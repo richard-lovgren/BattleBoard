@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HermitStore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dda2eb42800abc105006d67a47deced853a39b9e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b6fcc5cc402916787a0a4a0903c55cd0748f83e")]
 [assembly: System.Reflection.AssemblyProductAttribute("HermitStore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HermitStore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
