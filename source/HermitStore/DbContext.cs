@@ -11,22 +11,22 @@ namespace HermitStore
         {
 
         }
-        public required DbSet<User> User { get; set; }
+        public required DbSet<User> user { get; set; }
     }
 
     public class User
     {
-        public Guid Id { get; set; }
-        public Guid DiscordId { get; set; }
-        public required string UserName { get; set; }
-        public required string DisplayName { get; set; }
+        public Guid id { get; set; }
+        public Guid discord_id { get; set; }
+        public required string user_name { get; set; }
+        public required string display_name { get; set; }
     }
 
     public class UserDto
     {
-        public Guid DiscordId { get; set; }
-        public required string UserName { get; set; }
-        public required string DisplayName { get; set; }
+        public Guid discord_id { get; set; }
+        public required string user_name { get; set; }
+        public required string display_name { get; set; }
     }
 
 }

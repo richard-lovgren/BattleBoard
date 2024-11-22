@@ -1,10 +1,10 @@
 
 -- User table
-CREATE TABLE "User" ( -- Slight inconvenience - ASP requires pascal case, but Postgres converts unquoted identifiers to lowercase
-    "Id" UUID PRIMARY KEY,
-    "DiscordId" UUID NOT NULL,
-    "UserName" VARCHAR(30) NOT NULL,
-    "DisplayName" VARCHAR(30)
+CREATE TABLE "user" ( -- Slight inconvenience - ASP requires pascal case, but Postgres converts unquoted identifiers to lowercase
+    id UUID PRIMARY KEY,
+    discord_id UUID NOT NULL,
+    user_name VARCHAR(30) NOT NULL,
+    display_name VARCHAR(30)
 );
 
 -- Community table
@@ -52,12 +52,12 @@ CREATE TABLE "match" (
 -- Match participant table
 CREATE TABLE match_participant (
     id UUID PRIMARY KEY,
-    user_id UUID REFERENCES "User"("Id") ON DELETE CASCADE,
-    match_id UUID REFERENCES "User"("Id") ON DELETE CASCADE
+    user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
+    match_id UUID REFERENCES "user"(id) ON DELETE CASCADE
 );
 
 -- Constraints
 ALTER TABLE competition ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE SET NULL;
 ALTER TABLE "match" ADD CONSTRAINT fk_competition FOREIGN KEY (competition_id) REFERENCES competition(id) ON DELETE CASCADE;
-ALTER TABLE match_participant ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "User"("Id") ON DELETE CASCADE;
-ALTER TABLE match_participant ADD CONSTRAINT fk_match FOREIGN KEY (match_id) REFERENCES "match"(id) ON DELETE CASCADE;
+ALTER TABLE match_participant ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
+ALTER TABLE match_participant ADD CONSTRAINT fk_match FOREIGN KEY (match_id) REFERENCES "match" (id) ON DELETE CASCADE;

@@ -20,7 +20,7 @@ app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/users", async (HermitDbContext dbContext) =>
 {
-    var users = await dbContext.User.ToListAsync();
+    var users = await dbContext.user.ToListAsync();
     return users;
 });
 
@@ -29,21 +29,21 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
 
     var user = new User
     {
-        DiscordId = userDto.DiscordId,
-        UserName = userDto.UserName,
-        DisplayName = userDto.DisplayName,
-        Id = Guid.NewGuid()
+        discord_id = userDto.discord_id,
+        user_name = userDto.user_name,
+        display_name = userDto.display_name,
+        id = Guid.NewGuid()
     };
     
     //Slay queen
-    if (await dbContext.User.AnyAsync(u => u.DiscordId == user.DiscordId))
+    if (await dbContext.user.AnyAsync(u => u.discord_id == user.discord_id))
     {
         return Results.Conflict("User already exists");
     }
 
     try 
     {
-    dbContext.User.Add(user);
+    dbContext.user.Add(user);
     await dbContext.SaveChangesAsync();
     }
     catch (Exception e)
@@ -52,9 +52,9 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
         return Results.BadRequest("Failed to create user");
     }
 
-    logger.LogInformation("User {UserId} created", user.Id);
+    logger.LogInformation("User {UserId} created", user.id);
 
-    return Results.Created($"/users/{user.Id}", user);
+    return Results.Created($"/users/{user.id}", user);
     
 });
 
