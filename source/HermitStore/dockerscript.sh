@@ -1,0 +1,1 @@
+docker-compose up --build -d # Builds and starts the container in detached mode

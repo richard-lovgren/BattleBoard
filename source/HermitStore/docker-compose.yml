@@ -1,0 +1,30 @@
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Host:Container, glummer alltid
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=HermitStore;Username=HermitMan;Password=Crab
+
+  db:
+    image: "postgres:latest"
+    container_name: "hermitstore-db"
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db_init.sql:/docker-entrypoint-initdb.d/db_init.sql
+    environment:
+      - POSTGRES_USER=HermitMan
+      - POSTGRES_PASSWORD=Crab
+      - POSTGRES_DB=HermitStore
+  
+volumes:
+  postgres_data: 
