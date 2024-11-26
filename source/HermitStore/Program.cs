@@ -58,4 +58,117 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
     
 });
 
+
+app.MapGet("/communities", async (HermitDbContext dbContext) =>
+{
+    var communities = await dbContext.community.ToListAsync();
+    return communities;
+});
+
+app.MapGet("/communities/{id}", async (HermitDbContext dbContext, Guid id) =>
+{
+    var community = await dbContext.community.FindAsync(id);
+    if (community == null)
+    {
+        return Results.NotFound();
+    }
+
+    logger.LogInformation("Community {CommunityId} found", community.id);
+
+    return Results.Ok(community);
+});
+
+app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto communityDto) =>
+{
+    var community = new Community
+    {
+        community_name = communityDto.community_name,
+        community_image = communityDto.community_image,
+        id = Guid.NewGuid()
+    };
+
+    dbContext.community.Add(community);
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("Community {CommunityId} created", community.id);
+
+    return Results.Created($"/communities/{community.id}", community);
+});
+
+app.MapGet("/competitions", async (HermitDbContext dbContext) =>
+{
+    var competitions = await dbContext.competition.ToListAsync();
+    return competitions;
+});
+
+app.MapGet("/competitions/{id}", async (HermitDbContext dbContext, Guid id) =>
+{
+    var competition = await dbContext.competition.FindAsync(id);
+    if (competition == null)
+    {
+        return Results.NotFound();
+    }
+
+    logger.LogInformation("Competition {CompetitionId} found", competition.id);
+
+    return Results.Ok(competition);
+});
+
+app.MapPost("/competitions", async (HermitDbContext dbContext, CompetitionDto competitionDto) =>
+{
+    var competition = new Competition
+    {
+        id = Guid.NewGuid(),
+        competition_name = competitionDto.competition_name,
+        competition_description = competitionDto.competition_description,
+        competition_type = competitionDto.competition_type,
+        format = competitionDto.format,
+        competition_image = competitionDto.competition_image,
+        is_public = competitionDto.is_public,
+        game_id = competitionDto.game_id,
+        rank_alg = competitionDto.rank_alg,
+        participants = 0
+    };
+
+    dbContext.competition.Add(competition);
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("Competition {CompetitionId} created", competition.id);
+
+    return Results.Created($"/competitions/{competition.id}", competition);
+});
+
+app.MapPost("/competitions/join/{competition_id, user_id}", async (HermitDbContext dbContext, Guid competition_id, Guid user_id) =>
+{
+    var competition = await dbContext.competition.FindAsync(competition_id);
+    if (competition == null)
+    {
+        return Results.NotFound();
+    }
+
+    var user = await dbContext.user.FindAsync(user_id);
+    if (user == null)
+    {
+        return Results.NotFound();
+    }
+
+    //var competitionUser = new CompetitionUser
+    //{
+    //    competition_id = competition_id,
+    //    user_id = user_id
+    //};
+
+    //dbContext.competition_user.Add(competitionUser);
+    await dbContext.SaveChangesAsync();
+
+    competition.participants++;
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("User {UserId} joined competition {CompetitionId}", user_id, competition_id);
+
+    return Results.Created($"/competitions/{competition.id}", competition);
+});
+
+
+
 app.Run();
