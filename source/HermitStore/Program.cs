@@ -1,7 +1,8 @@
 
 using HermitStore;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
+using System;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,17 +35,17 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
         display_name = userDto.display_name,
         id = Guid.NewGuid()
     };
-    
+
     //Slay queen
     if (await dbContext.user.AnyAsync(u => u.discord_id == user.discord_id))
     {
         return Results.Conflict("User already exists");
     }
 
-    try 
+    try
     {
-    dbContext.user.Add(user);
-    await dbContext.SaveChangesAsync();
+        dbContext.user.Add(user);
+        await dbContext.SaveChangesAsync();
     }
     catch (Exception e)
     {
@@ -55,8 +56,85 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
     logger.LogInformation("User {UserId} created", user.id);
 
     return Results.Created($"/users/{user.id}", user);
-    
+
 });
+
+/**
+Get competions that a user has joined
+Need to query get competitions to get more info about them
+*/
+app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+{
+    try
+    {
+        var user = await dbContext.user.FindAsync(id);
+        if (user != null)
+        {
+            var communityIds = await dbContext.user_competition.Where(x => x.user_id == id).Select(x => x.competition_id).ToListAsync();
+            return Results.Ok(communityIds);
+        }
+        else
+        {
+            return Results.NotFound();
+        }
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Failed to get competitions");
+    }
+});
+
+/**
+Get communities that a user has joined
+Need to query get communities to get more info about them
+*/
+app.MapGet("/user/{id}/communities", async (HermitDbContext dbContext, Guid id) =>
+{
+    // return await dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
+    try
+    {
+        var user = await dbContext.user.FindAsync(id);
+        if (user != null)
+        {
+            var communityIds = dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
+            return Results.Ok(communityIds);
+        }
+        else
+        {
+            return Results.NotFound();
+        }
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Failed to get communities");
+    }
+});
+/**
+Get matches that a user has joined
+Need to query get matches to get more info about them
+*/
+app.MapGet("/user/{id}/matches", async (HermitDbContext dbContext, Guid id) =>
+{
+    // return await dbContext.match_user.Where(x => x.user_id == id).Select(x => x.match_id).ToListAsync();
+    try
+    {
+        var user = await dbContext.user.FindAsync(id);
+        if (user != null)
+        {
+            var matchIds = dbContext.match_user.Where(x => x.user_id == id).Select(x => x.match_id).ToListAsync();
+            return Results.Ok(matchIds);
+        }
+        else
+        {
+            return Results.NotFound();
+        }
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Failed to get matches");
+    }
+});
+
 
 
 app.MapGet("/communities", async (HermitDbContext dbContext) =>

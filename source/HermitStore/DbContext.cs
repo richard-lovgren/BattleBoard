@@ -16,12 +16,16 @@ namespace HermitStore
         public required DbSet<Game> game { get; set; }
         public required DbSet<Competition> competition { get; set; }
         public required DbSet<Match> match { get; set; }
-        public required DbSet<MatchParticipant> match_participant { get; set; }
+        public required DbSet<MatchUser> match_user { get; set; }
+        public required DbSet<MatchGame> match_game { get; set; }
+        public required DbSet<UserCommunity> user_community { get; set; }
+        public required DbSet<GameCommunity> game_community { get; set; }
+        public required DbSet<UserCompetition> user_competition { get; set; }
     }
 
     public class UserDto
     {
-        public required Guid discord_id { get; set; }
+        public required ulong discord_id { get; set; }
         public required string user_name { get; set; }
         public string? display_name { get; set; }
     }
@@ -29,7 +33,6 @@ namespace HermitStore
     {
         public required Guid id { get; set; }
     }
-
     public class CommunityDto
     {
         public required string community_name { get; set; }
@@ -39,8 +42,15 @@ namespace HermitStore
     {
         public required Guid id { get; set; }
     }
-
-    
+    public class UserCommunityDto
+    {
+        public required Guid user_id { get; set; }
+        public required Guid community_id { get; set; }
+    }
+    public class UserCommunity : UserCommunityDto
+    {
+        public required Guid id { get; set; }
+    }
     public class GameDto
     {
         public required string game_name { get; set; }
@@ -49,7 +59,15 @@ namespace HermitStore
     {
         public required Guid id { get; set; }
     }
-    
+    public class GameCommunityDto
+    {
+        public required Guid game_id { get; set; }
+        public required Guid community_id { get; set; }
+    }
+    public class GameCommunity : GameCommunityDto
+    {
+        public required Guid id { get; set; }
+    }
     public class CompetitionDto
     {
         public required string competition_name { get; set; }
@@ -68,7 +86,15 @@ namespace HermitStore
         public required int participants { get; set; }
         public required Guid id { get; set; }
     }
-
+    public class UserCompetitionDto
+    {
+        public required Guid user_id { get; set; }
+        public required Guid competition_id { get; set; }
+    }
+    public class UserCompetition : UserCompetitionDto
+    {
+        public required Guid id { get; set; }
+    }
     public class MatchDto
     {
         public Guid competition_id { get; set; }
@@ -80,16 +106,25 @@ namespace HermitStore
         public int networth { get; set; }
         public int match_time { get; set; }
     }
+    public class MatchGameDto
+    {
+        public required Guid game_id { get; set; }
+        public required Guid match_id { get; set; }
+    }
+    public class MatchGame : MatchGameDto
+    {
+        public required Guid id { get; set; }
+    }
     public class Match : MatchDto
     {
         public required Guid id { get; set; }
     }
-    public class MatchParticipantDto
+    public class MatchUserDto
     {
         public required Guid user_id { get; set; }
         public required Guid match_id { get; set; }
     }
-    public class MatchParticipant : MatchParticipantDto
+    public class MatchUser : MatchUserDto
     {
         public required Guid id { get; set; }
     }
