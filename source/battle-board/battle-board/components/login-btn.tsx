@@ -1,12 +1,14 @@
-
 "use client";
 
-import { handleSignIn } from "./server-login";
+import { signIn } from "next-auth/react";
 
-export default function LoginButton() {
+export default function LoginBtn() {
   return (
-    <form action={handleSignIn}>
-      <button type="submit">Login</button>
-    </form>
+    <button
+      className="bg-transparent border border-white px-4 py-1 rounded hover:bg-white hover:text-[#0b0320] transition"
+      onClick={() => signIn("discord")}
+    >
+      Login
+    </button>
   );
 }
