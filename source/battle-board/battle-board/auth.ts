@@ -1,23 +1,42 @@
 import NextAuth from "next-auth"
 import Discord from "next-auth/providers/discord"
- 
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [Discord({
-    profile(profile) {
-      console.log("Profile: " + JSON.stringify(profile));
-      return profile;
-    }
-  })],
+  providers: [
+    Discord({
+      profile(profile) {
+        console.log("Profile from Discord:", profile);
+        return {
+          id: profile.id,
+          name: profile.username, // Map Discord username to the `name` field
+          email: profile.email,
+          image: profile.avatar
+            ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+            : null,
+        };
+      },
+    }),
+  ],
   callbacks: {
     jwt({ token, user }) {
-      console.log("User: " + JSON.stringify(user))
-      console.log("Token: " + JSON.stringify(token))
-      return token
+      if (user) {
+        token.name = user.name; // Ensure the username is set in the JWT
+        token.picture = user.image;
+        token.email = user.email;
+      }
+      console.log("JWT Token:", token);
+      return token;
     },
     session({ session, token }) {
-      console.log("Session: " + JSON.stringify(session))
-      return session
-    }
-  }
-}
-);
+      session.user = {
+        ...session.user,
+        name: token.name, // Map the name from the token to the session
+        image: token.picture,
+        email: token.email ?? '',
+      };
+      console.log("Session Object:", session);
+      return session;
+    },
+  },
+});
+
