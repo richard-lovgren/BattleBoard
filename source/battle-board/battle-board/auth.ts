@@ -63,16 +63,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
 
-          if (!existingUserResponse.ok) {
-            console.error("Failed to query user data:", existingUserResponse.statusText);
-            return false; // Stop the sign-in process on error
-          }
-
-          const existingUser = await existingUserResponse.json();
-          if (existingUser) {
+          if (existingUserResponse.ok) {
+            const existingUser = await existingUserResponse.json();
             console.log("Existing user found:", existingUser);
             // Use the existing user data as needed
-          } else {
+          } else if (existingUserResponse.status === 404) {
             console.log("User does not exist, creating new user...");
 
             // Send the new user data to the database
@@ -83,13 +78,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               },
               body: JSON.stringify(userDto),
             });
-
             if (!createUserResponse.ok) {
               console.error("Failed to create new user:", createUserResponse.statusText);
               return false; // Stop the sign-in process on error
             } else {
               console.log("New user successfully created.");
             }
+          }
+          else {
+            console.error("Unexpected response from the database:", existingUserResponse.statusText);
+            return false; // Stop the sign-in process on error
           }
         } catch (error) {
           console.error("Error interacting with the database:", error);
