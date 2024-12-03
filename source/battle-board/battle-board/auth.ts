@@ -1,6 +1,26 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 
+
+declare module "next-auth" {
+  interface User {
+    display_name?: string; // Add display_name to User type
+  }
+
+  interface Session {
+    user: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      display_name?: string | null; // Add display_name to Session type
+    };
+  }
+
+  interface JWT {
+    display_name?: string; // Add display_name to JWT type
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Discord({
@@ -9,6 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: profile.id,
           name: profile.username, // Map Discord username to the `name` field
+          display_name: profile.global_name ?? profile.username,
           email: profile.email,
           image: profile.avatar
             ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
@@ -57,23 +78,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }
       return true; // Return `true` to continue the sign-in process
     },
-    jwt({ token, user }) {
+    jwt({ token, user, profile }) {
       if (user) {
         token.name = user.name; // Ensure the username is set in the JWT
         token.picture = user.image;
         token.email = user.email;
+        token.display_name = profile?.global_name ?? user.name; // Include display_name
       }
-      //console.log("JWT Token:", token);
       return token;
     },
     session({ session, token }) {
       session.user = {
         ...session.user,
         name: token.name, // Map the name from the token to the session
+        display_name: token.display_name as string | undefined, // Include display_name in the session
         image: token.picture,
         email: token.email ?? "",
       };
-      //console.log("Session Object:", session);
       return session;
     },
   },

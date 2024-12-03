@@ -17,7 +17,7 @@ export default function LoginBtn() {
             className="w-8 h-8 rounded-full"
           />
         )}
-        <p className="text-sm">Welcome, {session.user.name || "User"}</p>
+        <p className="text-sm">Welcome, {session.user.display_name || "User"}</p>
         <button
           className="bg-transparent border border-white px-4 py-1 rounded hover:bg-white hover:text-[#0b0320] transition"
           onClick={() => signOut()}
