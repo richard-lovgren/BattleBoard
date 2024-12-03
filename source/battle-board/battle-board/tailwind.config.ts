@@ -12,6 +12,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         buttonprimary: "var(--button-primary)",
+        buttonprimaryhover: "var(--button-primary-hover)",
         textshadow: "var(--text-shadow)"
       },
     },

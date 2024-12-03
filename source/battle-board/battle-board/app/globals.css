@@ -7,6 +7,7 @@
   --foreground: #765dea;
   --text-shadow: #4E35BE;
   --button-primary: #765dea;
+  --button-primary-hover: #a595ea;
   --font-primary: Arial, Helvetica, sans-serif;
   --font-odibee-sans: "Odibee Sans", cursive;
 }
@@ -41,9 +42,14 @@ body {
   font-family: var(--font-odibee-sans);
 }
 
-/* Apply Odibee Sans Globally */
+/* Apply Nunito Sans Globally */
 .font-nunito {
   font-family: var(--font-nunito-sans);
+}
+
+/* Apply Outfit Sans Globally */
+.font-outfit {
+  font-family: var(--font-outfit)
 }
 
 /* The Hero SVG from Figma as CSS *Gulp* */
