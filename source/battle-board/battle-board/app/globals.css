@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #0E0030;
-  --foreground: #765DEA;
+  --background: #0e0030;
+  --foreground: #765dea;
   --font-primary: Arial, Helvetica, sans-serif;
   --font-odibee-sans: "Odibee Sans", cursive;
 }
