@@ -34,3 +34,8 @@ body {
 .font-odibee {
   font-family: var(--font-odibee-sans);
 }
+
+/* Apply Odibee Sans Globally */
+.font-nunito {
+  font-family: var(--font-nunito-sans);
+}
