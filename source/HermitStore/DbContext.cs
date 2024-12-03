@@ -11,7 +11,7 @@ namespace HermitStore
         {
 
         }
-        public required DbSet<User> user { get; set; }
+        public required DbSet<User> users { get; set; }
         public required DbSet<Community> community { get; set; }
         public required DbSet<Game> game { get; set; }
         public required DbSet<Competition> competition { get; set; }
