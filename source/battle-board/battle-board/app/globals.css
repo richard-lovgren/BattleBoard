@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0E0030;
+  --foreground: #765DEA;
+  --font-primary: Arial, Helvetica, sans-serif;
+  --font-odibee-sans: "Odibee Sans", cursive;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,8 +16,22 @@
   }
 }
 
+html {
+  height: 100%;
+  overflow: auto;
+  background: var(--background);
+  overscroll-behavior: none;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-primary);
+  height: 100%;
+  margin: 0;
+}
+
+/* Apply Odibee Sans Globally */
+.font-odibee {
+  font-family: var(--font-odibee-sans);
 }

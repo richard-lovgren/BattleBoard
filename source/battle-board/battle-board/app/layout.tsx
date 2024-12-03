@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import { Odibee_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import Header from "./components/Header";
+
+const odibeeSans = Odibee_Sans({
+  subsets: ["latin"],
+  weight: "400", // Odibee Sans only has 400 weight available
+  variable: "--font-odibee-sans", // Set a CSS variable for the font
+});
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,9 +34,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${odibeeSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );
