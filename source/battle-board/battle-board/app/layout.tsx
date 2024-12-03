@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Odibee_Sans } from "next/font/google";
 import localFont from "next/font/local";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import Header from "./components/Header";
 
@@ -38,9 +39,11 @@ export default function RootLayout({
       >
         <div className="flex flex-col min-h-screen">
           <Header />
-          {children}
+
+
+          <SessionProvider>{children}</SessionProvider>
         </div>
-      </body>
-    </html>
+      </body >
+    </html >
   );
 }
