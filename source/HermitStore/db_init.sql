@@ -24,7 +24,7 @@ CREATE TABLE game (
 CREATE TABLE game_community (
     id UUID PRIMARY KEY,
     game_id UUID REFERENCES game(id) ON DELETE CASCADE,
-    community_id UUID REFERENCES community(id) ON DELETE
+    community_id UUID REFERENCES community(id) ON DELETE CASCADE
 );
 
 -- User Community N-N table

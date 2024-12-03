@@ -25,8 +25,13 @@ app.MapGet("/users", async (HermitDbContext dbContext) =>
     return users;
 });
 
-app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
+app.MapPost("/users", async (HttpContext httpContext, HermitDbContext dbContext) =>
 {
+    var userDto = await httpContext.Request.ReadFromJsonAsync<UserDto>();
+    if (userDto == null)
+    {
+        return Results.BadRequest("Invalid or missing request body.");
+    }
 
     var user = new User
     {
@@ -36,7 +41,6 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
         id = Guid.NewGuid()
     };
 
-    //Slay queen
     if (await dbContext.user.AnyAsync(u => u.discord_id == user.discord_id))
     {
         return Results.Conflict("User already exists");
@@ -56,7 +60,6 @@ app.MapPost("/users", async (HermitDbContext dbContext, UserDto userDto) =>
     logger.LogInformation("User {UserId} created", user.id);
 
     return Results.Created($"/users/{user.id}", user);
-
 });
 
 /**
