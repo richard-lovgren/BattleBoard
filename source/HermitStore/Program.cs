@@ -25,6 +25,26 @@ app.MapGet("/users", async (HermitDbContext dbContext) =>
     return users;
 });
 
+app.MapGet("/users/{id}", async (HermitDbContext dbContext, ulong id) =>
+{
+    try
+    {
+        var user = await dbContext.users.Where(x => x.discord_id == id).FirstOrDefaultAsync();
+        if (user != null)
+        {
+            return Results.Ok(user);
+        }
+        else
+        {
+            return Results.NotFound();
+        }
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Failed to get user");
+    }
+});
+
 app.MapPost("/users", async (HttpContext httpContext, HermitDbContext dbContext) =>
 {
     var userDto = await httpContext.Request.ReadFromJsonAsync<UserDto>();

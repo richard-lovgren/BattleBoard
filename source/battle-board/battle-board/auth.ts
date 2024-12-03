@@ -45,10 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       let db_conn_str = process.env.DB_CONN_STR;
       console.log("DB Connection String:", db_conn_str + "/users");
 
-      // Send user data to your database
-      if (profile)
-      {
-
+      if (profile) {
         let userDto = {
           discord_id: profile.id,
           user_name: profile.username,
@@ -57,25 +54,49 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         console.log("User DTO:", userDto);
 
-      try {
-        const response = await fetch((db_conn_str + "/users"), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userDto),
-        });
+        try {
+          // Check if the user already exists in the database
+          const existingUserResponse = await fetch(`${db_conn_str}/users/${profile.id}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
 
-        if (!response.ok) {
-          console.error("Failed to send user data to the database:", response.statusText);
-        } else {
-          console.log("User data successfully sent to the database.");
+          if (!existingUserResponse.ok) {
+            console.error("Failed to query user data:", existingUserResponse.statusText);
+            return false; // Stop the sign-in process on error
+          }
+
+          const existingUser = await existingUserResponse.json();
+          if (existingUser) {
+            console.log("Existing user found:", existingUser);
+            // Use the existing user data as needed
+          } else {
+            console.log("User does not exist, creating new user...");
+
+            // Send the new user data to the database
+            const createUserResponse = await fetch(`${db_conn_str}/users`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(userDto),
+            });
+
+            if (!createUserResponse.ok) {
+              console.error("Failed to create new user:", createUserResponse.statusText);
+              return false; // Stop the sign-in process on error
+            } else {
+              console.log("New user successfully created.");
+            }
+          }
+        } catch (error) {
+          console.error("Error interacting with the database:", error);
+          return false; // Stop the sign-in process on error
         }
-      } catch (error) {
-        console.error("Error sending user data to the database:", error);
       }
 
-    }
       return true; // Return `true` to continue the sign-in process
     },
     jwt({ token, user, profile }) {
