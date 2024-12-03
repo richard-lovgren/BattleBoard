@@ -7,13 +7,16 @@ export default function Header() {
       <Link href="/">
         <img src="/logo.svg" alt="logo" className=" justify-self-start" />
       </Link>
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-row gap-4 items-center">
+        <Link href="/search">
+          <img src="/search.svg" alt="search" className="h-8 w-8" />
+        </Link>
         <Link href="/user/testid#id">
-          <button className="text-white py-2 px-4 rounded-xl border-[#4E35BE] border-2">
+          <button className="text-white py-2 px-4 rounded-xl border-foreground border-2">
             Log in
           </button>
         </Link>
-        <button className="bg-[#4E35BE] text-white py-2 px-4 rounded-xl">
+        <button className="bg-foreground text-white py-2 px-4 rounded-xl">
           Sign up
         </button>
       </div>

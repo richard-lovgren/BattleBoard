@@ -20,7 +20,6 @@ html {
   height: 100%;
   overflow: auto;
   background: var(--background);
-  overscroll-behavior: none;
 }
 
 body {

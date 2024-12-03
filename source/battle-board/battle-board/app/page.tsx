@@ -2,9 +2,9 @@ import Hero from "./components/Hero";
 
 export default function Home() {
   return (
-    <div className="bg-[#0E0030] flex flex-col">
+    <div className="bg-background flex flex-col">
       <Hero />
-      <main className=" flex-auto font-odibee">Main</main>
+      <main className=" flex-auto font-odibee text-9xl text-center ">Main</main>
     </div>
   );
 }
