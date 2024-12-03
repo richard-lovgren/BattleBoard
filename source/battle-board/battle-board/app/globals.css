@@ -11,7 +11,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0e0030;
     --foreground: #ededed;
   }
 }
@@ -38,4 +38,121 @@ body {
 /* Apply Odibee Sans Globally */
 .font-nunito {
   font-family: var(--font-nunito-sans);
+}
+
+/* The Hero SVG from Figma as CSS *Gulp* */
+/* Group 18 */
+.hero {
+  position: absolute;
+  width: 1731.42px;
+  height: 1252.22px;
+  left: -218.81px;
+  top: -197.61px;
+
+
+
+  /* Polygon 1 */
+
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 886.44px;
+  height: 720.97px;
+  right: 612.37px;
+  top: 429.19px;
+
+  border: 10px solid #FFFFFF;
+  box-shadow: 10px 10px 10px rgba(255, 255, 255, 0.25);
+  border-radius: 40px;
+  transform: rotate(-45deg);
+
+
+  /* Polygon 2 */
+
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 886.44px;
+  height: 720.97px;
+  right: -1119.05px;
+  top: 427.81px;
+
+  border: 10px solid #FFFFFF;
+  box-shadow: 10px 10px 10px rgba(255, 255, 255, 0.25);
+  border-radius: 40px;
+  transform: rotate(135deg);
+
+
+  /* Rectangle 2 */
+
+  position: absolute;
+  width: 293px;
+  height: 142px;
+  left: 356px;
+  top: 340px;
+
+  background: #0E0030;
+
+
+  /* Rectangle 3 */
+
+  position: absolute;
+  width: 293px;
+  height: 142px;
+  left: 626px;
+  top: 371px;
+
+  background: #0E0030;
+
+
+  /* Battle */
+
+  position: absolute;
+  width: 269px;
+  height: 142px;
+  left: 354px;
+  top: 332px;
+
+  font-family: 'Odibee Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 128px;
+  line-height: 142px;
+  /* identical to box height */
+  letter-spacing: 0.05em;
+
+  color: #FFFFFF;
+
+
+
+  /* Board */
+
+  position: absolute;
+  width: 258px;
+  height: 142px;
+  left: 673px;
+  top: 376px;
+
+  font-family: 'Odibee Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 128px;
+  line-height: 142px;
+  /* identical to box height */
+  letter-spacing: 0.05em;
+
+  color: #FFFFFF;
+
+
+
+  /* Line 1 */
+
+  position: absolute;
+  width: 299.28px;
+  height: 0px;
+  left: 691px;
+  top: 287px;
+
+  border: 10px solid #FFFFFF;
+  transform: rotate(110.13deg);
 }

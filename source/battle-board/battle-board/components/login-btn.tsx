@@ -30,7 +30,7 @@ export default function LoginBtn() {
 
   return (
     <button
-      className="text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition "
+      className="text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition hover:border-transparent "
       onClick={() => signIn("discord")}
     >
       Login
