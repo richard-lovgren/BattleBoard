@@ -11,6 +11,8 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        buttonprimary: "var(--button-primary)",
+        textshadow: "var(--text-shadow)"
       },
     },
   },
