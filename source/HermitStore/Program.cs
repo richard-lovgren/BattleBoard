@@ -21,7 +21,7 @@ app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/users", async (HermitDbContext dbContext) =>
 {
-    var users = await dbContext.user.ToListAsync();
+    var users = await dbContext.users.ToListAsync();
     return users;
 });
 
@@ -41,14 +41,14 @@ app.MapPost("/users", async (HttpContext httpContext, HermitDbContext dbContext)
         id = Guid.NewGuid()
     };
 
-    if (await dbContext.user.AnyAsync(u => u.discord_id == user.discord_id))
+    if (await dbContext.users.AnyAsync(u => u.discord_id == user.discord_id))
     {
         return Results.Conflict("User already exists");
     }
 
     try
     {
-        dbContext.user.Add(user);
+        dbContext.users.Add(user);
         await dbContext.SaveChangesAsync();
     }
     catch (Exception e)
@@ -70,7 +70,7 @@ app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, Guid id
 {
     try
     {
-        var user = await dbContext.user.FindAsync(id);
+        var user = await dbContext.users.FindAsync(id);
         if (user != null)
         {
             var communityIds = await dbContext.user_competition.Where(x => x.user_id == id).Select(x => x.competition_id).ToListAsync();
@@ -96,7 +96,7 @@ app.MapGet("/user/{id}/communities", async (HermitDbContext dbContext, Guid id) 
     // return await dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
     try
     {
-        var user = await dbContext.user.FindAsync(id);
+        var user = await dbContext.users.FindAsync(id);
         if (user != null)
         {
             var communityIds = dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
@@ -121,7 +121,7 @@ app.MapGet("/user/{id}/matches", async (HermitDbContext dbContext, Guid id) =>
     // return await dbContext.match_user.Where(x => x.user_id == id).Select(x => x.match_id).ToListAsync();
     try
     {
-        var user = await dbContext.user.FindAsync(id);
+        var user = await dbContext.users.FindAsync(id);
         if (user != null)
         {
             var matchIds = dbContext.match_user.Where(x => x.user_id == id).Select(x => x.match_id).ToListAsync();
@@ -227,7 +227,7 @@ app.MapPost("/competitions/join/{competition_id, user_id}", async (HermitDbConte
         return Results.NotFound();
     }
 
-    var user = await dbContext.user.FindAsync(user_id);
+    var user = await dbContext.users.FindAsync(user_id);
     if (user == null)
     {
         return Results.NotFound();

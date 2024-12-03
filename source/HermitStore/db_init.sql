@@ -1,6 +1,6 @@
 
 -- User table
-CREATE TABLE "user" ( -- Slight inconvenience - ASP requires pascal case, but Postgres converts unquoted identifiers to lowercase
+CREATE TABLE users ( -- Slight inconvenience - ASP requires pascal case, but Postgres converts unquoted identifiers to lowercase
     id UUID PRIMARY KEY,
     discord_id bigserial NOT NULL,
     user_name VARCHAR(30) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE game_community (
 -- User Community N-N table
 CREATE TABLE user_community (
     id UUID PRIMARY KEY,
-    user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     community_id UUID REFERENCES community(id) ON DELETE CASCADE
 );
 
@@ -73,18 +73,18 @@ CREATE TABLE match_game (
 -- Match participant table
 CREATE TABLE match_user (
     id UUID PRIMARY KEY,
-    user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
-    match_id UUID REFERENCES "user"(id) ON DELETE CASCADE
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    match_id UUID REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Constraints
 ALTER TABLE competition ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE SET NULL;
 ALTER TABLE "match" ADD CONSTRAINT fk_competition FOREIGN KEY (competition_id) REFERENCES competition(id) ON DELETE CASCADE;
-ALTER TABLE match_participant ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
+ALTER TABLE match_participant ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE match_participant ADD CONSTRAINT fk_match FOREIGN KEY (match_id) REFERENCES "match" (id) ON DELETE CASCADE;
 ALTER TABLE match_game ADD CONSTRAINT fk_match FOREIGN KEY (match_id) REFERENCES "match"(id) ON DELETE CASCADE;
 ALTER TABLE match_game ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE;
 ALTER TABLE game_community ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE;
 ALTER TABLE game_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id) REFERENCES community(id) ON DELETE CASCADE;
-ALTER TABLE user_community ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
+ALTER TABLE user_community ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE user_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id) REFERENCES community(id) ON DELETE CASCADE;
