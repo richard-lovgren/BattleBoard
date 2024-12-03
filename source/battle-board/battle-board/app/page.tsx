@@ -22,13 +22,13 @@ export default function Home() {
             <div className="border border-white rounded-lg p-6 w-80">
               <h3 className="text-xl font-bold">Communities</h3>
               <p className="mt-2 text-gray-300">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.
               </p>
             </div>
             <div className="border border-white rounded-lg p-6 w-80">
               <h3 className="text-xl font-bold">Competitions</h3>
               <p className="mt-2 text-gray-300">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.
               </p>
             </div>
           </div>
