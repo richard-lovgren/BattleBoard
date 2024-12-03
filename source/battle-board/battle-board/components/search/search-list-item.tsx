@@ -1,3 +1,5 @@
+import GeneralButton from "../general-btn";
+
 export default function SearchListItem() {
 
     return (
@@ -24,9 +26,7 @@ export default function SearchListItem() {
                 </span>
             </div>
             <div className="flex items-center justify-center">
-                <button className=" appearance-none flex bg-buttonprimary h-10 w-36 rounded-xl items-center justify-center hover:bg-buttonprimaryhover">
-                    View
-                </button>
+                <GeneralButton/>
             </div>
         </div>
     </div>
