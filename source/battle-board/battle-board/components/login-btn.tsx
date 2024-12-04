@@ -19,7 +19,9 @@ export default function LoginBtn() {
               className="w-8 h-8 rounded-full"
             />
           )}
-          <p className="text-sm">Welcome, {session.user.display_name || "User"}</p>
+          <p className="text-sm">
+            Welcome, {session.user.display_name || "User"}
+          </p>
           <button
             className=" text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition hover:border-transparent  "
             onClick={() => signOut()}
@@ -27,7 +29,7 @@ export default function LoginBtn() {
             Logout
           </button>
         </div>
-      </Link >
+      </Link>
     );
   }
 
@@ -38,6 +40,5 @@ export default function LoginBtn() {
     >
       Login
     </button>
-
   );
 }

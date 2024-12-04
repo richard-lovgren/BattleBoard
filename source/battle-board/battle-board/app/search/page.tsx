@@ -1,5 +1,5 @@
 import SearchBar from "@/components/search/search-bar";
-import './search-module.css';
+import "./search-module.css";
 import SearchToggleButton from "@/components/search/search-toggle-btn";
 import SearchListItem from "@/components/search/search-list-item";
 export default function Search() {
@@ -11,36 +11,35 @@ export default function Search() {
             <div className="text-10xl">Search</div>
 
             <div className="flex items-center mt-10 h-8">
-              <div className="competitons-text text-3xl mr-5 font-nunito font-semibold ">Competitions</div> 
-              <SearchToggleButton/>
+              <div className="competitons-text text-3xl mr-5 font-nunito font-semibold ">
+                Competitions
+              </div>
+              <SearchToggleButton />
             </div>
-
           </div>
 
           <div className="mt-10">
-            <SearchBar/>
+            <SearchBar />
           </div>
 
           <div className="flex flex-wrap gap-10 justify-center mt-32 min-h-[80vh] w-[80vw] p-20">
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
-          <SearchListItem/>
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
+            <SearchListItem />
           </div>
         </div>
-
-
       </main>
     </div>
   );
