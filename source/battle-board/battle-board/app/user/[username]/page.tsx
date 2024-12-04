@@ -48,7 +48,7 @@ export default function LoginBtn() {
               <p className="text-slate-500 font-thin">L12</p>
             </div>
           </div>
-          <div className=" w-full border-2 border-white rounded-xl flex flex-col gap-2 h-1/2 border-transparent pr-56">
+          <div className=" w-full rounded-xl flex flex-col gap-2 h-1/2 pr-56">
             <div className="bg-foreground w-full flex flex-auto rounded-xl border-2 border-white items-center p-4 text-xl font-bold">
               Competition #1
             </div>
