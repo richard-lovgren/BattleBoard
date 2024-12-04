@@ -1,6 +1,5 @@
 
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace HermitStore
 {
