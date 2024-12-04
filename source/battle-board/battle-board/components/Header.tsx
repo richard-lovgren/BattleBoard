@@ -15,7 +15,7 @@ export default function Header() {
 
         <LoginBtn />
 
-        <button className="bg-foreground text-white py-2 px-4 rounded-xl dark:text-background">
+        <button className="bg-foreground text-white py-2 px-4 rounded-xl dark:text-background border-2 border-foreground">
           Sign Up
         </button>
       </div>
