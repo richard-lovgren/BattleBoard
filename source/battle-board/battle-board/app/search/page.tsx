@@ -22,7 +22,7 @@ export default function Search() {
   }
 
   /* Static placeholder data */
-  var buttonData : ButtonData = {
+  const buttonData : ButtonData = {
     isOn: toggleCompetitions,
     handleOnClick: handleToggle
   }
