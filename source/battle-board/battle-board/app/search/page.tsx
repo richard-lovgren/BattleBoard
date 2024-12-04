@@ -27,7 +27,7 @@ export default function Search() {
     handleOnClick: handleToggle
   }
 
-  let communities : Community[] = [
+  const communities : Community[] = [
     {
       id: 1,
       title: "Uppsala FGC",
@@ -86,7 +86,7 @@ export default function Search() {
     }
   ]
   
-  let competitons : Competition[] = [
+  const competitons : Competition[] = [
     {
       id: 1,
       title: "LOL rival league",

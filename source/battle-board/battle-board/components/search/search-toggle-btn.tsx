@@ -1,5 +1,4 @@
 import ButtonData from "@/models/button-data";
-import { Dispatch, SetStateAction } from "react";
 
 export default function SearchToggleButton(data: ButtonData) {
     function handleClick(e : any) {
