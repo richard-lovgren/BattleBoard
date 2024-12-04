@@ -1,6 +1,7 @@
 export default interface Community {
+    id: number;
     title: string;
     game: string;
-    active_competitions: number;
+    members: number;
     created_date : string;
 }

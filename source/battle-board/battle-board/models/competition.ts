@@ -1,4 +1,5 @@
 export default interface Competition {
+    id: number;
     title: string;
     game: string;
     participants: number;
