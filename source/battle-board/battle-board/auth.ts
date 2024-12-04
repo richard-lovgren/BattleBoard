@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 
-
 declare module "next-auth" {
   interface User {
     display_name?: string; // Add display_name to User type
@@ -56,12 +55,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         try {
           // Check if the user already exists in the database
-          const existingUserResponse = await fetch(`${db_conn_str}/users/${profile.id}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
+          const existingUserResponse = await fetch(
+            `${db_conn_str}/users/${profile.id}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
             },
-          });
+          );
 
           if (existingUserResponse.ok) {
             const existingUser = await existingUserResponse.json();
@@ -79,14 +81,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               body: JSON.stringify(userDto),
             });
             if (!createUserResponse.ok) {
-              console.error("Failed to create new user:", createUserResponse.statusText);
+              console.error(
+                "Failed to create new user:",
+                createUserResponse.statusText,
+              );
               return false; // Stop the sign-in process on error
             } else {
               console.log("New user successfully created.");
             }
-          }
-          else {
-            console.error("Unexpected response from the database:", existingUserResponse.statusText);
+          } else {
+            console.error(
+              "Unexpected response from the database:",
+              existingUserResponse.statusText,
+            );
             return false; // Stop the sign-in process on error
           }
         } catch (error) {

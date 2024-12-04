@@ -1,6 +1,6 @@
 "use client"
 import SearchBar from "@/components/search/search-bar";
-import './search-module.css';
+import "./search-module.css";
 import SearchToggleButton from "@/components/search/search-toggle-btn";
 import CompetitonSearchItem from "@/components/search/competition-search-item";
 import CommunitySearchItem from "@/components/search/community-search-item";
