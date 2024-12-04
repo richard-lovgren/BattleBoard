@@ -29,7 +29,7 @@ export default function LoginBtn() {
             <h2 className="font-bold">{session.user.display_name}</h2>
             <h2 className="font-bold">
               I like to play{" "}
-              <span className="text-foreground">League Of Legends.</span> It's
+              <span className="text-foreground">League Of Legends.</span> It&apos;s
               actually my most favourite of games. I get great enjoyment and
               relaxation out of playing league. The rift is calling....
             </h2>
