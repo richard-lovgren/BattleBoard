@@ -28,6 +28,7 @@ namespace HermitStore
         public required ulong discord_id { get; set; }
         public required string user_name { get; set; }
         public string? display_name { get; set; }
+        public string? league_puuid { get; set; }
     }
     public class User : UserDto
     {

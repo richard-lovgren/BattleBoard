@@ -1,10 +1,11 @@
 
 -- User table
-CREATE TABLE users ( -- Slight inconvenience - ASP requires pascal case, but Postgres converts unquoted identifiers to lowercase
+CREATE TABLE users (
     id UUID PRIMARY KEY,
     discord_id bigserial NOT NULL,
     user_name VARCHAR(30) NOT NULL,
-    display_name VARCHAR(30)
+    display_name VARCHAR(30),
+    league_puuid VARCHAR(100),
 );
 
 -- Community table

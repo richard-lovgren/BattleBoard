@@ -18,13 +18,17 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 
 app.MapGet("/", () => "Hello World!");
-
+/**
+Get all users
+*/
 app.MapGet("/users", async (HermitDbContext dbContext) =>
 {
     var users = await dbContext.users.ToListAsync();
     return users;
 });
-
+/**
+Get user by discord id
+*/
 app.MapGet("/users/{id}", async (HermitDbContext dbContext, ulong id) =>
 {
     try
