@@ -4,6 +4,8 @@ import Head from "next/head";
 
 import Hero from "../components/Hero";
 
+import Image from "next/image";
+
 export default function Home() {
   return (
     <>
@@ -43,28 +45,34 @@ export default function Home() {
             Competition Modes
           </h2>
           <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
-            <div className="border border-white rounded-lg p-6 w-64">
+            <div className="border border-white rounded-lg p-6 w-64 flex-col flex items-center">
               <h3 className="text-xl font-bold">Tournament</h3>
-              <img
+              <Image
                 src="/tournament.svg"
                 alt="Tournament Mode"
                 className="mt-4"
+                height={100}
+                width={100}
               />
             </div>
-            <div className="border border-white rounded-lg p-6 w-64">
+            <div className="border border-white rounded-lg p-6 w-64 flex-col flex items-center ">
               <h3 className="text-xl font-bold">Classic</h3>
-              <img
+              <Image
                 src="/classic_mode_icon.svg"
                 alt="Classic Mode"
                 className="mt-4"
+                height={100}
+                width={100}
               />
             </div>
-            <div className="border border-white rounded-lg p-6 w-64">
+            <div className="border border-white rounded-lg p-6 w-64 flex-col flex items-center ">
               <h3 className="text-xl font-bold">Rival</h3>
-              <img
+              <Image
                 src="/rival_mode_icon.svg"
                 alt="Rival Mode"
                 className="mt-4"
+                height={100}
+                width={100}
               />
             </div>
           </div>
