@@ -44,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${odibeeSans.variable} ${nunitoSans.variable} ${geistMono.variable} ${outfit.variable} antialiased`}
       >

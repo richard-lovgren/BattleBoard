@@ -2,7 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-
+import { Button } from "./ui/button";
 import Image from "next/image";
 
 export default function LoginBtn() {
@@ -38,11 +38,11 @@ export default function LoginBtn() {
   }
 
   return (
-    <button
-      className="text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition hover:border-transparent "
+    <Button
+      variant="outline"
       onClick={() => signIn("discord")}
     >
       Login
-    </button>
+    </Button>
   );
 }
