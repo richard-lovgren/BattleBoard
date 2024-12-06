@@ -26,22 +26,16 @@ export default function LoginBtn() {
           <p className="text-sm">
             Welcome, {session.user.display_name || "User"}
           </p>
-          <button
-            className=" text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition hover:border-transparent  "
-            onClick={() => signOut()}
-          >
+          <Button variant="outline" size="lg" onClick={() => signOut()}>
             Logout
-          </button>
+          </Button>
         </div>
       </Link>
     );
   }
 
   return (
-    <Button
-      variant="outline"
-      onClick={() => signIn("discord")}
-    >
+    <Button variant="outline" size="lg" onClick={() => signIn("discord")}>
       Login
     </Button>
   );

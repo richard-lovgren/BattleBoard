@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import SearchBar from "@/components/search/search-bar";
 import "./search-module.css";
 import SearchToggleButton from "@/components/search/search-toggle-btn";
@@ -12,88 +12,87 @@ import { useState } from "react";
 import ButtonData from "@/models/button-data";
 
 export default function Search() {
-
   /* State */
   const [toggleCompetitions, setToggleCompetitions] = useState(true);
-  
+
   const handleToggle = () => {
     console.log("toggled competitions/community");
     setToggleCompetitions(!toggleCompetitions);
-  }
+  };
 
   /* Static placeholder data */
-  const buttonData : ButtonData = {
+  const buttonData: ButtonData = {
     isOn: toggleCompetitions,
-    handleOnClick: handleToggle
-  }
+    handleOnClick: handleToggle,
+  };
 
-  const communities : Community[] = [
+  const communities: Community[] = [
     {
       id: 1,
       title: "Uppsala FGC",
       game: "Street Fighter 6, Tekken 8",
       members: 50,
-      created_date: "1 january 2020"
+      created_date: "1 january 2020",
     },
     {
       id: 2,
       title: "BattleBoard Team",
       game: "Software Engineering Project",
       members: 5,
-      created_date: "1 october 2024"
+      created_date: "1 october 2024",
     },
     {
       id: 3,
       title: "Pathetic Failure Squad",
       game: "Dota 2",
       members: 10,
-      created_date: "1 january 2024"
+      created_date: "1 january 2024",
     },
     {
       id: 4,
       title: "Community Title",
       game: "Associated game/games",
       members: 10,
-      created_date: "date"
+      created_date: "date",
     },
     {
       id: 5,
       title: "Community Title",
       game: "Associated game/games",
       members: 10,
-      created_date: "date"
+      created_date: "date",
     },
     {
       id: 6,
       title: "Community Title",
       game: "Associated game/games",
       members: 10,
-      created_date: "date"
+      created_date: "date",
     },
     {
       id: 7,
       title: "Community Title",
       game: "Associated game/games",
       members: 10,
-      created_date: "date"
+      created_date: "date",
     },
     {
       id: 8,
       title: "Community Title",
       game: "Associated game/games",
       members: 10,
-      created_date: "date"
-    }
-  ]
-  
-  const competitons : Competition[] = [
+      created_date: "date",
+    },
+  ];
+
+  const competitons: Competition[] = [
     {
       id: 1,
       title: "LOL rival league",
       game: "League of legends",
       participants: 2,
       competition_type: "Rival match",
-      start_date: "1 december 2024"
+      start_date: "1 december 2024",
     },
     {
       id: 2,
@@ -101,7 +100,7 @@ export default function Search() {
       game: "Street Fighter 6",
       participants: 30,
       competition_type: "Leauge match",
-      start_date: "7 september 2024"
+      start_date: "7 september 2024",
     },
     {
       id: 3,
@@ -109,7 +108,7 @@ export default function Search() {
       game: "Among Us",
       participants: 20,
       competition_type: "Tournament",
-      start_date: "5 september 2025"
+      start_date: "5 september 2025",
     },
     {
       id: 4,
@@ -117,7 +116,7 @@ export default function Search() {
       game: "Game",
       participants: 10,
       competition_type: "Competition type",
-      start_date: "Start date"
+      start_date: "Start date",
     },
     {
       id: 5,
@@ -125,7 +124,7 @@ export default function Search() {
       game: "Game",
       participants: 10,
       competition_type: "Competition type",
-      start_date: "Start date"
+      start_date: "Start date",
     },
     {
       id: 6,
@@ -133,7 +132,7 @@ export default function Search() {
       game: "Game",
       participants: 10,
       competition_type: "Competition type",
-      start_date: "Start date"
+      start_date: "Start date",
     },
     {
       id: 7,
@@ -141,7 +140,7 @@ export default function Search() {
       game: "Game",
       participants: 10,
       competition_type: "Competition type",
-      start_date: "Start date"
+      start_date: "Start date",
     },
     {
       id: 8,
@@ -149,9 +148,9 @@ export default function Search() {
       game: "Game",
       participants: 10,
       competition_type: "Competition type",
-      start_date: "Start date"
+      start_date: "Start date",
     },
-  ]
+  ];
   /* End of Static placeholder data */
 
   return (
@@ -163,37 +162,30 @@ export default function Search() {
 
             <div className="flex items-center mt-10 h-8">
               <div className="competitons-text text-3xl mr-5 font-nunito font-semibold ">
-                {toggleCompetitions ? 'Competitions' : 'Communities'}
-              </div> 
-              <SearchToggleButton {...buttonData}/>
+                {toggleCompetitions ? "Competitions" : "Communities"}
+              </div>
+              <SearchToggleButton {...buttonData} />
             </div>
-
           </div>
 
           <div className="mt-10">
-            <SearchBar/>
+            <SearchBar />
           </div>
 
           <div className="flex flex-wrap gap-10 justify-center mt-32 min-h-[80vh] w-[80vw] p-20">
             {toggleCompetitions && (
               <>
-                {competitons.map(comp => (
-                    <CompetitonSearchItem
-                    key={comp.id}
-                    {...comp}
-                    />
+                {competitons.map((comp) => (
+                  <CompetitonSearchItem key={comp.id} {...comp} />
                 ))}
               </>
             )}
 
             {!toggleCompetitions && (
               <>
-              {communities.map(comm => (
-                  <CommunitySearchItem
-                  key={comm.id}
-                  {...comm}
-                  />
-              ))}
+                {communities.map((comm) => (
+                  <CommunitySearchItem key={comm.id} {...comm} />
+                ))}
               </>
             )}
           </div>
