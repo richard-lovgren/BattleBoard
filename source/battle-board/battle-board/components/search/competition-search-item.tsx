@@ -36,7 +36,7 @@ export default function CompetitionSearchItem(competition : Competition) {
                 </span>
             </div>
             <div className="flex items-center justify-center">
-                <GeneralButton/>
+                <GeneralButton text="View"/>
             </div>
         </div>
     </div>
