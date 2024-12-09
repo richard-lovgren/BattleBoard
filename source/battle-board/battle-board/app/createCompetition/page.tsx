@@ -1,6 +1,4 @@
 import './createCompetition.css'
-import SearchToggleButton from '@/components/search/search-toggle-btn'
-import SearchListItem from '@/components/search/search-list-item'
 
 export default function CreateCompetition() {
   return (
