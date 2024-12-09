@@ -31,7 +31,7 @@ export default function CommunitySearchItem(community : Community) {
                 </span>
             </div>
             <div className="flex items-center justify-center">
-                <GeneralButton/>
+                <GeneralButton text="View"/>
             </div>
         </div>
     </div>
