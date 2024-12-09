@@ -107,8 +107,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     jwt({ token, user, profile }) {
       if (user) {
-        token.id = user.id;
-        token.name = user.name; // Ensure the username is set in the JWT
+        token.id = profile?.id as string;
+        token.name = user.name;
         token.picture = user.image;
         token.email = user.email;
         token.display_name = profile?.global_name ?? user.name; // Include display_name

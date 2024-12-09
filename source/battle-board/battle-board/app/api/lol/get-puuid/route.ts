@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const riotApiKey = process.env.RIOT_API_KEY; // Ensure this is set in your .env file
+        const riotApiKey = process.env.RIOT_API_KEY;
         const response = await fetch(
             `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(
                 username

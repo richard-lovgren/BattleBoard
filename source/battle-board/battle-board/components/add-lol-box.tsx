@@ -1,34 +1,39 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-
 export default function LolUsernameBox() {
     const { data: session } = useSession();
-    const [username, setUsername] = useState("");
+    console.log("Session data:", session);
+    const userId = session?.user?.id;
+
+    const [league_username, setUsername] = useState("");
     const [tagline, setTagline] = useState("");
     const [lolUsername, setLolUsername] = useState<string | null>(null);
-    const userId = session?.user?.id!;
-    console.log("User ID:", userId);
-    const db_conn_str = process.env.DB_CONN_STR;
+
+    const fetchUserLeagueData = async () => {
+        try {
+            console.log("Fetching data for userId:", userId);
+            const response = await fetch(`/api/get-user?userId=${userId}`);
+            if (!response.ok) {
+                throw new Error(`Error fetching user: ${response.statusText}`);
+            }
+
+            const user = await response.json();
+
+            if (user.league_puuid) {
+                const username = await getLolUsername(user.league_puuid);
+                console.log("Fetched username:", username);
+                setLolUsername(username || null);
+            } else {
+                setLolUsername(null);
+            }
+        } catch (error) {
+            console.error("Error in fetchUserLeagueData:", error);
+        }
+    };
 
     useEffect(() => {
-        // Fetch the user's League data from the backend
-        const fetchUserLeagueData = async () => {
-            try {
-                const response = await fetch("/api/get-user?userId=" + userId);
-                if (!response.ok) {
-                    throw new Error(`Error fetching user: ${response.statusText}`);
-                }
-
-                const user = await response.json();
-                if (user.league_puuid) {
-                    setLolUsername(`${user.display_name}`);
-                }
-            } catch (error) {
-                console.error("Error fetching user league data:", error, userId);
-            }
-        };
-
+        if (!userId) return;
         fetchUserLeagueData();
     }, [userId]);
 
@@ -40,15 +45,17 @@ export default function LolUsernameBox() {
 
     const handleSubmit = async () => {
         try {
-            const puuid = await getPuuid(username, tagline);
+            const puuid = await getPuuid(league_username, tagline);
             if (puuid) {
-                await updateUserLeaguePuuid(userId, puuid);
-                setLolUsername(username); // Update UI to reflect the new username
+                await updateUserLeaguePuuid(userId as string, puuid);
+                setLolUsername(league_username); // Update UI to reflect the new username
             }
         } catch (error) {
             console.error("Error in handleSubmit:", error);
         }
     };
+
+    if (!session || !userId) return <div>Loading...</div>;
 
     return (
         <div className="flex flex-col gap-4">
@@ -75,12 +82,14 @@ export default function LolUsernameBox() {
             )}
         </div>
     );
+
 }
 
+
 // Fetch the PUUID from Riot API
-async function getPuuid(username: string, tagline: string): Promise<string | null> {
+async function getPuuid(league_username: string, tagline: string): Promise<string | null> {
     try {
-        const response = await fetch(`/api/get-puuid?username=${encodeURIComponent(username)}&tagline=${encodeURIComponent(tagline)}`);
+        const response = await fetch(`/api/lol/get-puuid?username=${encodeURIComponent(league_username)}&tagline=${encodeURIComponent(tagline)}`);
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
         }
@@ -92,16 +101,36 @@ async function getPuuid(username: string, tagline: string): Promise<string | nul
     }
 }
 
+// Fetch Users LOL name from puuid
+async function getLolUsername(puuid: string): Promise<string | null> {
+    try {
+        if (!puuid) return null;
+        console.log("Fetching LOL username for PUUID:", puuid);
+        const response = await fetch(`/api/lol/get-username?puuid=${puuid}`);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        return `${data.gameName}#${data.tagLine}`;
+    } catch (error) {
+        console.error("Failed to fetch User:", error);
+        return null;
+    }
+}
+
+
 // Update the user's League PUUID in the backend
 async function updateUserLeaguePuuid(userId: string, puuid: string): Promise<void> {
     try {
-        const response = await fetch(`/users/${userId}`, {
+        const response = await fetch("/api/get-user?userId=" + userId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 league_puuid: puuid,
+                discord_id: userId,
+                username: null,
             }),
         });
 
