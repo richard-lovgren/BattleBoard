@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function LoginBtn() {
   const { data: session } = useSession();
 
-  console.log("Session Data:", session?.user.image); // Log the session data to debug
+  console.log("Session Data:", session?.user.name); // Log the session data to debug
 
   if (session?.user) {
     return (
@@ -29,9 +29,10 @@ export default function LoginBtn() {
             <h2 className="font-bold">{session.user.display_name}</h2>
             <h2 className="font-bold">
               I like to play{" "}
-              <span className="text-foreground">League Of Legends.</span> It&apos;s
-              actually my most favourite of games. I get great enjoyment and
-              relaxation out of playing league. The rift is calling....
+              <span className="text-foreground">League Of Legends.</span>{" "}
+              It&apos;s actually my most favourite of games. I get great
+              enjoyment and relaxation out of playing league. The rift is
+              calling....
             </h2>
           </div>
         </div>
