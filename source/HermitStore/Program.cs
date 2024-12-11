@@ -18,13 +18,17 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 
 app.MapGet("/", () => "Hello World!");
-
+/**
+Get all users
+*/
 app.MapGet("/users", async (HermitDbContext dbContext) =>
 {
     var users = await dbContext.users.ToListAsync();
     return users;
 });
-
+/**
+Get user by discord id
+*/
 app.MapGet("/users/{id}", async (HermitDbContext dbContext, ulong id) =>
 {
     try
@@ -80,6 +84,32 @@ app.MapPost("/users", async (HttpContext httpContext, HermitDbContext dbContext)
     logger.LogInformation("User {UserId} created", user.id);
 
     return Results.Created($"/users/{user.id}", user);
+});
+/**
+    Update user by discord id. If string is empty, no change will happen, if null then it will be set to null
+*/
+app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto userDto) =>
+{
+    try
+    {
+        var user = await dbContext.users.Where(x => x.discord_id == id).FirstOrDefaultAsync();
+        if (user != null)
+        {
+            user.display_name = userDto.display_name != string.Empty ? userDto.display_name : user.display_name;
+            user.league_puuid = userDto.league_puuid != string.Empty ? userDto.league_puuid : user.league_puuid;
+            dbContext.users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return Results.Ok(user);
+        }
+        else
+        {
+            return Results.NotFound();
+        }
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Failed to update user");
+    }
 });
 
 /**

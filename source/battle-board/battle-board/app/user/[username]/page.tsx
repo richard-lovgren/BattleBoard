@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import LolUsernameBox from "../../../components/add-lol-box";
 
 export default function LoginBtn() {
   const { data: session } = useSession();
@@ -33,6 +34,7 @@ export default function LoginBtn() {
               actually my most favourite of games. I get great enjoyment and
               relaxation out of playing league. The rift is calling....
             </h2>
+            <LolUsernameBox></LolUsernameBox>
           </div>
         </div>
         <div className="px-5 flex flex-grow flex-row w-full gap-4 bg-purple-500 bg bg-transparent">
