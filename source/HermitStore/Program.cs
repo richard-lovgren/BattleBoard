@@ -86,7 +86,7 @@ app.MapPost("/users", async (HttpContext httpContext, HermitDbContext dbContext)
     return Results.Created($"/users/{user.id}", user);
 });
 /**
-Update user by discord id
+    Update user by discord id. If string is empty, no change will happen, if null then it will be set to null
 */
 app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto userDto) =>
 {
@@ -95,8 +95,8 @@ app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto us
         var user = await dbContext.users.Where(x => x.discord_id == id).FirstOrDefaultAsync();
         if (user != null)
         {
-            user.display_name = userDto.display_name ?? user.display_name;
-            user.league_puuid = userDto.league_puuid ?? user.league_puuid;
+            user.display_name = userDto.display_name != string.Empty ? userDto.display_name : user.display_name;
+            user.league_puuid = userDto.league_puuid != string.Empty ? userDto.league_puuid : user.league_puuid;
             dbContext.users.Update(user);
             await dbContext.SaveChangesAsync();
             return Results.Ok(user);

@@ -54,6 +54,14 @@ export default function LolUsernameBox() {
             console.error("Error in handleSubmit:", error);
         }
     };
+    const handleRemove = async () => {
+        try {
+            await updateUserLeaguePuuid(userId as string, null);
+            setLolUsername(null);
+        } catch (error) {
+            console.error("Error in handleRemove:", error);
+        }
+    }
 
     if (!session || !userId) return <div>Loading...</div>;
 
@@ -62,6 +70,12 @@ export default function LolUsernameBox() {
             {lolUsername ? (
                 <div className="text-lg font-medium">
                     LoL Username: <span className="text-purple-500">{lolUsername}</span>
+                    <button
+                        className="px-4 py-2 bg-red-500 text-white rounded-md"
+                        onClick={handleRemove}
+                    >
+                        Remove
+                    </button>
                 </div>
             ) : (
                 <div className="flex gap-2">
@@ -120,7 +134,7 @@ async function getLolUsername(puuid: string): Promise<string | null> {
 
 
 // Update the user's League PUUID in the backend
-async function updateUserLeaguePuuid(userId: string, puuid: string): Promise<void> {
+async function updateUserLeaguePuuid(userId: string, puuid: string | null): Promise<void> {
     try {
         const response = await fetch("/api/get-user?userId=" + userId, {
             method: "PUT",
@@ -130,7 +144,7 @@ async function updateUserLeaguePuuid(userId: string, puuid: string): Promise<voi
             body: JSON.stringify({
                 league_puuid: puuid,
                 discord_id: userId,
-                username: null,
+                username: "",
             }),
         });
 
