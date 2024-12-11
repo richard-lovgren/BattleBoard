@@ -122,6 +122,7 @@ async function getPuuid(league_username: string, tagline: string): Promise<strin
         const data: { puuid: string } = await response.json();
         return data.puuid;
     } catch (error) {
+        console.log("Error in getPuuid:", error);
         return null;
     }
 }
@@ -138,6 +139,7 @@ async function getLolUsername(puuid: string): Promise<string | null> {
         const data = await response.json();
         return `${data.gameName}#${data.tagLine}`;
     } catch (error) {
+        console.log("Error in getLolUsername:", error);
         return null;
     }
 }
@@ -164,6 +166,6 @@ async function updateUserLeaguePuuid(userId: string, puuid: string | null): Prom
 
         console.log("User updated successfully.");
     } catch (error) {
-        console.error("Error updating user PUUID:", error);
+        console.log("Error updating user PUUID:", error);
     }
 }
