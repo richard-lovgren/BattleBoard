@@ -1,12 +1,19 @@
 "use client";
 
+import useCountryLocaleFlag from "@/hooks/useCountryLocaleFlag";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 export default function LoginBtn() {
   const { data: session } = useSession();
 
+  const { country, error } = useCountryLocaleFlag(
+    "https://flagsapi.com/BE/flat/64.png",
+  );
+
   console.log("Session Data:", session?.user.name); // Log the session data to debug
+
+  console.log("Session Data Locale:", session?.user.locale); // Log the session data locale to debug
 
   if (session?.user) {
     return (
@@ -23,9 +30,12 @@ export default function LoginBtn() {
             <div className="absolute inset-0 bg-black bg-opacity-20 rounded-[70px] shadow-inner shadow-black"></div>
           </div>
           <div className="flex flex-col gap py-5">
-            <h1 className="text-4xl font-bold font-odibee my-2">
-              {session.user.name}
-            </h1>
+            <div className="flex flex-row gap-2 items-center">
+              <h1 className="text-4xl font-bold font-odibee my-2">
+                {session.user.name}
+              </h1>
+              <h3 className="">{country}</h3>
+            </div>
             <h2 className="font-bold">{session.user.display_name}</h2>
             <h2 className="font-bold">
               I like to play{" "}
