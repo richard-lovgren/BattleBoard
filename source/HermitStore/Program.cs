@@ -253,13 +253,6 @@ app.MapPost("/competitions/join/{competition_id, user_id}", async (HermitDbConte
         return Results.NotFound();
     }
 
-    //var competitionUser = new CompetitionUser
-    //{
-    //    competition_id = competition_id,
-    //    user_id = user_id
-    //};
-
-    //dbContext.competition_user.Add(competitionUser);
     await dbContext.SaveChangesAsync();
 
     competition.participants++;
@@ -268,6 +261,28 @@ app.MapPost("/competitions/join/{competition_id, user_id}", async (HermitDbConte
     logger.LogInformation("User {UserId} joined competition {CompetitionId}", user_id, competition_id);
 
     return Results.Created($"/competitions/{competition.id}", competition);
+});
+
+app.MapGet("/games", async (HermitDbContext dbContext) =>
+{
+    var games = await dbContext.game.ToListAsync();
+    return games;
+});
+
+app.MapPost("/games", async (HermitDbContext dbContext, GameDto gameDto) =>
+{
+    var game = new Game
+    {
+        game_name = gameDto.game_name,
+        id = Guid.NewGuid()
+    };
+
+    dbContext.game.Add(game);
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("Game {GameId} created", game.id);
+
+    return Results.Created($"/communities/{game.id}", game);
 });
 
 
