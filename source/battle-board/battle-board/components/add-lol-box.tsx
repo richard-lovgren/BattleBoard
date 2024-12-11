@@ -8,7 +8,7 @@ export default function LolUsernameBox() {
 
     const [league_username, setUsername] = useState("");
     const [tagline, setTagline] = useState("");
-    const [lolUsername, setLolUsername] = useState<string | null>(null);
+    const [fullLolUsername, setFullLolUsername] = useState<string | null>(null);
     const [helpText, setHelpText] = useState("");
 
     const fetchUserLeagueData = async () => {
@@ -24,9 +24,9 @@ export default function LolUsernameBox() {
             if (user.league_puuid) {
                 const username = await getLolUsername(user.league_puuid);
                 console.log("Fetched username:", username);
-                setLolUsername(username || null);
+                setFullLolUsername(username || null);
             } else {
-                setLolUsername(null);
+                setFullLolUsername(null);
             }
         } catch (error) {
             console.error("Error in fetchUserLeagueData:", error);
@@ -49,7 +49,9 @@ export default function LolUsernameBox() {
             const puuid = await getPuuid(league_username, tagline);
             if (puuid) {
                 await updateUserLeaguePuuid(userId as string, puuid);
-                setLolUsername(league_username); // Update UI to reflect the new username
+                setFullLolUsername(league_username); // Update UI to reflect the new username
+                setUsername("");
+                setTagline("");
             }
             else {
                 setHelpText("Invalid username or tagline.");
@@ -62,7 +64,7 @@ export default function LolUsernameBox() {
         try {
             setHelpText("");
             await updateUserLeaguePuuid(userId as string, null);
-            setLolUsername(null);
+            setFullLolUsername(null);
         } catch (error) {
             console.error("Error in handleRemove:", error);
         }
@@ -72,10 +74,10 @@ export default function LolUsernameBox() {
 
     return (
         <div className="flex flex-col gap-4">
-            {lolUsername ? (
+            {fullLolUsername ? (
                 <div className="text-lg font-medium gap-4">
                     <div>
-                        LoL Username: <span className="text-purple-500">{lolUsername}</span>
+                        LoL Username: <span className="text-purple-500">{fullLolUsername}</span>
                     </div>
                     <button
                         className="px-4 py-2 bg-red-500 text-white rounded-md"
