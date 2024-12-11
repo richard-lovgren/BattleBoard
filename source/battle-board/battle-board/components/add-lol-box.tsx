@@ -9,6 +9,7 @@ export default function LolUsernameBox() {
     const [league_username, setUsername] = useState("");
     const [tagline, setTagline] = useState("");
     const [lolUsername, setLolUsername] = useState<string | null>(null);
+    const [helpText, setHelpText] = useState("");
 
     const fetchUserLeagueData = async () => {
         try {
@@ -50,12 +51,16 @@ export default function LolUsernameBox() {
                 await updateUserLeaguePuuid(userId as string, puuid);
                 setLolUsername(league_username); // Update UI to reflect the new username
             }
+            else {
+                setHelpText("Invalid username or tagline.");
+            }
         } catch (error) {
             console.error("Error in handleSubmit:", error);
         }
     };
     const handleRemove = async () => {
         try {
+            setHelpText("");
             await updateUserLeaguePuuid(userId as string, null);
             setLolUsername(null);
         } catch (error) {
@@ -68,8 +73,10 @@ export default function LolUsernameBox() {
     return (
         <div className="flex flex-col gap-4">
             {lolUsername ? (
-                <div className="text-lg font-medium">
-                    LoL Username: <span className="text-purple-500">{lolUsername}</span>
+                <div className="text-lg font-medium gap-4">
+                    <div>
+                        LoL Username: <span className="text-purple-500">{lolUsername}</span>
+                    </div>
                     <button
                         className="px-4 py-2 bg-red-500 text-white rounded-md"
                         onClick={handleRemove}
@@ -81,7 +88,7 @@ export default function LolUsernameBox() {
                 <div className="flex gap-2">
                     <input
                         type="text"
-                        placeholder="LOL Username#Tagline"
+                        placeholder="username#tagline"
                         className="px-4 py-2 border border-gray-300 rounded-md"
                         onChange={handleInputChange}
                     />
@@ -92,6 +99,9 @@ export default function LolUsernameBox() {
                     >
                         Submit
                     </button>
+                    <div className="text-sm text-red-500">
+                        {helpText}
+                    </div>
                 </div>
             )}
         </div>
@@ -110,7 +120,6 @@ async function getPuuid(league_username: string, tagline: string): Promise<strin
         const data: { puuid: string } = await response.json();
         return data.puuid;
     } catch (error) {
-        console.error("Failed to fetch PUUID:", error);
         return null;
     }
 }
@@ -127,7 +136,6 @@ async function getLolUsername(puuid: string): Promise<string | null> {
         const data = await response.json();
         return `${data.gameName}#${data.tagLine}`;
     } catch (error) {
-        console.error("Failed to fetch User:", error);
         return null;
     }
 }
