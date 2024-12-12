@@ -78,13 +78,13 @@ export default function CreateCompetition() {
           <div className='createGroupTwoCols'>
             <div className='createGroup'>
               <div className='text-5xl '>Title</div>
-              <div className='search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
+              <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
                 <input onChange={handleTitleChange} className=' text-3xl text-left w-full'></input>
               </div>
             </div>
             <div className='createGroup'>
               <div className='text-5xl'>Date</div>
-              <div className='search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
+              <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
                 <input className=' text-3xl text-left w-full'></input>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function CreateCompetition() {
 
           <div className='createGroup'>
               <div className='text-5xl '>Description</div>
-              <div className='search-bar flex items-center rounded-3xl border-solid border-[5px] h-[150px] w-[62vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
+              <div className='search-bar flex items-center rounded-3xl border-solid border-white border-[5px] h-[150px] w-[62vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
                 <input className=' text-3xl text-left w-full'></input>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function CreateCompetition() {
 
           <div className='createGroup'>
             <div className='text-5xl'>Choose game</div>
-            <div className='search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
+            <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
               <input className=' text-3xl text-left w-full'></input>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function CreateCompetition() {
             <div className='text-5xl'>Choose mode</div>
             
           <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
-            <div className="border-solid border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl  p-6 w-64">
+            <div className="border-solid border-white border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl  p-6 w-64">
               <h3 className="textshadow text-xl font-bold">Tournament</h3>
               <img
                 src="/tournament.svg"
@@ -130,7 +130,7 @@ export default function CreateCompetition() {
                 className="mt-4"
               />
             </div>
-            <div className="border-solid border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl  p-6 w-64">
+            <div className="border-solid border-white border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl  p-6 w-64">
               <h3 className="textshadow text-xl font-bold">Classic</h3>
               <img
                 src="/classic_mode_icon.svg"
@@ -138,7 +138,7 @@ export default function CreateCompetition() {
                 className="mt-4"
               />
             </div>
-            <div className="border-solid border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl  p-6 w-64">
+            <div className="border-solid border-white border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl  p-6 w-64">
               <h3 className="textshadow text-xl font-bold">Rival</h3>
               <img
                 src="/rival_mode_icon.svg"
@@ -150,7 +150,7 @@ export default function CreateCompetition() {
           </div>
           <div className='createGroup'>
             <div className='text-5xl'>Invite players</div>
-            <div className='search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
+            <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
               <input className=' text-3xl text-left w-full'></input>
             </div>
           </div>
