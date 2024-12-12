@@ -1,6 +1,5 @@
 "use client"
 import SearchBar from "@/components/search/search-bar";
-import "./search-module.css";
 import SearchToggleButton from "@/components/search/search-toggle-btn";
 import CompetitonSearchItem from "@/components/search/competition-search-item";
 import CommunitySearchItem from "@/components/search/community-search-item";
@@ -162,7 +161,7 @@ export default function Search() {
             <div className="text-10xl">Search</div>
 
             <div className="flex items-center mt-10 h-8">
-              <div className="competitons-text text-3xl mr-5 font-nunito font-semibold ">
+              <div className="textshadow text-3xl mr-5 font-nunito font-semibold ">
                 {toggleCompetitions ? 'Competitions' : 'Communities'}
               </div> 
               <SearchToggleButton {...buttonData}/>
