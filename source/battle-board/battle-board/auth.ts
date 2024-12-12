@@ -8,6 +8,7 @@ declare module "next-auth" {
 
   interface Session {
     user: {
+      id: string;
       name?: string | null;
       email?: string | null;
       image?: string | null;
@@ -115,7 +116,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     jwt({ token, user, profile }) {
       if (user) {
-        token.name = user.name; // Ensure the username is set in the JWT
+        token.id = profile?.id as string;
+        token.name = user.name;
         token.picture = user.image;
         token.email = user.email;
         token.display_name = profile?.global_name ?? user.name; // Include display_name
@@ -128,6 +130,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session({ session, token }) {
       session.user = {
         ...session.user,
+        id: token.id as string, // Include the user ID in the session
         name: token.name, // Map the name from the token to the session
         display_name: token.display_name as string | undefined, // Include display_name in the session
         image: token.picture,
