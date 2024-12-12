@@ -7,9 +7,10 @@ import Image from "next/image";
 export default function LoginBtn() {
   const { data: session } = useSession();
 
-  const { country, error } = useCountryLocaleFlag(
+  const { data, error } = useCountryLocaleFlag(
     "https://flagsapi.com/BE/flat/64.png",
   );
+  console.log("Error:", error); // Log the error to debug
 
   console.log("Session Data:", session?.user.name); // Log the session data to debug
 
@@ -34,7 +35,7 @@ export default function LoginBtn() {
               <h1 className="text-4xl font-bold font-odibee my-2">
                 {session.user.name}
               </h1>
-              <h3 className="">{country}</h3>
+              <h3 className="">{data}</h3>
             </div>
             <h2 className="font-bold">{session.user.display_name}</h2>
             <h2 className="font-bold">
