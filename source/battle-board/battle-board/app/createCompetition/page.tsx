@@ -1,24 +1,24 @@
 "use client"
 
-import { useState } from 'react';
+//import { useState } from 'react';
 import CompetitionDto from '@/models/dtos/competition-dto';
 import './createCompetition.css'
 
 export default function CreateCompetition() {
 
-  const competition : CompetitionDto = {
-    competition_name: "Test use state",
-    competition_description: "test desc",
-    competition_type: 1,
-    format: 1,
-    is_open: true,
-    is_running: true,
-    game_id: "8ffdbc35-84ab-4e3b-8743-789a59939e59",
-    rank_alg: 1,
-    is_public: true,
-  };
+  // const competition : CompetitionDto = {
+  //   competition_name: "Test use state",
+  //   competition_description: "test desc",
+  //   competition_type: 1,
+  //   format: 1,
+  //   is_open: true,
+  //   is_running: true,
+  //   game_id: "8ffdbc35-84ab-4e3b-8743-789a59939e59",
+  //   rank_alg: 1,
+  //   is_public: true,
+  // };
 
-  const [newCompetition, setNewCompetition] = useState<CompetitionDto | null>(null);
+  //const [newCompetition, setNewCompetition] = useState<CompetitionDto | null>(null);
 
   // const updateNewCompetitionState = async () => {
   //   setNewCompetition(competition);
