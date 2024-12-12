@@ -2,6 +2,8 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import Image from "next/image";
 
 export default function LoginBtn() {
   const { data: session } = useSession();
@@ -13,32 +15,28 @@ export default function LoginBtn() {
       <Link href={`/user/${session.user.name}`}>
         <div className="flex items-center space-x-4">
           {session.user.image && (
-            <img
+            <Image
               src={session.user.image}
               alt={session.user.name || "Profile Picture"}
               className="w-8 h-8 rounded-full"
+              height={32}
+              width={32}
             />
           )}
           <p className="text-sm">
             Welcome, {session.user.display_name || "User"}
           </p>
-          <button
-            className=" text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition hover:border-transparent  "
-            onClick={() => signOut()}
-          >
+          <Button variant="outline" size="lg" onClick={() => signOut()}>
             Logout
-          </button>
+          </Button>
         </div>
       </Link>
     );
   }
 
   return (
-    <button
-      className="text-white py-2 px-4 rounded-xl border-foreground border-2 hover:bg-white hover:text-[#0b0320] transition hover:border-transparent "
-      onClick={() => signIn("discord")}
-    >
+    <Button variant="outline" size="lg" onClick={() => signIn("discord")}>
       Login
-    </button>
+    </Button>
   );
 }

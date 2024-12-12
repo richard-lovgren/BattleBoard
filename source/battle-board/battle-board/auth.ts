@@ -13,6 +13,9 @@ declare module "next-auth" {
       email?: string | null;
       image?: string | null;
       display_name?: string | null; // Add display_name to Session type
+
+      // Adding locale to the session
+      locale?: string | null;
     };
   }
 
@@ -34,6 +37,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           image: profile.avatar
             ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
             : null,
+
+          // Adding locale to the user object
+          locale: profile.locale,
         };
       },
     }),
@@ -50,6 +56,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           discord_id: profile.id,
           user_name: profile.username,
           display_name: profile.global_name,
+
+          // Adding locale to the user object
+          locale: profile.locale,
         };
 
         console.log("User DTO:", userDto);
@@ -112,6 +121,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.picture = user.image;
         token.email = user.email;
         token.display_name = profile?.global_name ?? user.name; // Include display_name
+
+        // Adding locale to the JWT
+        token.locale = profile?.locale;
       }
       return token;
     },
@@ -123,6 +135,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         display_name: token.display_name as string | undefined, // Include display_name in the session
         image: token.picture,
         email: token.email ?? "",
+
+        // Adding locale to the session
+        locale: token.locale as string | undefined,
       };
       return session;
     },
