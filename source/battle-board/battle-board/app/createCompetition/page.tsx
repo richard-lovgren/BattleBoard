@@ -20,10 +20,10 @@ export default function CreateCompetition() {
 
   const [newCompetition, setNewCompetition] = useState<CompetitionDto | null>(null);
 
-  const updateNewCompetitionState = async () => {
-    setNewCompetition(competition);
-    console.log(newCompetition);
-  }
+  // const updateNewCompetitionState = async () => {
+  //   setNewCompetition(competition);
+  //   console.log(newCompetition);
+  // }
 
   const handleTitleChange = async () => {
 
@@ -79,7 +79,7 @@ export default function CreateCompetition() {
             <div className='createGroup'>
               <div className='text-5xl '>Title</div>
               <div className='search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
-                <input onChange={handleTitleChange()} className=' text-3xl text-left w-full'></input>
+                <input onChange={handleTitleChange} className=' text-3xl text-left w-full'></input>
               </div>
             </div>
             <div className='createGroup'>

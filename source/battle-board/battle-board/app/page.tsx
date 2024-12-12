@@ -25,7 +25,7 @@ export default function Home() {
               <h3 className="textshadow text-xl font-bold">Communities</h3>
               <p className="mt-2 mb-4 text-gray-300">
                 Create your own community or join exsisting ones.
-                Already part of community in discord? In that case you're already all set up!
+                Already part of community in discord? In that case you are already all set up!
               </p>
               <Link href="/createCommunity"><GeneralButton text="Create community"/></Link>
             </div>
