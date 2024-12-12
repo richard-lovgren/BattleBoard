@@ -68,6 +68,9 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --purple-light: #765DEA;
+    --purple-lighter: #856BF9;
   }
 }
 
@@ -102,3 +105,35 @@ input {
 .font-outfit {
   font-family: var(--font-outfit);
 }
+
+.h1{
+  display: flex;
+  font-size: 6rem; /* text-8xl in Tailwind */
+  font-family: 'Odibee Sans', sans-serif;
+  color: white;
+}
+
+.h2{
+  display: flex;
+  font-size: 4rem; /* text-8xl in Tailwind */
+  font-family: var(--font-odibee-sans);
+  color: white;
+}
+
+
+.h3{
+  display: flex;
+  font-size: 2rem; /* text-8xl in Tailwind */
+  font-family: var(--font-odibee-sans);
+  color: white;
+}
+
+.breadText{
+  display: flex;
+  font-size: 1rem; /* text-8xl in Tailwind */
+  font-family: var(--font-outfit);
+
+  color: white;
+}
+
+
