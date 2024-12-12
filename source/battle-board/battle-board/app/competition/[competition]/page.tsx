@@ -1,6 +1,7 @@
 //A default export react NextJS server side rendered page component.
 
 import Image from "next/image";
+import ClassicMode from "@/components/competitionModes/ClassicMode";
 
 export default function CompetitionPage() {
   const competition = {
@@ -60,6 +61,11 @@ export default function CompetitionPage() {
             </h1>
           </div>
         </div>
+
+      </div>
+      <div>
+        <ClassicMode />
+
       </div>
     </div>
   );
