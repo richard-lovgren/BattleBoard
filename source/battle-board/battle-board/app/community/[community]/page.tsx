@@ -1,10 +1,17 @@
 // app/community/[communityId]/page.tsx
 import Image from "next/image";
+import { GetServerSideProps } from 'next';
+
 
 interface CommunityData {
   community_name: string;
   community_id: string;
   community_image: string;
+}
+interface CommunityPageProps {
+  params: {
+    community: string;
+  };
 }
 
 const baseUrl = "http://localhost:3000";
@@ -24,7 +31,7 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
 }
 
 // Server component
-const CommunityPage = async ({ params }: { params: { community: string } }) => {
+const CommunityPage = async ({ params }: CommunityPageProps) => {
   // Extract community ID from the URL
   const { community } = params;
 

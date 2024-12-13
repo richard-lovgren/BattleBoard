@@ -1,6 +1,7 @@
 // app/community/[communityId]/page.tsx
 
 import UserPageBanner from "@/components/UserPageBanner";
+import CommunitiesList from "@/components/CommunitiesList"
 
 import CommunitiesList from "@/components/CommunitiesList";
 
@@ -14,15 +15,9 @@ interface CommunityData {
 
 interface UserPageParams {
 	params: {
-		user_id: string;
+		user_id: Number;
 	};
 }
-
-
-
-
-
-
 
 interface UserData {
 	id: string;
@@ -34,11 +29,11 @@ interface UserData {
 
 const baseUrl = "http://localhost:3000";
 
-async function fetchUserData(user_id: string): Promise<UserData> {
+async function fetchUserData(discord_id: Number): Promise<UserData> {
 	// Example API endpoint; replace with your actual API request
 	//console.log("Inside fetch community data: ", communityId);
 	const response = await fetch(
-		`${baseUrl}/api/users?userId=${user_id}`,
+		`${baseUrl}/api/users?userId=${discord_id}`,
 	);
 	if (!response.ok) {
 		return { id: "", discord_id: 0, user_name: "", display_name: "", league_puuid: "" };
@@ -67,21 +62,20 @@ async function fetchUserCommunitiesData(user_name: string): Promise<CommunityDat
 
 
 // Server component
-const UserPage: React.FC<UserPageParams> = async ({ params }: { params: { user_id: string } }) => {
+const UserPage: React.FC<UserPageParams> = async ({ params }: { params: { user_id: Number } }) => {
 	// Extract community ID from the URL
-	const { user_id } = params;
+	const { user_id } = await params;
+	const discord_id = await user_id;
+	console.log("USER ID", discord_id);
 
 	// Fetch user data from the API
-	const userDataHeader = await fetchUserData(user_id);
+	const userDataHeader = await fetchUserData(discord_id);
+
+	const userCommunitiesData = await fetchUserCommunitiesData(userDataHeader.user_name);
 
 	const userCommunitiesData = await fetchUserCommunitiesData(userDataHeader.user_name);
 
 	console.log("User Communities Data: ", userCommunitiesData);
-
-
-
-
-
 
 	return (
 
