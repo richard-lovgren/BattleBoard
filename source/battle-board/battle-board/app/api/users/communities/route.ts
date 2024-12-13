@@ -6,8 +6,8 @@ console.log("HELLO");
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-    const url = `${db_conn_str}/user/${userId}/communities`;
+    const user_name = searchParams.get("user_name");
+    const url = `${db_conn_str}/users/${user_name}/communities`;
     console.log("URL: ", url);
     const response = await fetch(url, {
       method: "GET",

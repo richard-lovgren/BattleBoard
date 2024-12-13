@@ -2,10 +2,12 @@
 
 import UserPageBanner from "@/components/UserPageBanner";
 
+import CommunitiesList from "@/components/CommunitiesList";
+
+
+
 interface CommunityData {
-	community_name: string;
 	community_id: string;
-	community_image: string;
 }
 
 
@@ -47,14 +49,14 @@ async function fetchUserData(user_id: string): Promise<UserData> {
 
 
 
-async function fetchUserCommunitiesData(user_id: string): Promise<CommunityData> {
-	console.log("Inside fetch user communities data RELEVANT: ", user_id);
+async function fetchUserCommunitiesData(user_name: string): Promise<CommunityData> {
+	console.log("Inside fetch user communities data RELEVANT: ", user_name);
 	const response = await fetch(
-		`${baseUrl}/api/users/communities?userId=${user_id}`, // Correct URL
+		`${baseUrl}/api/users/communities?user_name=${user_name}`, // Correct URL
 	);
 	if (!response.ok) {
 		console.log("Response.ok: ", response.ok);
-		return { community_name: "", community_id: "", community_image: "" };
+		return { community_id: "" };
 	}
 	return response.json();
 }
@@ -72,7 +74,7 @@ const UserPage: React.FC<UserPageParams> = async ({ params }: { params: { user_i
 	// Fetch user data from the API
 	const userDataHeader = await fetchUserData(user_id);
 
-	const userCommunitiesData = await fetchUserCommunitiesData(userDataHeader.id);
+	const userCommunitiesData = await fetchUserCommunitiesData(userDataHeader.user_name);
 
 	console.log("User Communities Data: ", userCommunitiesData);
 
@@ -82,7 +84,25 @@ const UserPage: React.FC<UserPageParams> = async ({ params }: { params: { user_i
 
 
 	return (
-		<UserPageBanner id={userDataHeader.id} discord_id={userDataHeader.discord_id} user_name={userDataHeader.user_name} display_name={userDataHeader.display_name} league_puuid={userDataHeader.league_puuid}></UserPageBanner>
+
+		<div className="min-h-screen w-full flex flex-col">
+
+
+			<UserPageBanner id={userDataHeader.id} discord_id={userDataHeader.discord_id} user_name={userDataHeader.user_name} display_name={userDataHeader.display_name} league_puuid={userDataHeader.league_puuid}></UserPageBanner>
+
+			<div className="bg-white flex  flex-col items-start px-10">
+
+
+
+				<CommunitiesList ids={["1", "2", "3", "44"]}></CommunitiesList>
+
+			</div>
+
+
+
+		</div>
+
+
 	);
 };
 

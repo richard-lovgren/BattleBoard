@@ -23,7 +23,7 @@ const UserPageBanner: React.FC<UserProps> = ({ id, discord_id, user_name, displa
   );
   if (session?.user) {
     return (
-      <main className="  text-white min-h-screen flex flex-col items-center px-2 py-2 font-nunito ">
+      <main className="  text-white flex flex-col items-center px-2 py-2 font-nunito ">
         <div className="bg-slate-500 flex flex-row w-full px-10 py-10 gap-4 bg-transparent  ">
           <div className="relative inline-block">
             <Image

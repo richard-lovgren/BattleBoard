@@ -116,7 +116,7 @@ app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto us
 Get competions that a user has joined
 Need to query get competitions to get more info about them
 */
-app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+app.MapGet("/user/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
 {
     try
     {
@@ -141,7 +141,7 @@ app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, Guid id
 Get communities that a user has joined
 Need to query get communities to get more info about them
 */
-app.MapGet("/user/{id}/communities", async (HermitDbContext dbContext, Guid id) =>
+app.MapGet("/users/{id}/communities", async (HermitDbContext dbContext, Guid id) =>
 {
     // return await dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
     try
@@ -149,7 +149,7 @@ app.MapGet("/user/{id}/communities", async (HermitDbContext dbContext, Guid id) 
         var user = await dbContext.users.FindAsync(id);
         if (user != null)
         {
-            var communityIds = dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
+            var communityIds = await dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
             return Results.Ok(communityIds);
         }
         else
