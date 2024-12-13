@@ -61,11 +61,9 @@ export default function CompetitionPage() {
             </h1>
           </div>
         </div>
-
       </div>
       <div>
         <ClassicMode />
-
       </div>
     </div>
   );
