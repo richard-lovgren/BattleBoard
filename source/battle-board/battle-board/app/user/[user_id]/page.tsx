@@ -3,7 +3,6 @@
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList"
 
-import CommunitiesList from "@/components/CommunitiesList";
 
 
 
@@ -73,7 +72,6 @@ const UserPage: React.FC<UserPageParams> = async ({ params }: { params: { user_i
 
 	const userCommunitiesData = await fetchUserCommunitiesData(userDataHeader.user_name);
 
-	const userCommunitiesData = await fetchUserCommunitiesData(userDataHeader.user_name);
 
 	console.log("User Communities Data: ", userCommunitiesData);
 
