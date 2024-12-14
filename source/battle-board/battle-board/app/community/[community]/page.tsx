@@ -1,6 +1,5 @@
 // app/community/[communityId]/page.tsx
 import Image from "next/image";
-import { GetServerSideProps } from 'next';
 
 
 interface CommunityData {
@@ -37,12 +36,6 @@ const CommunityPage = async ({ params }: CommunityPageProps) => {
 
   // Fetch community data from the API
   const communityDataHeader = await fetchCommunityData(community);
-
-  const community_Date = {
-    name: "Community name",
-    description:
-      "lorem ipsum sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
-  };
 
   return (
     <div className="w-full h-full  flex flex-col gap-4 items-center">
