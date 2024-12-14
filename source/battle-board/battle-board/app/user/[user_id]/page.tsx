@@ -8,11 +8,7 @@ interface CommunityData {
   community_name: string;
 }
 
-interface UserPageParams {
-  params: {
-    user_id: number;
-  };
-}
+type UserPageProps = Promise<{ discord_id: number }>;
 
 interface UserData {
   id: string;
@@ -55,14 +51,9 @@ async function fetchUserCommunitiesData(
 }
 
 // Server component
-const UserPage: React.FC<UserPageParams> = async ({
-  params,
-}: {
-  params: { user_id: number };
-}) => {
+const UserPage = async (props: { params: UserPageProps }) => {
   // Extract community ID from the URL
-  const { user_id } = await params;
-  const discord_id = await user_id;
+  const discord_id  = (await props.params).discord_id;
   console.log("USER ID", discord_id);
 
   // Fetch user data from the API

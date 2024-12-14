@@ -7,11 +7,7 @@ interface CommunityData {
   community_id: string;
   community_image: string;
 }
-interface CommunityPageProps {
-  params: {
-    community: string;
-  };
-}
+type CommunityPageProps = Promise<{ community: string }>;
 
 const baseUrl = "http://localhost:3000";
 
@@ -30,9 +26,10 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
 }
 
 // Server component
-const CommunityPage = async ({ params }: CommunityPageProps) => {
+const CommunityPage = async (props: { params: CommunityPageProps }) => {
   // Extract community ID from the URL
-  const { community } = params;
+  const params = await props.params;
+  const community = params.community;
 
   // Fetch community data from the API
   const communityDataHeader = await fetchCommunityData(community);
