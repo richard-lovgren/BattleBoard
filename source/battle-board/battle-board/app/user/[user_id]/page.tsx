@@ -8,7 +8,7 @@ interface CommunityData {
   community_name: string;
 }
 
-type UserPageProps = Promise<{ discord_id: number }>;
+type UserPageProps = Promise<{ user_id: number }>;
 
 interface UserData {
   id: string;
@@ -22,7 +22,6 @@ const baseUrl = "http://localhost:3000";
 
 async function fetchUserData(discord_id: number): Promise<UserData> {
   // Example API endpoint; replace with your actual API request
-  //console.log("Inside fetch community data: ", communityId);
   const response = await fetch(`${baseUrl}/api/users?userId=${discord_id}`);
   if (!response.ok) {
     return {
@@ -39,12 +38,10 @@ async function fetchUserData(discord_id: number): Promise<UserData> {
 async function fetchUserCommunitiesData(
   user_name: string
 ): Promise<CommunityData> {
-  console.log("Inside fetch user communities data RELEVANT: ", user_name);
   const response = await fetch(
     `${baseUrl}/api/users/communities?user_name=${user_name}` // Correct URL
   );
   if (!response.ok) {
-    console.log("Response.ok: ", response.ok);
     return { community_id: "", community_name: "" };
   }
   return response.json();
@@ -53,7 +50,7 @@ async function fetchUserCommunitiesData(
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
   // Extract community ID from the URL
-  const discord_id  = (await props.params).discord_id;
+  const discord_id = (await props.params).user_id;
   console.log("USER ID", discord_id);
 
   // Fetch user data from the API
