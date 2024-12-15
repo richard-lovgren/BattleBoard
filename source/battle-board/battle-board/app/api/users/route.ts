@@ -5,7 +5,15 @@ export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const userId = searchParams.get("userId");
-        const url = `${db_conn_str}/users/${userId}`;
+        let url: string;
+
+        if(userId == null) {
+            url = `${db_conn_str}/users`
+        } else {
+            url = `${db_conn_str}/users/${userId}`;
+        }
+
+        
         const response = await fetch(
             url,
             {
