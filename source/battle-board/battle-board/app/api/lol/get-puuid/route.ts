@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
 
     try {
         const riotApiKey = process.env.RIOT_API_KEY;
+        if (!riotApiKey) return NextResponse.json({ message: "Missing Riot API key" }, { status: 500 });
         const response = await fetch(
             `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(
                 username
