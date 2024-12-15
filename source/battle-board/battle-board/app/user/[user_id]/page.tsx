@@ -81,8 +81,8 @@ const UserPage = async (props: { params: UserPageProps }) => {
         display_name={userDataHeader.display_name}
         league_puuid={userDataHeader.league_puuid}
       ></UserPageBanner>
-
-      <div className="bg-white flex  flex-col items-start px-10">
+      <div className=" flex  flex-col items-start px-48">
+        <h1 className="text-2xl font-semibold text-accent">Communities:</h1>
         <CommunitiesList communities={userCommunitiesMap}></CommunitiesList>
       </div>
     </div>
