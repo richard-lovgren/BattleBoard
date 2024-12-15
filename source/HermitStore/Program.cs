@@ -149,8 +149,8 @@ app.MapGet("/users/{user_name}/communities", async (HermitDbContext dbContext, s
         {
             var communityIds = await dbContext.user_community.Where(x => x.user_name == user_name).Select(x => x.community_id).ToListAsync();
             var communityNames = await dbContext.community.Where(x => communityIds.Contains(x.id)).Select(x => x.community_name).ToListAsync();
-            var communityIdsAndNames = new Dictionary<Guid, string>();
-            
+            var communityIdsAndNames = new Dictionary<ulong, string>();
+
             if (communityIds.Count != communityNames.Count)
             {
                 return Results.Problem("Failed to get communities");
@@ -207,7 +207,7 @@ app.MapGet("/communities", async (HermitDbContext dbContext) =>
     return communities;
 });
 
-app.MapGet("/communities/{id}", async (HermitDbContext dbContext, Guid id) =>
+app.MapGet("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
 {
     var community = await dbContext.community.FindAsync(id);
     if (community == null)
@@ -229,7 +229,7 @@ app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto commu
     {
         community_name = communityDto.community_name,
         community_image = communityDto.community_image,
-        id = Guid.NewGuid(),
+        id = communityDto.id,
         created_at = DateTime.Now.ToUniversalTime(),
     };
 
@@ -241,7 +241,23 @@ app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto commu
     return Results.Created($"/communities/{community.id}", community);
 });
 
-app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, Guid id) =>
+app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
+{
+    var community = await dbContext.community.Where(x => x.id == id).FirstOrDefaultAsync();
+    if (community == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.community.Remove(community);
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("Community {CommunityId} deleted", community.id);
+
+    return Results.Ok();
+});
+
+app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
 {
     var userCommunity = new UserCommunity
     {

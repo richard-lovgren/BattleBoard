@@ -37,10 +37,11 @@ namespace HermitStore
     {
         public required string community_name { get; set; }
         public string? community_image { get; set; }
+
+        public required ulong id { get; set; }
     }
     public class Community : CommunityDto
     {
-        public required Guid id { get; set; }
         public required DateTime created_at { get; set; }
     }
     public class UserCommunityDto
@@ -50,7 +51,7 @@ namespace HermitStore
     public class UserCommunity : UserCommunityDto
     {
         public required Guid id { get; set; }
-        public required Guid community_id { get; set; }
+        public required ulong community_id { get; set; }
     }
     public class GameDto
     {

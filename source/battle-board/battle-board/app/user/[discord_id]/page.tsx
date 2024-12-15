@@ -1,4 +1,3 @@
-// app/community/[communityId]/page.tsx
 
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
@@ -53,7 +52,7 @@ async function fetchUserCommunitiesData(
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
   // Extract community ID from the URL
-  const discord_id  = (await props.params).discord_id;
+  const { discord_id }  = await props.params;
   console.log("USER ID", discord_id);
 
   // Fetch user data from the API
