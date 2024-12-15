@@ -1,5 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
-//Gets an array of match data for a given user puuid. Metadata as described in the Riot API documentation: https://developer.riotgames.com/apis#match-v5/GET_getMatch
+type RawMatchData = {
+    metadata: {
+        matchId: string;
+        participants: string[];
+        [key: string]: any;
+    };
+    info: {
+        participants: any[];
+        [key: string]: any;
+    };
+};
+
+type FilteredParticipant = {
+    summonerName: string;
+    summonerId: string;
+    championName: string;
+    championId: number;
+    teamId: number;
+    kills: number;
+    deaths: number;
+    assists: number;
+    totalDamageDealtToChampions: number;
+    totalDamageTaken: number;
+    goldEarned: number;
+    items: number[];
+    summonerSpells: number[];
+    win: boolean;
+};
+
+type FilteredMatchData = {
+    matchId: string;
+    participants: FilteredParticipant[];
+};
+
+function filterMatchData(rawData: RawMatchData): FilteredMatchData {
+    const { metadata, info } = rawData;
+    const matchId = metadata.matchId;
+
+    const filteredParticipants: FilteredParticipant[] = info.participants.map((p: any) => {
+        return {
+            summonerName: p.summonerName,
+            summonerId: p.summonerId,
+            championName: p.championName,
+            championId: p.championId,
+            teamId: p.teamId,
+            kills: p.kills,
+            deaths: p.deaths,
+            assists: p.assists,
+            totalDamageDealtToChampions: p.totalDamageDealtToChampions,
+            totalDamageTaken: p.totalDamageTaken,
+            goldEarned: p.goldEarned,
+            items: [
+                p.item0,
+                p.item1,
+                p.item2,
+                p.item3,
+                p.item4,
+                p.item5,
+            ].filter((item: number) => item !== 0),
+            summonerSpells: [p.summoner1Id, p.summoner2Id],
+            win: p.win,
+        };
+    });
+
+    return {
+        matchId,
+        participants: filteredParticipants,
+    };
+}
+//Gets an array of match data for a given user puuid.
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const puuid = searchParams.get("puuid");
@@ -44,7 +113,8 @@ export async function GET(req: NextRequest) {
                 return NextResponse.json({ message: errorData.message }, { status: matchResponse.status });
             }
 
-            const matchData = await matchResponse.json();
+            const rawData = await matchResponse.json();
+            const matchData = filterMatchData(rawData);
             matches.push(matchData);
         }
         return NextResponse.json(matches);
