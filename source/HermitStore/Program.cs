@@ -148,7 +148,20 @@ app.MapGet("/users/{user_name}/communities", async (HermitDbContext dbContext, s
         if (user != null)
         {
             var communityIds = await dbContext.user_community.Where(x => x.user_name == user_name).Select(x => x.community_id).ToListAsync();
-            return Results.Ok(communityIds);
+            var communityNames = await dbContext.community.Where(x => communityIds.Contains(x.id)).Select(x => x.community_name).ToListAsync();
+            var communityIdsAndNames = new Dictionary<Guid, string>();
+            
+            if (communityIds.Count != communityNames.Count)
+            {
+                return Results.Problem("Failed to get communities");
+            }
+
+            for (int i = 0; i < communityIds.Count; i++)
+            {
+                communityIdsAndNames.Add(communityIds[i], communityNames[i]);
+            }
+
+            return Results.Ok(communityIdsAndNames);
         }
         else
         {
