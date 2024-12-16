@@ -90,7 +90,7 @@ namespace HermitStore
     }
     public class UserCompetitionDto
     {
-        public required Guid user_id { get; set; }
+        public required ulong discord_id { get; set; }
         public required Guid competition_id { get; set; }
     }
     public class UserCompetition : UserCompetitionDto
@@ -123,7 +123,7 @@ namespace HermitStore
     }
     public class MatchUserDto
     {
-        public required Guid user_id { get; set; }
+        public required ulong discord_id { get; set; }
         public required Guid match_id { get; set; }
     }
     public class MatchUser : MatchUserDto

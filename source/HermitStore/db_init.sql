@@ -37,6 +37,8 @@ CREATE TABLE user_community (
     community_id bigserial REFERENCES community(id) ON DELETE CASCADE
 );
 
+
+
 -- Competition table
 CREATE TABLE competition (
     id UUID PRIMARY KEY,
