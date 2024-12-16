@@ -9,16 +9,23 @@ Console.WriteLine($"Connection String: {connectionString}");
 
 // Add services before building
 builder.Services.AddDbContext<HermitDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddOpenApi("skibidi");
+builder.Services.AddOpenApi("API Reference");
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.MapOpenApi();
 
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/openapi/API Reference.json", "HermitStore API");
+    options.RoutePrefix = "ref";
+});
+
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Hello World!").Produces<string>(StatusCodes.Status200OK);
 
 app.MapUserEndpoints();
 
@@ -26,7 +33,7 @@ app.MapGet("/communities", async (HermitDbContext dbContext) =>
 {
     var communities = await dbContext.community.ToListAsync();
     return communities;
-});
+}).Produces<List<Community>>(StatusCodes.Status200OK).WithDescription("Get all communities");
 
 app.MapGet("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
 {
@@ -39,7 +46,7 @@ app.MapGet("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
     logger.LogInformation("Community {CommunityId} found", community.id);
 
     return Results.Ok(community);
-});
+}).Produces<Community>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Get a community by ID");
 
 app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto communityDto) =>
 {
@@ -60,7 +67,7 @@ app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto commu
     logger.LogInformation("Community {CommunityId} created", community.id);
 
     return Results.Created($"/communities/{community.id}", community);
-});
+}).Produces<Community>(StatusCodes.Status201Created).WithDescription("Create a new community");
 
 app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
 {
@@ -76,7 +83,7 @@ app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =
     logger.LogInformation("Community {CommunityId} deleted", community.id);
 
     return Results.Ok();
-});
+}).Produces(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Delete a community by ID");
 
 app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
 {
@@ -93,7 +100,7 @@ app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCom
     logger.LogInformation("User: {UserName}:{UserId} joined community {CommunityId}", userCommunity.user_name, userCommunity.id, id);
 
     return Results.Created();
-});
+}).Produces(StatusCodes.Status201Created).WithDescription("Join a community");
 
 app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, ulong id) =>
 {
@@ -105,13 +112,13 @@ app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, u
 
     var competitionIds = await dbContext.competition.Where(x => x.community_id == id).Select(x => x.id).ToListAsync();
     return Results.Ok(competitionIds);
-});
+}).Produces<List<Guid>>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Get all competitions for a community");
 
 app.MapGet("/competitions", async (HermitDbContext dbContext) =>
 {
     var competitions = await dbContext.competition.ToListAsync();
     return competitions;
-});
+}).Produces<List<Competition>>(StatusCodes.Status200OK).WithDescription("Get all competitions");
 
 app.MapGet("/competitions/{id}", async (HermitDbContext dbContext, Guid id) =>
 {
@@ -124,7 +131,7 @@ app.MapGet("/competitions/{id}", async (HermitDbContext dbContext, Guid id) =>
     logger.LogInformation("Competition {CompetitionId} found", competition.id);
 
     return Results.Ok(competition);
-});
+}).Produces<Competition>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Get a competition by ID");
 
 app.MapPost("/competitions", async (HermitDbContext dbContext, CompetitionDto competitionDto) =>
 {
@@ -140,7 +147,7 @@ app.MapPost("/competitions", async (HermitDbContext dbContext, CompetitionDto co
         game_id = competitionDto.game_id,
         rank_alg = competitionDto.rank_alg,
         participants = 0,
-        community_id = competitionDto.community_id 
+        community_id = competitionDto.community_id
     };
 
     dbContext.competition.Add(competition);
@@ -149,7 +156,7 @@ app.MapPost("/competitions", async (HermitDbContext dbContext, CompetitionDto co
     logger.LogInformation("Competition {CompetitionId} created", competition.id);
 
     return Results.Created($"/competitions/{competition.id}", competition);
-});
+}).Produces<Competition>(StatusCodes.Status201Created).WithDescription("Create a new competition");
 
 app.MapPost("/competitions/join", async (HermitDbContext dbContext, UserCompetitionDto userCompetitionDto) =>
 {
@@ -184,26 +191,13 @@ app.MapPost("/competitions/join", async (HermitDbContext dbContext, UserCompetit
     logger.LogInformation("User {userName} joined competition {competitionId}", user_name, competition_id);
 
     return Results.Created();
-});
-
-/*
-app.MapGet("/users/{user_name}/competitions", async (HermitDbContext dbContext, string user_name) =>
-{
-    var user = await dbContext.users.Where(x => x.user_name == user_name).FirstOrDefaultAsync();
-    if (user == null)
-    {
-        return Results.NotFound();
-    }
-
-    var competitionIds = await dbContext.user_competition.Where(x => x.user_name == user_name).Select(x => x.competition_id).ToListAsync();
-    return Results.Ok(competitionIds);
-}); */
+}).Produces(StatusCodes.Status201Created).Produces(StatusCodes.Status404NotFound).WithDescription("Join a competition");
 
 app.MapGet("/games", async (HermitDbContext dbContext) =>
 {
     var games = await dbContext.game.ToListAsync();
-    return games;
-});
+    return Results.Ok(games);
+}).Produces<List<Game>>(StatusCodes.Status200OK).WithDescription("Get all games");
 
 app.MapPost("/games", async (HermitDbContext dbContext, GameDto gameDto) =>
 {
@@ -219,7 +213,7 @@ app.MapPost("/games", async (HermitDbContext dbContext, GameDto gameDto) =>
     logger.LogInformation("Game {GameId} created", game.id);
 
     return Results.Created($"/communities/{game.id}", game);
-});
+}).Produces<Game>(StatusCodes.Status201Created).WithDescription("Create a new game");
 
 
 
