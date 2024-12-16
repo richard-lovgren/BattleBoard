@@ -2,16 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
 
 export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-    const url = `${db_conn_str}/users/${userId}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+        const { searchParams } = new URL(req.url);
+        const userId = searchParams.get("userId");
+        let url: string;
+
+        if(userId == null) {
+            url = `${db_conn_str}/users`
+        } else {
+            url = `${db_conn_str}/users/${userId}`;
+        }
+
+        
+        const response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
     if (!response.ok) {
       const errorData = response;
