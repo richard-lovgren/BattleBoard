@@ -1,6 +1,10 @@
 // app/community/[communityId]/page.tsx
 import Image from "next/image";
 
+import CommunityMembersList from "@/components/CommunityMembersList";
+
+
+
 
 interface CommunityData {
   community_name: string;
@@ -14,8 +18,6 @@ const baseUrl = "http://localhost:3000";
 // Fetch community data directly inside the server component
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   // Example API endpoint; replace with your actual API request
-  //console.log("Inside fetch community data: ", communityId);
-  console.log("Inside fetch community data: ", communityId);
   const response = await fetch(
     `${baseUrl}/api/community?communityId=${communityId}`,
   );
@@ -47,16 +49,24 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
           ></Image>
           <div className="absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black"></div>
         </div>
-
         <div className="flex flex-col gap-4  h-full pl-12 pr-36 flex-grow   self-center py-0 bg-transparent">
           <h1 className="flex text-8xl font-odibee text-white">
             {communityDataHeader.community_name}
           </h1>
-
         </div>
+      </div>
+
+      <div className=" text-accent w-full flex text-6xl flex-row justify-end px-10">
+
+
+        <CommunityMembersList community_id="101010"></ CommunityMembersList>
+
+
 
 
       </div>
+
+
     </div>
   );
 };
