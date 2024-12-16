@@ -12,7 +12,7 @@ public static class UsersApi
         app.MapGet("/users/{id}", async (HermitDbContext dbContext, ulong id) => await GetUserById(dbContext, id));
         app.MapPost("/users", async (HttpContext httpContext, HermitDbContext dbContext) => await CreateUser(httpContext, dbContext));
         app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto userDto) => await UpdateUser(dbContext, id, userDto));
-        app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, ulong id) => await GetUserCompetitions(dbContext, id));
+        app.MapGet("/users/{user_name}/competitions", async (HermitDbContext dbContext, string user_name) => await GetUserCompetitions(dbContext, user_name));
         app.MapGet("/users/{user_name}/communities", async (HermitDbContext dbContext, string user_name) => await GetUserCommunities(dbContext, user_name));
         app.MapGet("/users/{id}/matches", async (HermitDbContext dbContext, ulong id) => await GetUserMatches(dbContext, id));
 
@@ -107,14 +107,16 @@ public static class UsersApi
     }
     }
 
-    private static async Task<IResult> GetUserCompetitions(HermitDbContext dbContext, ulong id)
+    private static async Task<IResult> GetUserCompetitions(HermitDbContext dbContext, string user_name)
     {
+        Console.WriteLine("Getting competitions for user {0}", user_name);
         try
     {
-        var user = await dbContext.users.FindAsync(id);
+        var user = await dbContext.users.Where(x => x.user_name == user_name).FirstOrDefaultAsync();
         if (user != null)
         {
-            var communityIds = await dbContext.user_competition.Where(x => x.discord_id == id).Select(x => x.competition_id).ToListAsync();
+            var communityIds = await dbContext.user_competition.Where(x => x.user_name == user_name).Select(x => x.competition_id).ToListAsync();
+            Console.WriteLine("Found {0} competitions for user {1}", communityIds.Count, user_name);
             return Results.Ok(communityIds);
         }
         else

@@ -79,9 +79,11 @@ namespace HermitStore
         public byte[]? competition_image { get; set; }
         public bool is_open { get; set; } = true;
         public bool is_running { get; set; } = false;
-        public required Guid game_id { get; set; }
+        public Guid? game_id { get; set; }
         public required int rank_alg { get; set; }
         public required bool is_public { get; set; }
+
+        public ulong? community_id { get; set; }
     }
     public class Competition : CompetitionDto
     {
@@ -90,8 +92,8 @@ namespace HermitStore
     }
     public class UserCompetitionDto
     {
-        public required ulong discord_id { get; set; }
         public required Guid competition_id { get; set; }
+        public required string user_name { get; set; }
     }
     public class UserCompetition : UserCompetitionDto
     {

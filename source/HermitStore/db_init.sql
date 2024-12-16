@@ -3,7 +3,7 @@
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     discord_id bigserial NOT NULL,
-    user_name VARCHAR(30) NOT NULL,
+    user_name VARCHAR(30) NOT NULL UNIQUE,
     display_name VARCHAR(30),
     league_puuid VARCHAR(100)
 );
@@ -52,7 +52,14 @@ CREATE TABLE competition (
     game_id UUID REFERENCES game(id) ON DELETE SET NULL,
     rank_alg INT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT TRUE,
-    participants INT NOT NULL
+    participants INT NOT NULL,
+    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+);
+
+CREATE TABLE user_competition (
+    id UUID PRIMARY KEY,
+    user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
 );
 
 -- Match table
