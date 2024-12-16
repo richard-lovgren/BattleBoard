@@ -26,7 +26,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
   return (
     <div className="flex  flex-row flex-wrap gap-4 w-full  py-10">
       {competitions.map((competition) => (
-        <Card className="w-[350px]">
+        <Card key={competition.id} className="w-[350px]">
           <CardHeader>
             <CardTitle className="font-thin text-3xl">
               {competition.competition_name}

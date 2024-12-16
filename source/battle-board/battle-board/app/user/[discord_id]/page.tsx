@@ -7,7 +7,7 @@ interface CommunityData {
   community_name: string;
 }
 
-type UserPageProps = Promise<{ user_id: number }>;
+type UserPageProps = Promise<{ discord_id: number }>;
 
 interface UserData {
   id: string;
@@ -49,7 +49,7 @@ async function fetchUserCommunitiesData(
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
   // Extract community ID from the URL
-  const { discord_id }  = await props.params;
+  const { discord_id } = await props.params;
   console.log("USER ID", discord_id);
 
   // Fetch user data from the API

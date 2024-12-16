@@ -26,7 +26,7 @@ const CommunitiesList: React.FC<CommunitiesListProps> = ({ communities }) => {
   return (
     <div className="flex  flex-row flex-wrap gap-4 w-full  py-10">
       {communities.map((community) => (
-        <Card className="w-[350px]">
+        <Card key={community.id} className="w-[350px]">
           <CardHeader>
             <CardTitle className="font-thin">{community.name}</CardTitle>
           </CardHeader>
