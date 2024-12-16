@@ -28,26 +28,10 @@ const CommunityMembersList: React.FC<CommunityMembersProps> = ({ community_id })
     }
   ]
 
-
-
-
-
-
-
   return (
-    <div className="flex flex-col border-4 border-accent">
-
-
-
-      <h1 className="text-3xl flex">Community Members:</h1>
-
+    <div className="flex flex-col border-4 border-accent p-4 rounded-md">
+      <h1 className="text-3xl flex font-bold font-odibee">Community Members:</h1>
       <div className="flex">
-
-
-
-
-
-
         <Table>
           <TableCaption>The current community members and their roles.</TableCaption>
           <TableHeader>
@@ -67,14 +51,7 @@ const CommunityMembersList: React.FC<CommunityMembersProps> = ({ community_id })
             </TableRow>
           </TableBody>
         </Table>
-
       </div>
-
-
-
-
-
-
     </div>
   );
 }

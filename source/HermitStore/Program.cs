@@ -258,6 +258,222 @@ app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCom
     return Results.Created();
 });
 
+
+app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+{
+    var competitions = await dbContext.competition
+        .Where(c => c.community_id == id)
+
+        .Select(c => new
+        {
+            c.id,
+            c.competition_name,
+        })
+
+
+        .ToListAsync();
+
+    return competitions.Any() ? Results.Ok(competitions) : Results.NotFound();
+});
+
+
+
+
+/*app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+{
+    try
+    {
+        // Verify community exists
+        var community = await dbContext.community.FindAsync(id);
+        if (community == null)
+        {
+            return Results.NotFound($"Community with ID {id} not found.");
+        }
+
+        // Fetch games associated with the community
+        var gameIds = await dbContext.game_community
+            .Where(gc => gc.community_id == id)
+            .Select(gc => gc.game_id)
+            .ToListAsync();
+
+        if (!gameIds.Any())
+        {
+            return Results.Ok(new List<object>()); // No games, hence no competitions
+        }
+
+        // Fetch competitions associated with these games
+        var competitions = await dbContext.competition
+            .Where(c => gameIds.Contains(c.game_id))
+            .Select(c => new
+            {
+                c.id,
+                c.competition_name,
+                c.competition_description,
+                c.competition_type,
+                c.format,
+                c.competition_image,
+                c.is_public,
+                c.participants,
+                c.rank_alg,
+                c.game_id
+            })
+            .ToListAsync();
+
+        return Results.Ok(competitions);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error retrieving competitions for community {CommunityId}", id);
+        return Results.Problem("An error occurred while retrieving competitions for the community.");
+    }
+});*/
+
+
+
+
+/*app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+{
+    try
+    {
+        // Check if the community exists
+        var community = await dbContext.community.FindAsync(id);
+        if (community == null)
+        {
+            return Results.NotFound($"Community with ID {id} not found.");
+        }
+
+        // Query competitions associated with the community
+        var competitions = await dbContext.user_competition
+            .Where(uc => uc.community_id == id)
+            .Join(dbContext.competition,
+                  uc => uc.competition_id,
+                  c => c.id,
+                  (uc, c) => new
+                  {
+                      c.id,
+                      c.competition_name,
+                      c.competition_description,
+                      c.competition_type,
+                      c.format,
+                      c.competition_image,
+                      c.is_public,
+                      c.participants,
+                      c.rank_alg,
+                      c.game_id
+                  })
+            .ToListAsync();
+
+        // Return competitions if found
+        return Results.Ok(competitions);
+    }
+    catch (Exception ex)
+    {
+        // Log and return an error response
+        logger.LogError(ex, "Failed to retrieve competitions for community {CommunityId}", id);
+        return Results.Problem("An error occurred while fetching competitions.");
+    }
+});*/
+
+
+/*app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+{
+    try
+    {
+        // Check if the community exists
+        var community = await dbContext.community.FindAsync(id);
+        if (community == null)
+        {
+            return Results.NotFound($"Community with ID {id} not found.");
+        }
+
+        // Get games associated with the community
+        var gameIds = await dbContext.game_community
+            .Where(gc => gc.community_id == id)
+            .Select(gc => gc.game_id)
+            .ToListAsync();
+
+        if (!gameIds.Any())
+        {
+            return Results.Ok(new List<object>()); // No games, hence no competitions
+        }
+
+        // Find competitions associated with these games
+        var competitions = await dbContext.competition
+            .Where(c => gameIds.Contains(c.game_id))
+            .Select(c => new
+            {
+                c.id,
+                c.competition_name,
+                c.competition_description,
+                c.competition_type,
+                c.format,
+                c.competition_image,
+                c.is_public,
+                c.participants,
+                c.rank_alg,
+                c.game_id
+            })
+            .ToListAsync();
+
+        return Results.Ok(competitions);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to retrieve competitions for community {CommunityId}", id);
+        return Results.Problem("An error occurred while fetching competitions.");
+    }
+});*/
+
+
+
+
+
+
+/*app.MapGet("/communities/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+{
+    try
+    {
+        // Find the community first to ensure it exists
+        var community = await dbContext.community.FindAsync(id);
+        if (community == null)
+        {
+            return Results.NotFound($"Community with ID {id} not found.");
+        }
+
+        // Get competitions associated with the community
+        var competitions = await dbContext.community_competition
+            .Where(cc => cc.community_id == id)
+            .Select(cc => new
+            {
+                cc.competition.id,
+                cc.competition.competition_name,
+                cc.competition.competition_description,
+                cc.competition.competition_type,
+                cc.competition.format,
+                cc.competition.competition_image,
+                cc.competition.is_public,
+                cc.competition.participants,
+                cc.competition.rank_alg,
+                cc.competition.game_id
+            })
+            .ToListAsync();
+
+        return Results.Ok(competitions);
+    }
+    catch (Exception ex)
+    {
+        // Log and return an error response
+        logger.LogError(ex, "Failed to retrieve competitions for community {CommunityId}", id);
+        return Results.Problem("An error occurred while fetching competitions.");
+    }
+});*/
+
+
+
+//app.MapGet("/communities/{id}/competitions", async ...) {}
+
+
+
 app.MapGet("/competitions", async (HermitDbContext dbContext) =>
 {
     var competitions = await dbContext.competition.ToListAsync();
@@ -290,7 +506,11 @@ app.MapPost("/competitions", async (HermitDbContext dbContext, CompetitionDto co
         is_public = competitionDto.is_public,
         game_id = competitionDto.game_id,
         rank_alg = competitionDto.rank_alg,
-        participants = 0
+        participants = 0,
+
+        community_id = competitionDto.community_id
+
+
     };
 
     dbContext.competition.Add(competition);

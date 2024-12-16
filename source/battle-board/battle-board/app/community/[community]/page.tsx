@@ -2,15 +2,19 @@
 import Image from "next/image";
 
 import CommunityMembersList from "@/components/CommunityMembersList";
-
-
-
+import CompetitionList from "@/components/CompetitionList";
 
 interface CommunityData {
   community_name: string;
   community_id: string;
   community_image: string;
 }
+
+interface CompetitionData {
+  competition_name: string;
+  id: string;
+}
+
 type CommunityPageProps = Promise<{ community: string }>;
 
 const baseUrl = "http://localhost:3000";
@@ -27,6 +31,20 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   return response.json();
 }
 
+async function fetchCommunityCompetitionData(communityId: string): Promise<CompetitionData[]> {
+
+  console.log("Community ID: lol", communityId);
+
+
+  const response = await fetch(
+    `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
+  );
+  if (!response.ok) {
+    return [];
+  }
+  return response.json();
+}
+
 // Server component
 const CommunityPage = async (props: { params: CommunityPageProps }) => {
   // Extract community ID from the URL
@@ -35,6 +53,10 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
 
   // Fetch community data from the API
   const communityDataHeader = await fetchCommunityData(community);
+
+  const communityCompetitionData = await fetchCommunityCompetitionData(community);
+
+  console.log("Competition ids: ", communityCompetitionData);
 
   return (
     <div className="w-full h-full  flex flex-col gap-4 items-center">
@@ -55,18 +77,10 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
           </h1>
         </div>
       </div>
-
       <div className=" text-accent w-full flex text-6xl flex-row justify-end px-10">
-
-
+        <CompetitionList competitions={communityCompetitionData}></CompetitionList>
         <CommunityMembersList community_id="101010"></ CommunityMembersList>
-
-
-
-
       </div>
-
-
     </div>
   );
 };

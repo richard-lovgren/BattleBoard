@@ -13,30 +13,30 @@ import {
 import { useRouter } from "next/navigation";
 
 
-interface CommunitiesListProps {
-  communities: { id: string; name: string }[];
+interface CompetitionListProps {
+  competitions: { id: string; competition_name: string }[];
 }
 
-const CommunitiesList: React.FC<CommunitiesListProps> = ({ communities }) => {
+const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
 
   const router = useRouter();
 
   const handleNavigation = (id: string) => {
-    router.replace(`/community/${id}`);
+    router.replace(`/competition/${id}`);
   }
 
   return (
     <div className="flex  flex-row flex-wrap gap-4 w-full  py-10">
-      {communities.map((community) => (
+      {competitions.map((competition) => (
         <Card className="w-[350px]">
           <CardHeader>
-            <CardTitle className="font-thin">{community.name}</CardTitle>
+            <CardTitle className="font-thin text-3xl">{competition.competition_name}</CardTitle>
           </CardHeader>
           <CardContent>
             <h1 className="text-lg font-semibold">BILD KANSKE</h1>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => handleNavigation(community.id)}>View</Button>
+            <Button variant="outline" onClick={() => handleNavigation(competition.id)}>View</Button>
           </CardFooter>
         </Card>
       ))
@@ -45,4 +45,4 @@ const CommunitiesList: React.FC<CommunitiesListProps> = ({ communities }) => {
   );
 };
 
-export default CommunitiesList;
+export default CompetitionList;

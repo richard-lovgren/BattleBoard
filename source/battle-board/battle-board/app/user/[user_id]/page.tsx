@@ -60,6 +60,8 @@ const UserPage = async (props: { params: UserPageProps }) => {
     userDataHeader.user_name
   );
 
+  console.log("Communities for user: ", userCommunitiesData);
+
   const userCommunitiesMap = Object.entries(userCommunitiesData).map(
     ([id, name]) => ({
       id: id,

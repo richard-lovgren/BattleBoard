@@ -81,6 +81,7 @@ namespace HermitStore
         public required Guid game_id { get; set; }
         public required int rank_alg { get; set; }
         public required bool is_public { get; set; }
+        public Guid community_id { get; set; }
     }
     public class Competition : CompetitionDto
     {
