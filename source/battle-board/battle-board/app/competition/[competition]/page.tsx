@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import PlayerGrid from "@/components/playerGrid/PlayerGrid";
-import ClassicMode from "@/components/competitionModes/ClassicMode";
+import ClassicMode from "@/components/competitionModes/classicMode/ClassicMode";
 
 export default function CompetitionPage() {
   const competition = {
