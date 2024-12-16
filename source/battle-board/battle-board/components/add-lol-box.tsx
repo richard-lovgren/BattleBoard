@@ -10,6 +10,7 @@ export default function LolUsernameBox() {
   const [tagline, setTagline] = useState("");
   const [fullLolUsername, setFullLolUsername] = useState<string | null>(null);
   const [helpText, setHelpText] = useState("");
+  const [fetched, setFetched] = useState(false);
 
   const fetchUserLeagueData = async () => {
     try {
@@ -28,6 +29,7 @@ export default function LolUsernameBox() {
       } else {
         setFullLolUsername(null);
       }
+      setFetched(true);
     } catch (error) {
       console.error("Error in fetchUserLeagueData:", error);
     }
@@ -73,36 +75,40 @@ export default function LolUsernameBox() {
 
   return (
     <div className="flex flex-col gap-4">
-      {fullLolUsername ? (
-        <div className="text-lg font-medium gap-4">
-          <div>
-            LoL Username:{" "}
-            <span className="text-purple-500">{fullLolUsername}</span>
+      {fetched ? (
+        fullLolUsername ? (
+          <div className="text-lg font-medium gap-4">
+            <div>
+              LOL Username:{" "}
+              <span className="text-purple-500">{fullLolUsername}</span>
+            </div>
+            <button
+              className="px-4 py-2 bg-red-500 text-white rounded-md"
+              onClick={handleRemove}
+            >
+              Remove
+            </button>
           </div>
-          <button
-            className="px-4 py-2 bg-red-500 text-white rounded-md"
-            onClick={handleRemove}
-          >
-            Remove
-          </button>
-        </div>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="username#tagline"
+              className="px-4 py-2 border border-gray-300 rounded-md"
+              onChange={handleInputChange}
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-purple-500 text-white rounded-md"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+            <div className="text-sm text-red-500">{helpText}</div>
+          </div>
+        )
       ) : (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="username#tagline"
-            className="px-4 py-2 border border-gray-300 rounded-md"
-            onChange={handleInputChange}
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-purple-500 text-white rounded-md"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-          <div className="text-sm text-red-500">{helpText}</div>
-        </div>
+        <div className="text-lg font-medium gap-4">Loading...</div>
       )}
     </div>
   );
