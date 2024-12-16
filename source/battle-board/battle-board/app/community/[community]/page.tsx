@@ -23,7 +23,7 @@ const baseUrl = "http://localhost:3000";
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   // Example API endpoint; replace with your actual API request
   const response = await fetch(
-    `${baseUrl}/api/community?communityId=${communityId}`,
+    `${baseUrl}/api/community?communityId=${communityId}`
   );
   if (!response.ok) {
     return { community_name: "", community_id: "", community_image: "" };
@@ -31,10 +31,10 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   return response.json();
 }
 
-async function fetchCommunityCompetitionData(communityId: string): Promise<CompetitionData[]> {
-
+async function fetchCommunityCompetitionData(
+  communityId: string
+): Promise<CompetitionData[]> {
   console.log("Community ID: lol", communityId);
-
 
   const response = await fetch(
     `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
@@ -54,7 +54,9 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
   // Fetch community data from the API
   const communityDataHeader = await fetchCommunityData(community);
 
-  const communityCompetitionData = await fetchCommunityCompetitionData(community);
+  const communityCompetitionData = await fetchCommunityCompetitionData(
+    community
+  );
 
   console.log("Competition ids: ", communityCompetitionData);
 
@@ -78,8 +80,10 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
         </div>
       </div>
       <div className=" text-accent w-full flex text-6xl flex-row justify-end px-10">
-        <CompetitionList competitions={communityCompetitionData}></CompetitionList>
-        <CommunityMembersList community_id="101010"></ CommunityMembersList>
+        <CompetitionList
+          competitions={communityCompetitionData}
+        ></CompetitionList>
+        <CommunityMembersList community_id="101010"></CommunityMembersList>
       </div>
     </div>
   );

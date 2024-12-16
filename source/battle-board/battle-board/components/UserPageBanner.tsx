@@ -13,13 +13,17 @@ interface UserProps {
   league_puuid: string;
 }
 
-
-
-const UserPageBanner: React.FC<UserProps> = ({ id, discord_id, user_name, display_name, league_puuid }) => {
+const UserPageBanner: React.FC<UserProps> = ({
+  id,
+  discord_id,
+  user_name,
+  display_name,
+  league_puuid,
+}) => {
   const { data: session } = useSession();
 
   const { data, error } = useCountryLocaleFlag(
-    "https://flagsapi.com/BE/flat/64.png",
+    "https://flagsapi.com/BE/flat/64.png"
   );
   if (session?.user) {
     return (
@@ -55,7 +59,7 @@ const UserPageBanner: React.FC<UserProps> = ({ id, discord_id, user_name, displa
       </div>
     );
   }
-}
+};
 
 //Export the component
 export default UserPageBanner;

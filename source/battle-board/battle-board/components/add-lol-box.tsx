@@ -111,12 +111,14 @@ export default function LolUsernameBox() {
 // Fetch the PUUID from Riot API
 async function getPuuid(
   league_username: string,
-  tagline: string,
+  tagline: string
 ): Promise<string | null> {
   try {
     if (!league_username || !tagline) return null;
     const response = await fetch(
-      `/api/lol/get-puuid?username=${encodeURIComponent(league_username)}&tagline=${encodeURIComponent(tagline)}`,
+      `/api/lol/get-puuid?username=${encodeURIComponent(
+        league_username
+      )}&tagline=${encodeURIComponent(tagline)}`
     );
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -149,7 +151,7 @@ async function getLolUsername(puuid: string): Promise<string | null> {
 // Update the user's League PUUID in the backend
 async function updateUserLeaguePuuid(
   userId: string,
-  puuid: string | null,
+  puuid: string | null
 ): Promise<void> {
   try {
     const response = await fetch("/api/users?userId=" + userId, {
