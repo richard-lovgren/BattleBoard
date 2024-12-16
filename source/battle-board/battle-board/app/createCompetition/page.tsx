@@ -1,67 +1,66 @@
-'use client'
+'use client';
 
+import { useEffect, useState } from 'react';
 import CompetitionDto from '@/models/dtos/competition-dto';
-import './createCompetition.css'
+import './createCompetition.css';
 import Game from '@/models/game';
 
-const fetchGameData = async () => {
-  try {
-    const response = await fetch(`/api/games`);
-
-    if (!response.ok) {
-      throw new Error(`Error fetching games: ${response.statusText}`);
-    }
-
-    const result: Game[] = await response.json();
-
-    console.log(result);
-    
-    return result;
-
-  } catch (error) {
-      console.error("Error in fetchGameData:", error);
-  }
-}
-
-const games: Game[] | undefined = await fetchGameData();
-
 export default function CreateCompetition() {
-
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const placeholderUsers: string[] = ["laswer5", ".nattap", "cafg", "richard", "nagnub"];
+
+  // Fetch game data
+  useEffect(() => {
+    const fetchGameData = async () => {
+      try {
+        const response = await fetch(`/api/games`);
+        if (!response.ok) {
+          throw new Error(`Error fetching games: ${response.statusText}`);
+        }
+        const result: Game[] = await response.json();
+        setGames(result);
+      } catch (error) {
+        console.error("Error in fetchGameData:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGameData();
+  }, []);
 
   async function postCompetitionData(body: CompetitionDto) {
     try {
       console.log("Creating competition with body::", body);
       const url = `/api/competitions`;
 
-      const response = await fetch(url, 
-        {
-          method: "POST",
-          body: JSON.stringify(body),
-        }
-      )
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (!response.ok) {
         throw new Error(`Error creating competition: ${response.statusText}`);
       }
 
       const result = await response.json();
       console.log(result.message);
-
-
     } catch (error) {
-        console.error("Error in postCompetitionData:", error);
+      console.error("Error in postCompetitionData:", error);
     }
-  };
+  }
 
-  async function handleSumbit(e: any) {
+  async function handleSumbit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const form = e.target;
+    const form = e.currentTarget;
     const formData = new FormData(form);
 
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
-
     const body: CompetitionDto = {
       competition_name: formJson.competitionName.toString(),
       competition_description: formJson.competitionDesc.toString(),
@@ -87,78 +86,107 @@ export default function CreateCompetition() {
             <hr />
           </div>
 
+          {/* Title and Date */}
           <div className='createGroupTwoCols'>
             <div className='createGroup'>
-              <label className='text-5xl '>Title</label>
+              <label className='text-5xl'>Title</label>
               <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
-                <input name='competitionName' className=' text-3xl text-left w-full'></input>
+                <input name='competitionName' className='text-3xl text-left w-full' />
               </div>
             </div>
             <div className='createGroup'>
               <label className='text-5xl'>Date</label>
               <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
-                <input name='date' className=' text-3xl text-left w-full'></input>
+                <input name='date' className='text-3xl text-left w-full' />
               </div>
             </div>
           </div>
 
+          {/* Description */}
           <div className='createGroup'>
-              <label className='text-5xl '>
-                Description
-                <textarea name='competitionDesc' 
-                  className=' appearance-none focus:outline-none mt-5 p-4 flex items-center text-3xl rounded-3xl bg-[#0E0030] border-solid border-white border-[5px] h-[150px] w-[62vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
-                </textarea>
-              </label>
+            <label className='text-5xl'>
+              Description
+              <textarea
+                name='competitionDesc'
+                className='appearance-none focus:outline-none mt-5 p-4 flex items-center text-3xl rounded-3xl bg-[#0E0030] border-solid border-white border-[5px] h-[150px] w-[62vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'
+              ></textarea>
+            </label>
+          </div>
 
-            </div>
-
+          {/* Cover Image */}
           <div className='createGroup'>
             <label className='text-5xl'>Add a cover image</label>
             <button type='button' className='uploadButton font-nunito'>Upload image</button>
           </div>
 
+          {/* Settings */}
           <div className='createGroup'>
             <div className='text-5xl'>Settings</div>
-            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit '><input className=' appearance-auto' type='radio' name='isPublic' value={1} defaultChecked={true}></input> Public </label>
-            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit '><input className=' appearance-auto' type='radio' name='isPublic' value={0}></input> Private </label>
+            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit'>
+              <input className='appearance-auto' type='radio' name='isPublic' value={1} defaultChecked /> Public
+            </label>
+            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit'>
+              <input className='appearance-auto' type='radio' name='isPublic' value={0} /> Private
+            </label>
           </div>
 
+          {/* Games */}
           <div className='createGroup'>
             <label className='text-5xl'>Choose game</label>
             <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
-              <select className=' decorated text-3xl text-left w-full bg-[#0E0030] rounded-full focus:outline-none 'name="game">
-                {games!.map(game => (
-                  <option key={game.id} value={game.id}> {game.game_name} </option>
-                  ))
-                }
-              </select> 
+              {loading ? (
+                <div>Loading games...</div>
+              ) : (
+                <select
+                  className='decorated text-3xl text-left w-full bg-[#0E0030] rounded-full focus:outline-none'
+                  name='game'
+                >
+                  {games.map((game) => (
+                    <option key={game.id} value={game.id}>
+                      {game.game_name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 
+          {/* Modes */}
           <div className='createGroup'>
             <div className='text-5xl'>Choose mode</div>
-            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit '><input className=' appearance-auto' type='radio' name='competitionType' value={1} defaultChecked={true}></input> Tournament </label>
-            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit '><input className=' appearance-auto' type='radio' name='competitionType' value={2}></input> Classic </label>
-            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit '><input className=' appearance-auto' type='radio' name='competitionType' value={3}></input> Rival </label>
+            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit'>
+              <input className='appearance-auto' type='radio' name='competitionType' value={1} defaultChecked /> Tournament
+            </label>
+            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit'>
+              <input className='appearance-auto' type='radio' name='competitionType' value={2} /> Classic
+            </label>
+            <label className='font-nunito textshadow text-xl hover:cursor-pointer w-fit'>
+              <input className='appearance-auto' type='radio' name='competitionType' value={3} /> Rival
+            </label>
           </div>
 
+          {/* Players */}
           <div className='createGroup'>
             <label className='text-5xl'>Invite players</label>
             <div className='search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50'>
-              <select className=' decorated text-3xl text-left w-full bg-[#0E0030] rounded-full focus:outline-none 'name="invtedUsers">
-                {
-                  placeholderUsers.map(user => (
-                    <option key={user} value={user}> {user} </option>
-                  ))
-                }
+              <select
+                className='decorated text-3xl text-left w-full bg-[#0E0030] rounded-full focus:outline-none'
+                name='invitedUsers'
+              >
+                {placeholderUsers.map((user) => (
+                  <option key={user} value={user}>
+                    {user}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
-          <button type='submit' className='createButton font-nunito'>Save</button>
-
+          <button type='submit' className='createButton font-nunito'>
+            Save
+          </button>
         </form>
       </main>
     </div>
-  )
+  );
 }
