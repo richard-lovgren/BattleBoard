@@ -1,8 +1,6 @@
 
 using HermitStore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,7 +114,7 @@ app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto us
 Get competions that a user has joined
 Need to query get competitions to get more info about them
 */
-app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
+app.MapGet("/user/{id}/competitions", async (HermitDbContext dbContext, Guid id) =>
 {
     try
     {
@@ -141,16 +139,29 @@ app.MapGet("/users/{id}/competitions", async (HermitDbContext dbContext, Guid id
 Get communities that a user has joined
 Need to query get communities to get more info about them
 */
-app.MapGet("/user/{id}/communities", async (HermitDbContext dbContext, Guid id) =>
+app.MapGet("/users/{user_name}/communities", async (HermitDbContext dbContext, string user_name) =>
 {
     // return await dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
     try
     {
-        var user = await dbContext.users.FindAsync(id);
+        var user = await dbContext.users.Where(x => x.user_name == user_name).FirstOrDefaultAsync();
         if (user != null)
         {
-            var communityIds = dbContext.user_community.Where(x => x.user_id == id).Select(x => x.community_id).ToListAsync();
-            return Results.Ok(communityIds);
+            var communityIds = await dbContext.user_community.Where(x => x.user_name == user_name).Select(x => x.community_id).ToListAsync();
+            var communityNames = await dbContext.community.Where(x => communityIds.Contains(x.id)).Select(x => x.community_name).ToListAsync();
+            var communityIdsAndNames = new Dictionary<ulong, string>();
+
+            if (communityIds.Count != communityNames.Count)
+            {
+                return Results.Problem("Failed to get communities");
+            }
+
+            for (int i = 0; i < communityIds.Count; i++)
+            {
+                communityIdsAndNames.Add(communityIds[i], communityNames[i]);
+            }
+
+            return Results.Ok(communityIdsAndNames);
         }
         else
         {
@@ -196,7 +207,7 @@ app.MapGet("/communities", async (HermitDbContext dbContext) =>
     return communities;
 });
 
-app.MapGet("/communities/{id}", async (HermitDbContext dbContext, Guid id) =>
+app.MapGet("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
 {
     var community = await dbContext.community.FindAsync(id);
     if (community == null)
@@ -211,11 +222,15 @@ app.MapGet("/communities/{id}", async (HermitDbContext dbContext, Guid id) =>
 
 app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto communityDto) =>
 {
+
+    logger.LogInformation("CommunityDto: {CommunityDto}", communityDto);
+
     var community = new Community
     {
         community_name = communityDto.community_name,
         community_image = communityDto.community_image,
-        id = Guid.NewGuid()
+        id = communityDto.id,
+        created_at = DateTime.Now.ToUniversalTime(),
     };
 
     dbContext.community.Add(community);
@@ -224,6 +239,39 @@ app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto commu
     logger.LogInformation("Community {CommunityId} created", community.id);
 
     return Results.Created($"/communities/{community.id}", community);
+});
+
+app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =>
+{
+    var community = await dbContext.community.Where(x => x.id == id).FirstOrDefaultAsync();
+    if (community == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.community.Remove(community);
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("Community {CommunityId} deleted", community.id);
+
+    return Results.Ok();
+});
+
+app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
+{
+    var userCommunity = new UserCommunity
+    {
+        user_name = userCommunityDto.user_name,
+        community_id = id,
+        id = Guid.NewGuid(),
+    };
+
+    dbContext.user_community.Add(userCommunity);
+    await dbContext.SaveChangesAsync();
+
+    logger.LogInformation("User: {UserName}:{UserId} joined community {CommunityId}", userCommunity.user_name, userCommunity.id, id);
+
+    return Results.Created();
 });
 
 app.MapGet("/competitions", async (HermitDbContext dbContext) =>

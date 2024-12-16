@@ -12,7 +12,7 @@ export default function LoginBtn() {
 
   if (session?.user) {
     return (
-      <Link href={`/user/${session.user.name}`}>
+      <Link href={`/user/${session.user.id}`}>
         <div className="flex items-center space-x-4">
           {session.user.image && (
             <Image
