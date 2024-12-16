@@ -12,7 +12,7 @@ export default function CreateCommunity() {
 
           <div className="createGroup">
             <div className="text-5xl">Community name</div>
-            <div className="search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
               <input className=" text-3xl text-left w-full"></input>
             </div>
           </div>
@@ -24,7 +24,7 @@ export default function CreateCommunity() {
 
           <div className="createGroup">
             <div className="text-5xl">Invite community members</div>
-            <div className="search-bar flex items-center rounded-full border-solid border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
               <input className=" text-3xl text-left w-full"></input>
             </div>
           </div>

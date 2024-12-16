@@ -1,8 +1,8 @@
 //A default export react NextJS server side rendered page component.
 
 import Image from "next/image";
-import ClassicMode from "@/components/competitionModes/classicMode/ClassicMode";
 import PlayerGrid from "@/components/playerGrid/PlayerGrid";
+import ClassicMode from "@/components/competitionModes/ClassicMode";
 
 export default function CompetitionPage() {
   const competition = {

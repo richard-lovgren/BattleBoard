@@ -23,7 +23,7 @@ export default function Home() {
         <section className="mt-16 w-full text-center">
           <h2 className="text-5xl font-bold mb-8 font-odibee ">Features</h2>
           <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
-            <div className="flex flex-col items-center justify-center border-solid border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl p-6 w-80">
+            <div className="flex flex-col items-center justify-center border-solid border-white border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl p-6 w-80">
               <h3 className="textshadow text-xl font-bold">Communities</h3>
               <p className="mt-2 mb-4 text-gray-300">
                 Create your own community or join exsisting ones.
@@ -31,7 +31,7 @@ export default function Home() {
               </p>
               <Link href="/createCommunity"><GeneralButton text="Create community"/></Link>
             </div>
-            <div className="flex flex-col items-center justify-center border-solid border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl p-6 w-80">
+            <div className="flex flex-col items-center justify-center border-solid border-white border-[5px] shadow-lg shadow-indigo-500/50 rounded-3xl p-6 w-80">
               <h3 className="textshadow text-xl font-bold">Competitions</h3>
               <p className="mt-2 mb-4 text-gray-300">
                 Create or join communities on BattleBoard. Competitions types include 
