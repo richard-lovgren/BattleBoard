@@ -37,10 +37,11 @@ namespace HermitStore
     {
         public required string community_name { get; set; }
         public string? community_image { get; set; }
+
+        public required ulong id { get; set; }
     }
     public class Community : CommunityDto
     {
-        public required Guid id { get; set; }
         public required DateTime created_at { get; set; }
     }
     public class UserCommunityDto
@@ -50,7 +51,7 @@ namespace HermitStore
     public class UserCommunity : UserCommunityDto
     {
         public required Guid id { get; set; }
-        public required Guid community_id { get; set; }
+        public required ulong community_id { get; set; }
     }
     public class GameDto
     {
@@ -78,10 +79,11 @@ namespace HermitStore
         public byte[]? competition_image { get; set; }
         public bool is_open { get; set; } = true;
         public bool is_running { get; set; } = false;
-        public required Guid game_id { get; set; }
+        public Guid? game_id { get; set; }
         public required int rank_alg { get; set; }
         public required bool is_public { get; set; }
-        public Guid community_id { get; set; }
+
+        public ulong? community_id { get; set; }
     }
     public class Competition : CompetitionDto
     {
@@ -90,8 +92,8 @@ namespace HermitStore
     }
     public class UserCompetitionDto
     {
-        public required Guid user_id { get; set; }
         public required Guid competition_id { get; set; }
+        public required string user_name { get; set; }
     }
     public class UserCompetition : UserCompetitionDto
     {
@@ -123,7 +125,7 @@ namespace HermitStore
     }
     public class MatchUserDto
     {
-        public required Guid user_id { get; set; }
+        public required ulong discord_id { get; set; }
         public required Guid match_id { get; set; }
     }
     public class MatchUser : MatchUserDto

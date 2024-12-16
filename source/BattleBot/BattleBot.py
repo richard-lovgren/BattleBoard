@@ -51,11 +51,13 @@ async def on_guild_join(guild: discord.Guild):
             community_data = {
                 "community_name": guild.name,
                 "community_image": None,
+                "id": guild.id,
             }
         else:
             community_data = {
                 "community_name": guild.name,
                 "community_image": guild.icon.url,
+                "id": guild.id,
             }
 
         res = requests.post(getenv("API_URL") + "/communities", json=community_data)
@@ -64,7 +66,7 @@ async def on_guild_join(guild: discord.Guild):
             print(f"Failed to register community: {res.raw.read(), res.status_code}")
             return
 
-        print(f"Registered community: {guild.name}")
+        print(f"Registered community: {guild.name} with ID: {guild.id}")
 
         community_id = res.json()["id"]
 
@@ -95,6 +97,26 @@ async def on_guild_join(guild: discord.Guild):
 
     except Exception as e:
         print(f"Error joining server: {e}")
+
+@bot.event 
+async def on_guild_remove(guild: discord.Guild):
+    print(f"BattleBot removed from server: {guild.name}")
+
+    print(f"Deleting community: {guild.name}")
+
+    try:
+
+        res = requests.delete(getenv("API_URL") + f"/communities/{guild.id}")
+
+    except Exception as e:
+        print(f"Error deleting community: {e}")
+        return
+
+    if res.status_code != 200:
+        print(f"Failed to delete community: {res}")
+        return
+    
+    print(f"Deleted community: {guild.name}")
 
 
 @bot.tree.command(name="test", description="skibidi toilet")
