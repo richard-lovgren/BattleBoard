@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,9 +11,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+
+const baseUrl = "http://localhost:3000";
+
+interface CompetitionData {
+  competition_id: string;
+  competition_name: string;
+  competition_description: string
+}
 
 interface CompetitionListProps {
-  competitions: { id: string; competition_name: string }[];
+  competitions: { id: string }[];
+}
+
+async function fetcCommunityCompetitionData(
+  competition_id: string
+): Promise<CompetitionData> {
+  const response = await fetch(
+    `${baseUrl}/api/users/communities?user_name=${competition_id}` // Correct URL
+  );
+  if (!response.ok) {
+    return { competition_id: "", competition_name: "", competition_description: "" };
+  }
+  return response.json();
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
@@ -23,13 +45,18 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
     router.replace(`/competition/${id}`);
   };
 
+
+  //TODO: To get the actual competition name and stuff an then put in the card title and so on.
+  /*useEffect(() => {
+    await fetchCommunityCompetitionData(competitions);
+  }, competitions);*/
+
   return (
     <div className="flex  flex-row flex-wrap gap-4 w-full  py-10">
       {competitions.map((competition) => (
         <Card key={competition.id} className="w-[350px]">
           <CardHeader>
             <CardTitle className="font-thin text-3xl">
-              {competition.competition_name}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -39,6 +66,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
             <Button
               variant="outline"
               onClick={() => handleNavigation(competition.id)}
+              className="hover:bg-foreground hover:border-foreground"
             >
               View
             </Button>
