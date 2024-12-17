@@ -57,6 +57,7 @@ app.MapPost("/communities", async (HermitDbContext dbContext, CommunityDto commu
     {
         community_name = communityDto.community_name,
         community_image = communityDto.community_image,
+        community_members = communityDto.community_members == null ? 0 : communityDto.community_members,
         id = communityDto.id,
         created_at = DateTime.Now.ToUniversalTime(),
     };
@@ -85,16 +86,35 @@ app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =
     return Results.Ok();
 }).Produces(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Delete a community by ID");
 
-app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
+app.MapPost("/communities/{id}/users/{userId}", async (HermitDbContext dbContext, ulong id, Guid userId) =>
 {
+
+
+    //Check that community exsists
+    var community = await dbContext.community.FindAsync(id);
+    if (community == null)
+    {
+        return Results.BadRequest("Community not found");
+    }
+    logger.LogInformation("Community {CommunityId} found", community.id);
+
+    //Check that user exists
+    var user = await dbContext.users.FindAsync(userId);
+    if (user == null)
+    {
+        return Results.BadRequest("User {Us} does not exist");
+    }
+
     var userCommunity = new UserCommunity
     {
-        user_name = userCommunityDto.user_name,
+        user_name = user.user_name,
         community_id = id,
         id = Guid.NewGuid(),
     };
 
     dbContext.user_community.Add(userCommunity);
+    //Increment member count
+    community.community_members++;
     await dbContext.SaveChangesAsync();
 
     logger.LogInformation("User: {UserName}:{UserId} joined community {CommunityId}", userCommunity.user_name, userCommunity.id, id);
