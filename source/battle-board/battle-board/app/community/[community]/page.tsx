@@ -16,13 +16,11 @@ interface CompetitionData {
 
 type CommunityPageProps = Promise<{ community: string }>;
 
-const baseUrl = process.env.DB_CONN_STR;
-
 // Fetch community data directly inside the server component
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   console.log("Inside fetch community data: ", communityId);
   const response = await fetch(
-    `${baseUrl}/api/community?communityId=${communityId}`
+    `api/community?communityId=${communityId}`
   );
   if (!response.ok) {
     return { community_name: "", community_id: "", community_image: "" };
@@ -36,7 +34,7 @@ async function fetchCommunityCompetitionData(
   console.log("Community ID: lol", communityId);
 
   const response = await fetch(
-    `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
+    `/api/community/competition?communityId=${communityId}` // Correct URL
   );
   if (!response.ok) {
     return [];
