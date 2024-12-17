@@ -125,7 +125,7 @@ namespace HermitStore
     }
     public class MatchUserDto
     {
-        public required ulong discord_id { get; set; }
+        public required string user_name { get; set; }
         public required Guid match_id { get; set; }
     }
     public class MatchUser : MatchUserDto
