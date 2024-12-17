@@ -86,7 +86,7 @@ app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =
     return Results.Ok();
 }).Produces(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Delete a community by ID");
 
-app.MapPost("/communities/{id}/users/{userId}", async (HermitDbContext dbContext, ulong id, Guid userId) =>
+app.MapPost("/communities/{id}/users/", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
 {
 
 
@@ -99,10 +99,10 @@ app.MapPost("/communities/{id}/users/{userId}", async (HermitDbContext dbContext
     logger.LogInformation("Community {CommunityId} found", community.id);
 
     //Check that user exists
-    var user = await dbContext.users.FindAsync(userId);
+    var user = await dbContext.users.Where(x => x.user_name == userCommunityDto.user_name).FirstOrDefaultAsync();
     if (user == null)
     {
-        return Results.BadRequest("User {Us} does not exist");
+        return Results.BadRequest("User does not exist");
     }
 
     var userCommunity = new UserCommunity
