@@ -11,10 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-
-const baseUrl = "http://localhost:3000";
 
 interface CompetitionData {
   competition_id: string;
@@ -26,11 +22,11 @@ interface CompetitionListProps {
   competitions: { id: string }[];
 }
 
-async function fetcCommunityCompetitionData(
+async function fetchCommunityCompetitionData(
   competition_id: string
 ): Promise<CompetitionData> {
   const response = await fetch(
-    `${baseUrl}/api/users/communities?user_name=${competition_id}` // Correct URL
+    `/api/users/communities?user_name=${competition_id}` // Correct URL
   );
   if (!response.ok) {
     return { competition_id: "", competition_name: "", competition_description: "" };

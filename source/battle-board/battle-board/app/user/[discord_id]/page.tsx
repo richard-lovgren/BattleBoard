@@ -17,11 +17,9 @@ interface UserData {
   league_puuid: string;
 }
 
-const baseUrl = "http://localhost:3000";
-
 async function fetchUserData(discord_id: number): Promise<UserData> {
   // Example API endpoint; replace with your actual API request
-  const response = await fetch(`${baseUrl}/api/users?userId=${discord_id}`);
+  const response = await fetch(`/api/users?userId=${discord_id}`);
   if (!response.ok) {
     return {
       id: "",
@@ -38,7 +36,7 @@ async function fetchUserCommunitiesData(
   user_name: string
 ): Promise<CommunityData> {
   const response = await fetch(
-    `${baseUrl}/api/users/communities?user_name=${user_name}` // Correct URL
+    `/api/users/communities?user_name=${user_name}` // Correct URL
   );
   if (!response.ok) {
     return { community_id: "", community_name: "" };

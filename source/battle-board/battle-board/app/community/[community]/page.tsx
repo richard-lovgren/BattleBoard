@@ -16,7 +16,7 @@ interface CompetitionData {
 
 type CommunityPageProps = Promise<{ community: string }>;
 
-const baseUrl = "http://localhost:3000";
+const baseUrl = process.env.DB_CONN_STR;
 
 // Fetch community data directly inside the server component
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
