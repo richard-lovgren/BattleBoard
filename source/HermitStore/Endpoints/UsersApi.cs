@@ -118,7 +118,7 @@ public static class UsersApi
             return Results.BadRequest("Failed to create user");
         }
 
-        //Console.WriteLine("User {UserId} created", user.id);
+        Console.WriteLine($"User {user.user_name} created");
 
         return Results.Created($"/users/{user.id}", user);
     }
@@ -158,7 +158,7 @@ public static class UsersApi
         string user_name
     )
     {
-        Console.WriteLine("Getting competitions for user {0}", user_name);
+        Console.WriteLine($"Getting competitions for user {user_name}");
         try
         {
             var user = await dbContext
