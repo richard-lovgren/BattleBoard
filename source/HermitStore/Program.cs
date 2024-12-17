@@ -86,7 +86,7 @@ app.MapDelete("/communities/{id}", async (HermitDbContext dbContext, ulong id) =
     return Results.Ok();
 }).Produces(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).WithDescription("Delete a community by ID");
 
-app.MapPost("/communities/{id}/users/", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
+app.MapPost("/communities/{id}/users", async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
 {
 
 
