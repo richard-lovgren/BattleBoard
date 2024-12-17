@@ -1,15 +1,12 @@
-
 using Microsoft.EntityFrameworkCore;
 
 namespace HermitStore
 {
-
     public class HermitDbContext : DbContext
     {
-        public HermitDbContext(DbContextOptions<HermitDbContext> options) : base(options)
-        {
+        public HermitDbContext(DbContextOptions<HermitDbContext> options)
+            : base(options) { }
 
-        }
         public required DbSet<User> users { get; set; }
         public required DbSet<Community> community { get; set; }
         public required DbSet<Game> game { get; set; }
@@ -29,47 +26,58 @@ namespace HermitStore
         public string? display_name { get; set; }
         public string? league_puuid { get; set; }
     }
+
     public class User : UserDto
     {
         public required Guid id { get; set; }
     }
+
     public class CommunityDto
     {
         public required string community_name { get; set; }
         public string? community_image { get; set; }
-
         public required ulong id { get; set; }
     }
+
     public class Community : CommunityDto
     {
         public required DateTime created_at { get; set; }
+
+        public int community_members { get; set; } = 0;
     }
+
     public class UserCommunityDto
     {
         public required string user_name { get; set; }
     }
+
     public class UserCommunity : UserCommunityDto
     {
         public required Guid id { get; set; }
         public required ulong community_id { get; set; }
     }
+
     public class GameDto
     {
         public required string game_name { get; set; }
     }
+
     public class Game : GameDto
     {
         public required Guid id { get; set; }
     }
+
     public class GameCommunityDto
     {
         public required Guid game_id { get; set; }
         public required Guid community_id { get; set; }
     }
+
     public class GameCommunity : GameCommunityDto
     {
         public required Guid id { get; set; }
     }
+
     public class CompetitionDto
     {
         public required string competition_name { get; set; }
@@ -85,20 +93,24 @@ namespace HermitStore
 
         public ulong? community_id { get; set; }
     }
+
     public class Competition : CompetitionDto
     {
         public required int participants { get; set; }
         public required Guid id { get; set; }
     }
+
     public class UserCompetitionDto
     {
         public required Guid competition_id { get; set; }
         public required string user_name { get; set; }
     }
+
     public class UserCompetition : UserCompetitionDto
     {
         public required Guid id { get; set; }
     }
+
     public class MatchDto
     {
         public Guid competition_id { get; set; }
@@ -110,24 +122,29 @@ namespace HermitStore
         public int networth { get; set; }
         public int match_time { get; set; }
     }
+
     public class MatchGameDto
     {
         public required Guid game_id { get; set; }
         public required Guid match_id { get; set; }
     }
+
     public class MatchGame : MatchGameDto
     {
         public required Guid id { get; set; }
     }
+
     public class Match : MatchDto
     {
         public required Guid id { get; set; }
     }
+
     public class MatchUserDto
     {
         public required string user_name { get; set; }
         public required Guid match_id { get; set; }
     }
+
     public class MatchUser : MatchUserDto
     {
         public required Guid id { get; set; }
