@@ -13,7 +13,7 @@ CREATE TABLE community (
     id bigserial PRIMARY KEY,
     community_name VARCHAR(30) NOT NULL,
     community_image VARCHAR(120),
-    community_members INT DEFAULT 0,
+    community_members INT DEFAULT 0 NOT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE competition (
     game_id UUID REFERENCES game(id) ON DELETE SET NULL,
     rank_alg INT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT TRUE,
-    participants INT NOT NULL,
+    participants INT DEFAULT 0 NOT NULL,
     community_id bigserial REFERENCES community(id) ON DELETE CASCADE
 );
 
