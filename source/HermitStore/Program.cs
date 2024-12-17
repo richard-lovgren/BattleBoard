@@ -299,3 +299,4 @@ app.MapPost(
     .WithDescription("Create a new game");
 
 app.Run();
+
