@@ -1,10 +1,10 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import PlayerGrid from "@/components/playerGrid/PlayerGrid";
 import ClassicMode from "@/components/competitionModes/classicMode/ClassicMode";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { useParams } from "next/navigation";
 
 interface CompetitionData {
@@ -20,8 +20,12 @@ interface CompetitionData {
   is_public: boolean;
 }
 
-async function fetchCompetitionData(competitionId: string): Promise<CompetitionData | null> {
-  const response = await fetch(`/api/competitions?competitionId=${competitionId}`);
+async function fetchCompetitionData(
+  competitionId: string
+): Promise<CompetitionData | null> {
+  const response = await fetch(
+    `/api/competitions?competitionId=${competitionId}`
+  );
   if (!response.ok) return null;
   return response.json();
 }
@@ -36,8 +40,9 @@ const CompetitionPage = () => {
   const params = useParams();
   const { competition } = params;
   const { data: session } = useSession();
-  const username = session?.user?.name!;
-  const [competitionData, setCompetitionData] = useState<CompetitionData | null>(null);
+  const username = session?.user?.name;
+  const [competitionData, setCompetitionData] =
+    useState<CompetitionData | null>(null);
   const [gameName, setGameName] = useState<string | null>(null);
   useEffect(() => {
     const loadCompetitionData = async () => {
@@ -49,7 +54,7 @@ const CompetitionPage = () => {
       }
     };
     loadCompetitionData();
-  }, [username]);
+  }, [username, competition]);
 
   if (!competitionData) {
     return <div>Loading competition data...</div>;
@@ -102,8 +107,12 @@ const CompetitionPage = () => {
             height={100}
           />
           <div className="flex flex-col gap-0 items-center">
-            <h1 className="flex text-xl font-odibee text-white py-0 my-0">23/12</h1>
-            <h1 className="flex text-xl font-odibee text-white py-0 my-0">2024</h1>
+            <h1 className="flex text-xl font-odibee text-white py-0 my-0">
+              23/12
+            </h1>
+            <h1 className="flex text-xl font-odibee text-white py-0 my-0">
+              2024
+            </h1>
           </div>
         </div>
       </div>
@@ -111,14 +120,13 @@ const CompetitionPage = () => {
         <PlayerGrid />
       </div>
 
-      
       {username === competitionData.creator_name && (
-      <div>
-        <Button variant="contained" color="primary">
-          Edit competition results
-        </Button>
-      </div>
-    )}
+        <div>
+          <Button variant="contained" color="primary">
+            Edit competition results
+          </Button>
+        </div>
+      )}
 
       <div>{competitionMainElement}</div>
     </div>
