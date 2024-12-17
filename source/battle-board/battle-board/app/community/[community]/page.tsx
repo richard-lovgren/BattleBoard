@@ -1,8 +1,8 @@
 import Image from "next/image";
-
 import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
 
+const baseUrl = process.env.BASE_URL;
 interface CommunityData {
   community_name: string;
   community_id: string;
@@ -34,7 +34,7 @@ async function fetchCommunityCompetitionData(
   console.log("Community ID: lol", communityId);
 
   const response = await fetch(
-    `/api/community/competition?communityId=${communityId}` // Correct URL
+    `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
   );
   if (!response.ok) {
     return [];

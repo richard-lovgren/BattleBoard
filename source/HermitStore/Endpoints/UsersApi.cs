@@ -118,7 +118,7 @@ public static class UsersApi
             return Results.BadRequest("Failed to create user");
         }
 
-        Console.WriteLine("User {UserId} created", user.id);
+        //Console.WriteLine("User {UserId} created", user.id);
 
         return Results.Created($"/users/{user.id}", user);
     }

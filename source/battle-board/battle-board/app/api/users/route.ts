@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
             url = `${db_conn_str}/users/${userId}`;
         }
 
-        
         const response = await fetch(
             url,
             {

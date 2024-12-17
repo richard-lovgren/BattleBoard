@@ -81,6 +81,7 @@ namespace HermitStore
     public class CompetitionDto
     {
         public required string competition_name { get; set; }
+        public required string creator_name { get; set; }
         public string? competition_description { get; set; }
         public required int competition_type { get; set; }
         public required int format { get; set; }

@@ -201,6 +201,7 @@ app.MapPost(
             var competition = new Competition
             {
                 id = Guid.NewGuid(),
+                creator_name = competitionDto.creator_name,
                 competition_name = competitionDto.competition_name,
                 competition_description = competitionDto.competition_description,
                 competition_type = competitionDto.competition_type,
@@ -280,6 +281,19 @@ app.MapGet(
     )
     .Produces<List<Game>>(StatusCodes.Status200OK)
     .WithDescription("Get all games");
+
+app.MapGet("/games/{id}", async (HermitDbContext dbContext, Guid id) =>
+{
+    var game = await dbContext.game.FindAsync(id);
+    if (game == null)
+    {
+        return Results.NotFound();
+    }
+
+    logger.LogInformation("Game {GameId} found", game.id);
+
+    return Results.Ok(game);
+});
 
 app.MapPost(
         "/games",

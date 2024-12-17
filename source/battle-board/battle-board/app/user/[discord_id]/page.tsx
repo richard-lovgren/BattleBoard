@@ -1,7 +1,6 @@
-
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
-
+const baseUrl = process.env.BASE_URL;
 interface CommunityData {
   community_id: string;
   community_name: string;
@@ -19,7 +18,7 @@ interface UserData {
 
 async function fetchUserData(discord_id: number): Promise<UserData> {
   // Example API endpoint; replace with your actual API request
-  const response = await fetch(`/api/users?userId=${discord_id}`);
+  const response = await fetch(`${baseUrl}/api/users?userId=${discord_id}`);
   if (!response.ok) {
     return {
       id: "",
@@ -36,7 +35,7 @@ async function fetchUserCommunitiesData(
   user_name: string
 ): Promise<CommunityData> {
   const response = await fetch(
-    `/api/users/communities?user_name=${user_name}` // Correct URL
+    `${baseUrl}/api/users/communities?user_name=${user_name}` // Correct URL
   );
   if (!response.ok) {
     return { community_id: "", community_name: "" };
