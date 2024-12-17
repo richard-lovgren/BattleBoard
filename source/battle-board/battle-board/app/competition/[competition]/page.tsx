@@ -62,7 +62,6 @@ export default function CompetitionPage() {
             </h1>
           </div>
         </div>
-
       </div>
       <div>
         <PlayerGrid/>
@@ -70,7 +69,6 @@ export default function CompetitionPage() {
 
       <div>
         <ClassicMode />
-
       </div>
     </div>
   );

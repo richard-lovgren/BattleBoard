@@ -3,16 +3,17 @@
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     discord_id bigserial NOT NULL,
-    user_name VARCHAR(30) NOT NULL,
+    user_name VARCHAR(30) NOT NULL UNIQUE,
     display_name VARCHAR(30),
     league_puuid VARCHAR(100)
 );
 
 -- Community table
 CREATE TABLE community (
-    id UUID PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     community_name VARCHAR(30) NOT NULL,
-    community_image BYTEA
+    community_image VARCHAR(120),
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Game table
@@ -25,15 +26,18 @@ CREATE TABLE game (
 CREATE TABLE game_community (
     id UUID PRIMARY KEY,
     game_id UUID REFERENCES game(id) ON DELETE CASCADE,
-    community_id UUID REFERENCES community(id) ON DELETE CASCADE
+    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
 );
 
 -- User Community N-N table
 CREATE TABLE user_community (
     id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    community_id UUID REFERENCES community(id) ON DELETE CASCADE
+    user_id UUID REFERENCES users(id),
+    user_name VARCHAR(30) NOT NULL,
+    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
 );
+
+
 
 -- Competition table
 CREATE TABLE competition (
@@ -48,7 +52,14 @@ CREATE TABLE competition (
     game_id UUID REFERENCES game(id) ON DELETE SET NULL,
     rank_alg INT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT TRUE,
-    participants INT NOT NULL
+    participants INT NOT NULL,
+    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+);
+
+CREATE TABLE user_competition (
+    id UUID PRIMARY KEY,
+    user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
 );
 
 -- Match table
@@ -87,5 +98,10 @@ ALTER TABLE match_game ADD CONSTRAINT fk_match FOREIGN KEY (match_id) REFERENCES
 ALTER TABLE match_game ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE;
 ALTER TABLE game_community ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE;
 ALTER TABLE game_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id) REFERENCES community(id) ON DELETE CASCADE;
-ALTER TABLE user_community ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE user_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id) REFERENCES community(id) ON DELETE CASCADE;
+
+
+ALTER TABLE competition
+ADD COLUMN community_id UUID REFERENCES community(id) ON DELETE CASCADE;
+
+
