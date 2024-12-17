@@ -1,6 +1,5 @@
 
 using HermitStore;
-using Microsoft.AspNetCore.StaticAssets;
 using Microsoft.EntityFrameworkCore;
 
 public static class UsersApi
@@ -14,7 +13,7 @@ public static class UsersApi
         app.MapPut("/users/{id}", async (HermitDbContext dbContext, ulong id, UserDto userDto) => await UpdateUser(dbContext, id, userDto)).Produces<User>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).Produces(StatusCodes.Status400BadRequest);
         app.MapGet("/users/{user_name}/competitions", async (HermitDbContext dbContext, string user_name) => await GetUserCompetitions(dbContext, user_name)).Produces<List<Guid>>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).Produces(StatusCodes.Status400BadRequest);
         app.MapGet("/users/{user_name}/communities", async (HermitDbContext dbContext, string user_name) => await GetUserCommunities(dbContext, user_name)).Produces<Dictionary<ulong, string>>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).Produces(StatusCodes.Status400BadRequest);
-        app.MapGet("/users/{id}/matches", async (HermitDbContext dbContext, ulong id) => await GetUserMatches(dbContext, id)).Produces<List<Guid>>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).Produces(StatusCodes.Status400BadRequest);
+        app.MapGet("/users/{user_name}/matches", async (HermitDbContext dbContext, string user_name) => await GetUserMatches(dbContext, user_name)).Produces<List<Guid>>(StatusCodes.Status200OK).Produces(StatusCodes.Status404NotFound).Produces(StatusCodes.Status400BadRequest);
 
         Console.WriteLine("Mapped /users endpoints");
     }
@@ -164,14 +163,14 @@ public static class UsersApi
         }
     }
 
-    private static async Task<IResult> GetUserMatches(HermitDbContext dbContext, ulong id)
+    private static async Task<IResult> GetUserMatches(HermitDbContext dbContext, string user_name)
     {
         try
         {
-            var user = await dbContext.users.Where(x => x.discord_id == id).FirstOrDefaultAsync();
+            var user = await dbContext.users.Where(x => x.user_name == user_name).FirstOrDefaultAsync();
             if (user != null)
             {
-                var matchIds = dbContext.match_user.Where(x => x.discord_id == id).Select(x => x.match_id).ToListAsync();
+                var matchIds = dbContext.match_user.Where(x => x.user_name == user_name).Select(x => x.match_id).ToListAsync();
                 return Results.Ok(matchIds);
             }
             else
