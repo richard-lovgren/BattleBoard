@@ -68,22 +68,23 @@ CREATE TABLE user_competition (
 
 CREATE TABLE "leaderboard" (
     id UUID PRIMARY KEY,
-    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE,
-)
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
+);
 
 CREATE TABLE "leaderboard_metric" (
-    id UUID PRIMARY KEY,
     leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
     metric_name VARCHAR(30) NOT NULL,
-)
+    PRIMARY KEY (leaderboard_id, metric_name)
+);
 
-CREATE TABLE "leaderboard_user_score" (
+CREATE TABLE "leaderboard_user_score" ( 
     id UUID PRIMARY KEY,
     leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
     user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
-    metric_name VARCHAR(30) REFERENCES leaderboard_metric(metric_name) ON DELETE CASCADE,
+    metric_name VARCHAR(30),
     score INT NOT NULL,
-)
+    FOREIGN KEY (leaderboard_id, metric_name) REFERENCES leaderboard_metric(leaderboard_id, metric_name) ON DELETE CASCADE
+);
 
 -- END RUSH 
 
@@ -152,7 +153,7 @@ INSERT INTO community(id, community_name, community_members) VALUES(131857110941
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926133, 'Uppsala FGC', 50);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418966134, 'Gnarp FGC', 8);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926135, 'IT Sektionen', 500);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418936136, 'Ångström Warriors', 75);
+INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926136, 'Ångström Warriors', 75);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926137, 'Moba Pro Club', 24);
 
 -- Competitions
