@@ -25,7 +25,7 @@ async function getCommunities(): Promise<Community[]> {
 
 export default function Search() {
   /* State */
-  const [toggleCompetitions, setToggleCompetitions] = useState(localStorage.getItem("toggleCompetitions") === "true");
+  const [toggleCompetitions, setToggleCompetitions] = useState(false);
   const [searchString, setSearchString] = useState('');
   const [competitions, setCompetitions] = useState<CompetitionData[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
@@ -55,14 +55,20 @@ export default function Search() {
     isOn: toggleCompetitions,
     handleOnClick: handleToggle,
   };
+  useEffect(() => {
+    const savedValue = window.localStorage.getItem("toggleCompetitions");
+    if(savedValue === "true") {
+      setToggleCompetitions(Boolean(savedValue));
+    }
+  },[]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        localStorage.setItem('toggleCompetitions', toggleCompetitions.toString())
-
+        window.localStorage.setItem("toggleCompetitions", toggleCompetitions.toString());
+        
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
           console.log("competitionData", competitionData);
