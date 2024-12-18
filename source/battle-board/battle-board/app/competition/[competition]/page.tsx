@@ -9,6 +9,11 @@ import CompetitionData from "@/models/interfaces/CompetitionData";
 import { Button } from "@mui/material";
 import { parse } from "papaparse";
 
+import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
+import LeaderboardEntryDTO from "@/models/dtos/leaderboard-entry-dto";
+import LeaderboardMetricDTO from "@/models/dtos/leaderboard-metric-dto";
+import Leaderboard from "@/models/interfaces/leaderboard";
+
 interface GameData {
   game_id: string;
   game_name: string;
@@ -16,7 +21,7 @@ interface GameData {
 
 function parseCsv<T>(fileContent: string): T[] {
   const { data, errors } = parse<T>(fileContent, {
-    header: true,         // Treat the first row as the header
+    header: true, // Treat the first row as the header
     skipEmptyLines: true, // Ignore empty rows
   });
 
@@ -41,10 +46,39 @@ async function fetchCompetitionData(
 async function fetchGameName(gameId: string): Promise<string | null> {
   const response = await fetch(`/api/game?gameId=${gameId}`);
   if (!response.ok) return null;
+
+  const gameData = await response.json();
+  return gameData?.game_name || null; // Return the game_name directly
+}
+
+async function fetchClassicLeaderBoard(competitionId: string) {
+  const response = await fetch(
+    `/api/competitions/classic/leaderboard?competitionId=${competitionId}`
+  );
+  if (!response.ok) return null;
   return response.json();
 }
 
+async function createClassicLeaderboard(competitionId: string) {
+  const leaderboardDto: LeaderboardDTO = {
+    competition_id: competitionId,
+  };
 
+  const response = await fetch(`/api/competitions/classic/leaderboard`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(leaderboardDto),
+  });
+
+  if (!response.ok) {
+    console.error("Failed to create leaderboard");
+    return null;
+  }
+
+  return await response.json();
+}
 
 const CompetitionPage = () => {
   const params = useParams();
@@ -54,6 +88,9 @@ const CompetitionPage = () => {
   const [competitionData, setCompetitionData] =
     useState<CompetitionData | null>(null);
   const [gameName, setGameName] = useState<string | null>(null);
+
+  const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
+
   useEffect(() => {
     const loadCompetitionData = async () => {
       const data = await fetchCompetitionData(competition as string);
@@ -69,6 +106,16 @@ const CompetitionPage = () => {
   if (!competitionData) {
     return <div>Loading competition data...</div>;
   }
+
+  useEffect(() => {
+    const loadLeaderboard = async () => {
+      const data = await fetchClassicLeaderBoard(competitionData.id);
+      if (data) {
+        setLeaderboard(data);
+      }
+    };
+    loadLeaderboard();
+  }, [competitionData]);
 
   let competitionMainElement: JSX.Element = <></>;
   if (competitionData.competition_type === 0) {

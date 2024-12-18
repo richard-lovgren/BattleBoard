@@ -17,6 +17,10 @@ namespace HermitStore
         public required DbSet<UserCommunity> user_community { get; set; }
         public required DbSet<GameCommunity> game_community { get; set; }
         public required DbSet<UserCompetition> user_competition { get; set; }
+
+        public required DbSet<Leaderboard> leaderboard { get; set; }
+        public required DbSet<LeaderboardMetric> leaderboard_metric { get; set; }
+        public required DbSet<LeaderboardEntry> leaderboard_entry { get; set; }
     }
 
     public class UserDto
@@ -147,6 +151,41 @@ namespace HermitStore
     }
 
     public class MatchUser : MatchUserDto
+    {
+        public required Guid id { get; set; }
+    }
+
+    // Leaderboard stuff
+    public class LeaderboardDto
+    {
+        public required Guid competition_id { get; set; }
+    }
+
+    public class Leaderboard : LeaderboardDto
+    {
+        public required Guid id { get; set; }
+    }
+
+    public class LeaderboardMetricDto
+    {
+        public required Guid leaderboard_id { get; set; }
+        public required string metric_name { get; set; }
+    }
+
+    public class LeaderboardMetric : LeaderboardMetricDto
+    {
+        public required Guid id { get; set; }
+    }
+
+    public class LeaderboardEntryDto
+    {
+        public required Guid leaderboard_id { get; set; }
+        public required string user_name { get; set; }
+        public required string metric_name { get; set; }
+        public required int metric_value { get; set; }
+    }
+
+    public class LeaderboardEntry : LeaderboardEntryDto
     {
         public required Guid id { get; set; }
     }

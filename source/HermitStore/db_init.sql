@@ -64,6 +64,29 @@ CREATE TABLE user_competition (
     competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
 );
 
+-- RUSH CLASSIC CUSTOM TABLES
+
+CREATE TABLE "leaderboard" (
+    id UUID PRIMARY KEY,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE,
+)
+
+CREATE TABLE "leaderboard_metric" (
+    id UUID PRIMARY KEY,
+    leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
+    metric_name VARCHAR(30) NOT NULL,
+)
+
+CREATE TABLE "leaderboard_user_score" (
+    id UUID PRIMARY KEY,
+    leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
+    user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
+    metric_name VARCHAR(30) REFERENCES leaderboard_metric(metric_name) ON DELETE CASCADE,
+    score INT NOT NULL,
+)
+
+-- END RUSH 
+
 -- Match table
 CREATE TABLE "match" (
     id UUID PRIMARY KEY,

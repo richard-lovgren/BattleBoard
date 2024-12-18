@@ -28,6 +28,7 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 app.MapGet("/", () => "Hello World!").Produces<string>(StatusCodes.Status200OK);
 
 app.MapUserEndpoints();
+app.MapClassicModeEndpoints();
 
 app.MapGet(
         "/communities",
