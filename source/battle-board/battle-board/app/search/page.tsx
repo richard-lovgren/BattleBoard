@@ -28,7 +28,7 @@ async function getCommunities(): Promise<Community[]> {
 
 export default function Search() {
   /* State */
-  const [toggleCompetitions, setToggleCompetitions] = useState(true);
+  const [toggleCompetitions, setToggleCompetitions] = useState(localStorage.getItem('toggleCompetitions') === 'true');
   const [competitions, setCompetitions] = useState<CompetitionData[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +50,7 @@ export default function Search() {
       try {
         setLoading(true);
         setError(null);
+        localStorage.setItem('toggleCompetitions', toggleCompetitions.toString())
 
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
