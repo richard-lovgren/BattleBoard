@@ -298,4 +298,22 @@ app.MapPost(
     .Produces<Game>(StatusCodes.Status201Created)
     .WithDescription("Create a new game");
 
+app.MapGet(
+    "/games/{id}",
+    async (HermitDbContext dbContext, Guid id) =>
+    {
+        var game = await dbContext.game.FindAsync(id);
+        if (game == null)
+        {
+            return Results.NotFound();
+        }
+
+        logger.LogInformation("Game {GameId} found", game.id);
+
+        return Results.Ok(game);
+    }
+);
+
+
+
 app.Run();

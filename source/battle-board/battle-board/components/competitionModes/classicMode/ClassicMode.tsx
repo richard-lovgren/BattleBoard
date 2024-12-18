@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   Box,
-  Paper,
   TableRow,
   TableHead,
   TableContainer,
@@ -16,17 +15,21 @@ type RowData = {
   [key: string]: string | number // allow both strings and numbers
 }
 
-// JSON data
-const rows: RowData[] = [
-  { rank: 1, name: 'nattap', calories: 159, fat: 6.0, carbs: 24, protein: 4.0 },
-  { rank: 2, name: 'user2', calories: 237, fat: 9.0, carbs: 37, protein: 4.3 },
-  { rank: 3, name: 'user3', calories: 262, fat: 16.0, carbs: 24, protein: 6.0 },
-  { rank: 4, name: 'user4', calories: 305, fat: 3.7, carbs: 67, protein: 4.3 },
-  { rank: 5, name: 'user5', calories: 356, fat: 16.0, carbs: 49, protein: 3.9 },
-]
+// Interface for the ClassicMode components props
+interface ClassicModeProps {
+  Rows: RowData[];
+}
 
-export default function ClassicMode() {
-  const columns = rows.length > 0 ? Object.keys(rows[0]) : []
+const ClassicMode: React.FC<ClassicModeProps> = ({ Rows }) => {
+  const columns = Rows.length > 0 ? Object.keys(Rows[0]) : []
+
+  if (columns.length === 0) {
+    return (
+      <div className="flex">
+        <h1 className="font-bold text-2xl">Input some data to visualize it!</h1>
+      </div>
+    );
+  }
 
   return (
     <Box style={{ width: '60vw', margin: '0 0 100px 0' }}>
@@ -42,7 +45,7 @@ export default function ClassicMode() {
             </TableRow>
           </TableHead>
           <TableBody >
-            {rows.map((row, rowIndex) => (
+            {Rows.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 sx={{
@@ -51,10 +54,10 @@ export default function ClassicMode() {
                 }}
               >
                 {columns.map((column) => (
-                  <TableCell key={column} sx={{ color: 'white', border:'none' }}>
-                  <Typography className="breadText">{row[column]}</Typography>
-                    
-                    
+                  <TableCell key={column} sx={{ color: 'white', border: 'none' }}>
+                    <Typography className="breadText">{row[column]}</Typography>
+
+
                   </TableCell>
                 ))}
               </TableRow>
@@ -65,3 +68,5 @@ export default function ClassicMode() {
     </Box>
   )
 }
+
+export default ClassicMode;
