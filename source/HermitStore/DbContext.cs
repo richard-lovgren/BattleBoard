@@ -4,6 +4,11 @@ namespace HermitStore
 {
     public class HermitDbContext : DbContext
     {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LeaderboardMetric>().HasKey(lm => new { lm.leaderboard_id, lm.metric_name });
+            base.OnModelCreating(modelBuilder);
+        }
         public HermitDbContext(DbContextOptions<HermitDbContext> options)
             : base(options) { }
 

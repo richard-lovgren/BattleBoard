@@ -226,14 +226,14 @@ app.MapPost(
                 community_id = competitionDto.community_id,
             };
 
-            if (competition.community_id != null)
-            {
-                var community = await dbContext.community.FindAsync(competition.community_id);
-                if (community == null)
-                {
-                    return Results.NotFound("Community not found");
-                }
-            }
+            //if (competition.community_id != null)
+            //{
+            //    var community = await dbContext.community.FindAsync(competition.community_id);
+            //    if (community == null)
+            //    {
+            //        return Results.NotFound("Community not found");
+            //    }
+            //}
 
             if (competition.creator_name != null)
             {
