@@ -11,7 +11,7 @@ CREATE TABLE users (
 -- Community table
 CREATE TABLE community (
     id BIGINT PRIMARY KEY,
-    community_name VARCHAR(30) NOT NULL,
+    community_name VARCHAR(30) NOT NULL UNIQUE,
     community_image VARCHAR(120),
     community_members INT DEFAULT 0 NOT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP

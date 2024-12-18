@@ -9,6 +9,7 @@ import Community from "@/models/community";
 
 import { useEffect, useState } from "react";
 import ButtonData from "@/models/button-data";
+import SearchBarData from "@/models/search-bar-data";
 
 async function getCompetitions(): Promise<CompetitionData[]> {
   const response = await fetch("/api/competitions/public");
@@ -18,19 +19,18 @@ async function getCompetitions(): Promise<CompetitionData[]> {
 async function getCommunities(): Promise<Community[]> {
   const response = await fetch("/api/community/public");
   const data = await response.json();
-  const sketchyJSInts = data.map((item: any) => ({
-    ...item,
-    id: item.id.toString()
-  }));
-  return sketchyJSInts;
+  return data
 }
 
 
 export default function Search() {
   /* State */
-  const [toggleCompetitions, setToggleCompetitions] = useState(true);
+  const [toggleCompetitions, setToggleCompetitions] = useState(false);
+  const [searchString, setSearchString] = useState('');
   const [competitions, setCompetitions] = useState<CompetitionData[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
+  const [filteredCompetitions, setFilteredCompetitions] = useState(competitions);
+  const [filteredCommunities, setFilteredCommunities] = useState(communities);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,26 +39,53 @@ export default function Search() {
     setToggleCompetitions(!toggleCompetitions);
   };
 
-  /* Static placeholder data */
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchString(searchTerm);
+    setFilteredCommunities(communities.filter((comm) => comm.community_name.toLowerCase().includes(searchTerm)));
+    setFilteredCompetitions(competitions.filter((comp) => comp.competition_name.toLowerCase().includes(searchTerm)));
+  }
+
+  const searchBarData: SearchBarData = {
+    searchString: searchString,
+    handleChange: handleInputChange,
+  }
+
   const buttonData: ButtonData = {
     isOn: toggleCompetitions,
     handleOnClick: handleToggle,
   };
+  useEffect(() => {
+    const savedValue = window.localStorage.getItem("toggleCompetitions");
+    if(savedValue === "true") {
+      setToggleCompetitions(Boolean(savedValue));
+    }
+  },[]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-
+        window.localStorage.setItem("toggleCompetitions", toggleCompetitions.toString());
+        
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
           console.log("competitionData", competitionData);
           setCompetitions(competitionData);
+          setFilteredCompetitions(competitionData);
+
+          if(searchString) {
+            setFilteredCompetitions(competitionData.filter((comp) => comp.competition_name.toLowerCase().includes(searchString)));
+          }
         } else {
           const communityData = await getCommunities();
           console.log("communityData", communityData);
           setCommunities(communityData);
+          setFilteredCommunities(communityData);
+          if(searchString) {
+            setFilteredCommunities(communityData.filter((comm) => comm.community_name.toLowerCase().includes(searchString)));
+          }
         }
       } catch (err) {
         setError((err as Error).message);
@@ -88,7 +115,7 @@ export default function Search() {
           </div>
 
           <div className="mt-10">
-            <SearchBar />
+            <SearchBar {...searchBarData} />
           </div>
 
           <div className="flex flex-wrap gap-10 justify-center mt-32 min-h-[80vh] w-[80vw] p-20">
@@ -96,15 +123,15 @@ export default function Search() {
             {error && <div>Error: {error}</div>}
             {!loading && !error && toggleCompetitions && (
               <>
-                {competitions.map((comp) => (
+                {filteredCompetitions.map((comp) => (
                   <CompetitonSearchItem key={comp.id} {...comp} />
                 ))}
               </>
             )}
             {!loading && !error && !toggleCompetitions && (
               <>
-                {communities.map((comm) => (
-                  <CommunitySearchItem key={comm.id} {...comm} />
+                {filteredCommunities.map((comm) => (
+                  <CommunitySearchItem key={comm.community_name} {...comm} />
                 ))}
               </>
             )}

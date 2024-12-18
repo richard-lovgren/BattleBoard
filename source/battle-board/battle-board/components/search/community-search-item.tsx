@@ -1,6 +1,7 @@
 import Community from "@/models/community";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
+import formatDate from "@/app/modules/helpers";
 
 export default function CommunitySearchItem(community: Community) {
   return (
@@ -47,7 +48,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            Created {community.created_at.toString().split(".")[0]}
+            Created {formatDate(community.created_at)}
           </span>
         </div>
         <div className="flex items-center justify-center">
