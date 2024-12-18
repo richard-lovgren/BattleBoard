@@ -1,23 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import PlayerGrid from "@/components/playerGrid/PlayerGrid";
 import ClassicMode from "@/components/competitionModes/classicMode/ClassicMode";
-import Button from "@mui/material/Button";
-import { useParams } from "next/navigation";
+import CompetitionData from "@/models/interfaces/CompetitionData";
+import { Button } from "@mui/material";
+import { parse } from "papaparse";
 
-interface CompetitionData {
-  competition_name: string;
-  creator_name: string;
-  competition_description: string;
-  competition_type: number;
-  format: number;
-  is_open: boolean;
-  is_running: boolean;
+interface GameData {
   game_id: string;
-  rank_alg: number;
-  is_public: boolean;
+  game_name: string;
+}
+
+function parseCsv<T>(fileContent: string): T[] {
+  const { data, errors } = parse<T>(fileContent, {
+    header: true,         // Treat the first row as the header
+    skipEmptyLines: true, // Ignore empty rows
+  });
+
+  if (errors.length > 0) {
+    console.error("CSV Parsing Errors:", errors);
+    throw new Error("Failed to parse CSV file");
+  }
+
+  return data;
 }
 
 async function fetchCompetitionData(
@@ -35,6 +43,8 @@ async function fetchGameName(gameId: string): Promise<string | null> {
   if (!response.ok) return null;
   return response.json();
 }
+
+
 
 const CompetitionPage = () => {
   const params = useParams();
