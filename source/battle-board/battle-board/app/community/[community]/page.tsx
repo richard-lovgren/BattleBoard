@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
+import CompetitionData from "@/models/interfaces/CompetitionData";
 
 const baseUrl = process.env.BASE_URL;
 interface CommunityData {
@@ -9,18 +10,13 @@ interface CommunityData {
   community_image?: string;
 }
 
-interface CompetitionData {
-  competition_name: string;
-  id: string;
-}
-
 type CommunityPageProps = Promise<{ community: string }>;
 
 // Fetch community data directly inside the server component
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   console.log("Inside fetch community data: ", communityId);
   const response = await fetch(
-    `api/community?communityId=${communityId}`
+    `${baseUrl}/api/community?communityId=${communityId}`
   );
   if (!response.ok) {
     return { community_name: "", community_id: "", community_image: "" };

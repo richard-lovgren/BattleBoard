@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: errorData.message }, { status: response.status });
         }
 
-        return NextResponse.json({ message: "Competition created successfully." });
+        const response_data = await response.json();
+        return NextResponse.json({ id: response_data });
     } catch (error) {
         console.error("Error creating competition:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

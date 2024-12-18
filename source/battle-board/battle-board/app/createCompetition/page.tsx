@@ -4,11 +4,16 @@ import { useEffect, useState } from 'react';
 import CompetitionDto from '@/models/dtos/competition-dto';
 import './createCompetition.css';
 import Game from '@/models/game';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function CreateCompetition() {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const placeholderUsers: string[] = ["laswer5", ".nattap", "cafg", "richard", "nagnub"];
+  const session = useSession();
+  const router = useRouter();
+  const username = session.data?.user.name || "undefined";
 
   // Fetch game data
   useEffect(() => {
@@ -30,9 +35,22 @@ export default function CreateCompetition() {
     fetchGameData();
   }, []);
 
-  async function postCompetitionData(body: CompetitionDto) {
+  if (!session.data) {
+    return (
+      <div className="bg-background flex flex-col items-center">
+        <main className="flex-auto item font-odibee text-9xl">
+          <div className="text-6xl">
+            You must be logged in to create a competition
+            <hr />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  async function postCompetitionData(body: CompetitionDto): Promise<string | null> {
     try {
-      console.log("Creating competition with body::", body);
+      console.log("Creating competition with body:", body);
       const url = `/api/competitions`;
 
       const response = await fetch(url, {
@@ -48,13 +66,15 @@ export default function CreateCompetition() {
       }
 
       const result = await response.json();
-      console.log(result.message);
+      const id = result.id;
+      return id;
     } catch (error) {
       console.error("Error in postCompetitionData:", error);
     }
+    return null;
   }
 
-  async function handleSumbit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -63,6 +83,7 @@ export default function CreateCompetition() {
     const formJson = Object.fromEntries(formData.entries());
     const body: CompetitionDto = {
       competition_name: formJson.competitionName.toString(),
+      creator_name: username,
       competition_description: formJson.competitionDesc.toString(),
       competition_type: parseInt(formJson.competitionType.toString()),
       format: 1,
@@ -74,13 +95,21 @@ export default function CreateCompetition() {
     };
 
     console.log(body);
-    await postCompetitionData(body);
+    const competition_id = await postCompetitionData(body);
+    
+    if (!competition_id) {
+      console.error("Error creating competition");
+      router.push(`/`);
+    }
+
+    router.push(`/competition/${competition_id}`);
+
   }
 
   return (
     <div className='bg-background flex flex-col items-center'>
       <main className='flex-auto item font-odibee text-9xl'>
-        <form method='post' onSubmit={handleSumbit} className='createWrapper'>
+        <form method='post' onSubmit={handleSubmit} className='createWrapper'>
           <div className='text-6xl'>
             Create a competition
             <hr />
@@ -183,7 +212,7 @@ export default function CreateCompetition() {
           </div>
 
           <button type='submit' className='createButton font-nunito'>
-            Save
+            Create competition
           </button>
         </form>
       </main>

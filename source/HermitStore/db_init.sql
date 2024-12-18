@@ -2,7 +2,7 @@
 -- User table
 CREATE TABLE users (
     id UUID PRIMARY KEY,
-    discord_id bigserial NOT NULL,
+    discord_id BIGINT NOT NULL,
     user_name VARCHAR(30) NOT NULL UNIQUE,
     display_name VARCHAR(30),
     league_puuid VARCHAR(100)
@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 -- Community table
 CREATE TABLE community (
-    id bigserial PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     community_name VARCHAR(30) NOT NULL,
     community_image VARCHAR(120),
     community_members INT DEFAULT 0 NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE game (
 CREATE TABLE game_community (
     id UUID PRIMARY KEY,
     game_id UUID REFERENCES game(id) ON DELETE CASCADE,
-    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+    community_id BIGINT REFERENCES community(id) ON DELETE CASCADE
 );
 
 -- User Community N-N table
@@ -35,7 +35,7 @@ CREATE TABLE user_community (
     id UUID PRIMARY KEY,
     user_id UUID REFERENCES users(id),
     user_name VARCHAR(30) NOT NULL,
-    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+    community_id BIGINT REFERENCES community(id) ON DELETE CASCADE
 );
 
 
@@ -55,7 +55,7 @@ CREATE TABLE competition (
     rank_alg INT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT TRUE,
     participants INT DEFAULT 0 NOT NULL,
-    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+    community_id BIGINT REFERENCES community(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_competition (

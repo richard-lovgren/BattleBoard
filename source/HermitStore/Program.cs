@@ -214,15 +214,46 @@ app.MapPost(
                 community_id = competitionDto.community_id,
             };
 
+            if (competition.community_id != null)
+            {
+                var community = await dbContext.community.FindAsync(competition.community_id);
+                if (community == null)
+                {
+                    return Results.NotFound("Community not found");
+                }
+            }
+
+            if (competition.creator_name != null)
+            {
+                var user = await dbContext
+                    .users.Where(x => x.user_name == competition.creator_name)
+                    .FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    return Results.NotFound("User not found");
+                }
+
+                dbContext.user_competition.Add(
+                    new UserCompetition
+                    {
+                        id = Guid.NewGuid(),
+                        user_name = competition.creator_name,
+                        competition_id = competition.id,
+                    }
+                );
+            }
+
+            competition.participants++;
+
             dbContext.competition.Add(competition);
             await dbContext.SaveChangesAsync();
 
             logger.LogInformation("Competition {CompetitionId} created", competition.id);
 
-            return Results.Created($"/competitions/{competition.id}", competition);
+            return Results.Created<Guid>("/competitions/{competition.id}", competition.id);
         }
     )
-    .Produces<Competition>(StatusCodes.Status201Created)
+    .Produces<Guid>(StatusCodes.Status201Created)
     .WithDescription("Create a new competition");
 
 app.MapPost(
