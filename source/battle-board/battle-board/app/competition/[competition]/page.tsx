@@ -3,9 +3,80 @@
 import Image from "next/image";
 import PlayerGrid from "@/components/playerGrid/PlayerGrid";
 import ClassicMode from "@/components/competitionModes/classicMode/ClassicMode";
+import { parse } from "papaparse";
 
-export default function CompetitionPage() {
-  const competition = {
+interface CompetitionData {
+  id: string;
+  competition_name: string;
+  competition_description: string;
+  competition_game: string;
+}
+
+interface GameData {
+  game_id: string;
+  game_name: string;
+}
+
+type CompetitionPageProps = Promise<{ competition: number }>;
+
+export function parseCsv<T>(fileContent: string): T[] {
+  const { data, errors } = parse<T>(fileContent, {
+    header: true,         // Treat the first row as the header
+    skipEmptyLines: true, // Ignore empty rows
+  });
+
+  if (errors.length > 0) {
+    console.error("CSV Parsing Errors:", errors);
+    throw new Error("Failed to parse CSV file");
+  }
+
+  return data;
+}
+
+async function fetchCompetitionData(competition_id: number): Promise<CompetitionData> {
+  // Example API endpoint; replace with your actual API request
+  console.log("BASE_URL:", process.env.BASE_URL);
+  console.log("Heere", competition_id);
+  const response = await fetch(`${process.env.BASE_URL}/api/competitions?competitionId=${competition_id}`);
+  if (!response.ok) {
+    return {
+      id: "",
+      competition_name: "",
+      competition_description: "",
+      competition_game: "",
+    };
+  }
+  return response.json();
+}
+
+async function fetchCompetitionGameData(game_id: string): Promise<GameData> {
+  // Example API endpoint; replace with your actual API request
+  console.log("BASE_URL:", process.env.BASE_URL);
+  console.log("Heere", game_id);
+  const response = await fetch(`${process.env.BASE_URL}/api/competitions?competitionId=${game_id}`);
+  if (!response.ok) {
+    return {
+      game_id: "",
+      game_name: "",
+    };
+  }
+  return response.json();
+}
+
+// Server component
+const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
+  // Extract community ID from the URL
+  const { competition } = await props.params;
+
+  // Fetch user data from the API
+  const competitionHeader = await fetchCompetitionData(competition);
+
+  console.log("Competitions: ", competitionHeader);
+
+  //TODO: Fetch game data so API enpoint is needed.
+  //const competitionGame = fetchCompetitionGameData(competitionHeader.competition_game);
+
+  const competitionData = {
     name: "Competition name",
     description: "League of legends",
 
@@ -28,14 +99,14 @@ export default function CompetitionPage() {
 
         <div className="flex flex-col gap-4  h-full pl-12 pr-36">
           <h1 className="flex text-8xl font-odibee text-white">
-            {competition.name}
+            {competitionHeader.competition_name}
           </h1>
           <h2 className="flex text-4xl font-odibee text-white text-wrap">
-            {competition.description}
+            {competitionHeader.competition_description}
           </h2>
 
           <h3 className="flex text-xl font-odibee text-white">
-            {competition.game}
+            {competitionHeader.competition_game}
           </h3>
         </div>
 
@@ -64,12 +135,14 @@ export default function CompetitionPage() {
         </div>
       </div>
       <div>
-        <PlayerGrid/>
+        <PlayerGrid />
       </div>
-
       <div>
         <ClassicMode />
       </div>
     </div>
   );
 }
+
+// Export the server component
+export default CompetitionPage;

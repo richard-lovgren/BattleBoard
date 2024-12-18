@@ -19,7 +19,9 @@ interface UserData {
 
 async function fetchUserData(discord_id: number): Promise<UserData> {
   // Example API endpoint; replace with your actual API request
-  const response = await fetch(`/api/users?userId=${discord_id}`);
+  console.log("BASE_URL:", process.env.BASE_URL);
+  console.log("Heere", discord_id);
+  const response = await fetch(`${process.env.BASE_URL}/api/users?userId=${discord_id}`);
   if (!response.ok) {
     return {
       id: "",
@@ -35,8 +37,9 @@ async function fetchUserData(discord_id: number): Promise<UserData> {
 async function fetchUserCommunitiesData(
   user_name: string
 ): Promise<CommunityData> {
-  const response = await fetch(
-    `/api/users/communities?user_name=${user_name}` // Correct URL
+  // Example API endpoint; replace with your actual API request
+  console.log("BASE_URL:", process.env.BASE_URL);
+  const response = await fetch(`${process.env.BASE_URL}/api/users/communities?user_name=${user_name}` // Correct URL
   );
   if (!response.ok) {
     return { community_id: "", community_name: "" };
