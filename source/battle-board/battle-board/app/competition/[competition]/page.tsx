@@ -85,29 +85,30 @@ const CompetitionPage = () => {
   const { competition } = params;
   const { data: session } = useSession();
   const username = session?.user?.name;
-  const [competitionData, setCompetitionData] =
-    useState<CompetitionData | null>(null);
-  const [gameName, setGameName] = useState<string | null>(null);
 
+  const [competitionData, setCompetitionData] = useState<CompetitionData | null>(null);
+  const [gameName, setGameName] = useState<string | null>(null);
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
 
+  // Fetch competition data and game name
   useEffect(() => {
+    if (!competition) return;
     const loadCompetitionData = async () => {
       const data = await fetchCompetitionData(competition as string);
       if (data) {
         setCompetitionData(data);
-        const gameName = await fetchGameName(data.game_id);
-        setGameName(gameName || "Game not found");
+
+        // Fetch game name if competition data is fetched
+        const fetchedGameName = await fetchGameName(data.game_id);
+        setGameName(fetchedGameName || "Game not found");
       }
     };
     loadCompetitionData();
-  }, [username, competition]);
+  }, [competition]);
 
-  if (!competitionData) {
-    return <div>Loading competition data...</div>;
-  }
-
+  // Fetch leaderboard data when competitionData is available
   useEffect(() => {
+    if (!competitionData?.id) return;
     const loadLeaderboard = async () => {
       const data = await fetchClassicLeaderBoard(competitionData.id);
       if (data) {
@@ -116,6 +117,10 @@ const CompetitionPage = () => {
     };
     loadLeaderboard();
   }, [competitionData]);
+
+  if (!competitionData) {
+    return <div>Loading competition data...</div>;
+  }
 
   let competitionMainElement: JSX.Element = <></>;
   if (competitionData.competition_type === 0) {
