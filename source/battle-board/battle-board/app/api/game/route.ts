@@ -1,17 +1,11 @@
-
 import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const communityId = searchParams.get("communityId");
-    const url = `${db_conn_str}/communities/${communityId}/competitions`;
-
-
-    console.log("URL : ", url);
-
-
+    const gameId = searchParams.get("gameId");
+    const url = `${db_conn_str}/games/${gameId}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -30,7 +24,7 @@ export async function GET(req: NextRequest) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error fetching competition:", error);
+    console.error("Error fetching game : ", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

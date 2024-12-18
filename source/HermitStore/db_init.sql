@@ -2,7 +2,7 @@
 -- User table
 CREATE TABLE users (
     id UUID PRIMARY KEY,
-    discord_id bigserial NOT NULL,
+    discord_id BIGINT NOT NULL,
     user_name VARCHAR(30) NOT NULL UNIQUE,
     display_name VARCHAR(30),
     league_puuid VARCHAR(100)
@@ -10,8 +10,8 @@ CREATE TABLE users (
 
 -- Community table
 CREATE TABLE community (
-    id bigserial PRIMARY KEY,
-    community_name VARCHAR(30) NOT NULL,
+    id BIGINT PRIMARY KEY,
+    community_name VARCHAR(30) NOT NULL UNIQUE,
     community_image VARCHAR(120),
     community_members INT DEFAULT 0 NOT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -27,7 +27,7 @@ CREATE TABLE game (
 CREATE TABLE game_community (
     id UUID PRIMARY KEY,
     game_id UUID REFERENCES game(id) ON DELETE CASCADE,
-    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+    community_id BIGINT REFERENCES community(id) ON DELETE CASCADE
 );
 
 -- User Community N-N table
@@ -35,7 +35,7 @@ CREATE TABLE user_community (
     id UUID PRIMARY KEY,
     user_id UUID REFERENCES users(id),
     user_name VARCHAR(30) NOT NULL,
-    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+    community_id BIGINT REFERENCES community(id) ON DELETE CASCADE
 );
 
 
@@ -43,6 +43,7 @@ CREATE TABLE user_community (
 -- Competition table
 CREATE TABLE competition (
     id UUID PRIMARY KEY,
+    creator_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
     competition_name VARCHAR(30) NOT NULL,
     competition_description VARCHAR(250),
     competition_type INT NOT NULL,
@@ -54,7 +55,7 @@ CREATE TABLE competition (
     rank_alg INT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT TRUE,
     participants INT DEFAULT 0 NOT NULL,
-    community_id bigserial REFERENCES community(id) ON DELETE CASCADE
+    community_id BIGINT REFERENCES community(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_competition (
@@ -62,6 +63,30 @@ CREATE TABLE user_competition (
     user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
     competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
 );
+
+-- RUSH CLASSIC CUSTOM TABLES
+
+CREATE TABLE "leaderboard" (
+    id UUID PRIMARY KEY,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
+);
+
+CREATE TABLE "leaderboard_metric" (
+    leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
+    metric_name VARCHAR(30) NOT NULL,
+    PRIMARY KEY (leaderboard_id, metric_name)
+);
+
+CREATE TABLE "leaderboard_user_score" ( 
+    id UUID PRIMARY KEY,
+    leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
+    user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
+    metric_name VARCHAR(30),
+    score INT NOT NULL,
+    FOREIGN KEY (leaderboard_id, metric_name) REFERENCES leaderboard_metric(leaderboard_id, metric_name) ON DELETE CASCADE
+);
+
+-- END RUSH 
 
 -- Match table
 CREATE TABLE "match" (
@@ -126,19 +151,19 @@ INSERT INTO game(id, game_name) VALUES('241e3728-5b50-45a1-92cf-c8695af932e2', '
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926131, 'BattleBoard Team', 5);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926132, 'Pathetic Failure Squad', 10);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926133, 'Uppsala FGC', 50);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926134, 'Gnarp FGC', 8);
+INSERT INTO community(id, community_name, community_members) VALUES(1318571109418966134, 'Gnarp FGC', 8);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926135, 'IT Sektionen', 500);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926136, 'Ångström Warriors', 75);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926137, 'Moba Pro Club', 24);
 
 -- Competitions
-INSERT INTO competition(id, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'LOL rival league', 'Rival leauge in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926131);
+INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival leauge in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926131);
 
 
-INSERT INTO competition(id, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'Kapp clash 10', '10th kappa clash in sf6', 1, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926133);
+INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'dummy2', 'Kapp clash 10', '10th kappa clash in sf6', 1, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926133);
 
 
-INSERT INTO competition(id, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 1, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  2, 1318571109418926136);
+INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'dummy3', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 1, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  2, 1318571109418926136);

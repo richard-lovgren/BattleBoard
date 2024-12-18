@@ -4,6 +4,11 @@ namespace HermitStore
 {
     public class HermitDbContext : DbContext
     {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LeaderboardMetric>().HasKey(lm => new { lm.leaderboard_id, lm.metric_name });
+            base.OnModelCreating(modelBuilder);
+        }
         public HermitDbContext(DbContextOptions<HermitDbContext> options)
             : base(options) { }
 
@@ -17,12 +22,16 @@ namespace HermitStore
         public required DbSet<UserCommunity> user_community { get; set; }
         public required DbSet<GameCommunity> game_community { get; set; }
         public required DbSet<UserCompetition> user_competition { get; set; }
+
+        public required DbSet<Leaderboard> leaderboard { get; set; }
+        public required DbSet<LeaderboardMetric> leaderboard_metric { get; set; }
+        public required DbSet<LeaderboardEntry> leaderboard_entry { get; set; }
     }
 
     public class UserDto
     {
         public required ulong discord_id { get; set; }
-        public string? user_name { get; set; }
+        public required string user_name { get; set; }
         public string? display_name { get; set; }
         public string? league_puuid { get; set; }
     }
@@ -81,6 +90,7 @@ namespace HermitStore
     public class CompetitionDto
     {
         public required string competition_name { get; set; }
+        public required string creator_name { get; set; }
         public string? competition_description { get; set; }
         public required int competition_type { get; set; }
         public required int format { get; set; }
@@ -146,6 +156,38 @@ namespace HermitStore
     }
 
     public class MatchUser : MatchUserDto
+    {
+        public required Guid id { get; set; }
+    }
+
+    // Leaderboard stuff
+    public class LeaderboardDto
+    {
+        public required Guid competition_id { get; set; }
+    }
+
+    public class Leaderboard : LeaderboardDto
+    {
+        public required Guid id { get; set; }
+    }
+
+    public class LeaderboardMetricDto
+    {
+        public required Guid leaderboard_id { get; set; }
+        public required string metric_name { get; set; }
+    }
+
+    public class LeaderboardMetric : LeaderboardMetricDto;
+
+    public class LeaderboardEntryDto
+    {
+        public required Guid leaderboard_id { get; set; }
+        public required string user_name { get; set; }
+        public required string metric_name { get; set; }
+        public required int metric_value { get; set; }
+    }
+
+    public class LeaderboardEntry : LeaderboardEntryDto
     {
         public required Guid id { get; set; }
     }

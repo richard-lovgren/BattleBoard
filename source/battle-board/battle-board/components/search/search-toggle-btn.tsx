@@ -1,6 +1,7 @@
 import ButtonData from "@/models/button-data";
 
 export default function SearchToggleButton(data: ButtonData) {
+  
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     data.handleOnClick();

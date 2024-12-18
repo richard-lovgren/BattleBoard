@@ -1,5 +1,6 @@
 export default interface CompetitionDto {
     competition_name: string;
+    creator_name: string;
     competition_description: string;
     competition_type: number;
     format?: number;

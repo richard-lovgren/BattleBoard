@@ -1,6 +1,7 @@
 import Community from "@/models/community";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
+import formatDate from "@/app/modules/helpers";
 
 export default function CommunitySearchItem(community: Community) {
   return (
@@ -17,7 +18,7 @@ export default function CommunitySearchItem(community: Community) {
       <div className="item-container flex flex-col text-[16px] font-outfit p-4">
         <div className="flex flex-col ml-3 mb-3">
           <span className="flex items-center text-[24px] mb-4">
-            {community.title}
+            {community.community_name}
           </span>
           <span className="flex items-center">
             <Image
@@ -27,7 +28,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            {community.game}
+            {"(Game name)"}
           </span>
           <span className="flex items-center">
             <Image
@@ -37,7 +38,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            {community.members} members
+            {community.community_members} members
           </span>
           <span className="flex items-center">
             <Image
@@ -47,7 +48,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            Created {community.created_date}
+            Created {formatDate(community.created_at)}
           </span>
         </div>
         <div className="flex items-center justify-center">

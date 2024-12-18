@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
 
@@ -6,12 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const communityId = searchParams.get("communityId");
-    const url = `${db_conn_str}/communities/${communityId}/competitions`;
-
-
-    console.log("URL : ", url);
-
-
+    const url = `${db_conn_str}/communities`;
     const response = await fetch(url, {
       method: "GET",
       headers: {

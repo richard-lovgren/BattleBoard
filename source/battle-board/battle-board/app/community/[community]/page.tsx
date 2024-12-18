@@ -1,17 +1,13 @@
 import Image from "next/image";
-
 import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
+import CompetitionData from "@/models/interfaces/CompetitionData";
 
+const baseUrl = process.env.BASE_URL;
 interface CommunityData {
   community_name: string;
   community_id: string;
   community_image?: string;
-}
-
-interface CompetitionData {
-  competition_name: string;
-  id: string;
 }
 
 type CommunityPageProps = Promise<{ community: string }>;
@@ -20,7 +16,7 @@ type CommunityPageProps = Promise<{ community: string }>;
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
   console.log("Inside fetch community data: ", communityId);
   const response = await fetch(
-    `api/community?communityId=${communityId}`
+    `${baseUrl}/api/community?communityId=${communityId}`
   );
   if (!response.ok) {
     return { community_name: "", community_id: "", community_image: "" };
@@ -34,7 +30,7 @@ async function fetchCommunityCompetitionData(
   console.log("Community ID: lol", communityId);
 
   const response = await fetch(
-    `/api/community/competition?communityId=${communityId}` // Correct URL
+    `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
   );
   if (!response.ok) {
     return [];

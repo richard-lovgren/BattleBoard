@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
-console.log("DB Connection String: ", db_conn_str);
-console.log("HELLO");
 
 export async function GET(req: NextRequest) {
   try {

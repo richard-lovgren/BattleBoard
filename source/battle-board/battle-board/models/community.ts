@@ -1,7 +1,7 @@
 export default interface Community {
-  id: number;
-  title: string;
-  game: string;
-  members: number;
-  created_date: string;
-}
+    created_at: Date;
+    community_members: number;
+    community_name: string;
+    community_image?: string;
+    id: bigint;
+};
