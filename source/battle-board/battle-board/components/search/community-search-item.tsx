@@ -17,7 +17,7 @@ export default function CommunitySearchItem(community: Community) {
       <div className="item-container flex flex-col text-[16px] font-outfit p-4">
         <div className="flex flex-col ml-3 mb-3">
           <span className="flex items-center text-[24px] mb-4">
-            {community.title}
+            {community.community_name}
           </span>
           <span className="flex items-center">
             <Image
@@ -27,7 +27,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            {community.game}
+            {"(Game name)"}
           </span>
           <span className="flex items-center">
             <Image
@@ -37,7 +37,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            {community.members} members
+            {community.community_members} members
           </span>
           <span className="flex items-center">
             <Image
@@ -47,7 +47,7 @@ export default function CommunitySearchItem(community: Community) {
               width={50}
               height={50}
             />
-            Created {community.created_date}
+            Created {community.created_at.toString().split(".")[0]}
           </span>
         </div>
         <div className="flex items-center justify-center">

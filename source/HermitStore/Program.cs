@@ -165,6 +165,17 @@ app.MapGet(
     .WithDescription("Get all competitions for a community");
 
 app.MapGet(
+        "/competitions/public",
+        async (HermitDbContext dbContext) =>
+        {
+            var competitions = await dbContext.competition.Where(x => x.is_public).ToListAsync();
+            return Results.Ok(competitions);
+        }
+    )
+    .Produces<List<Competition>>(StatusCodes.Status200OK)
+    .WithDescription("Get all public competitions");
+
+app.MapGet(
         "/competitions",
         async (HermitDbContext dbContext) =>
         {
