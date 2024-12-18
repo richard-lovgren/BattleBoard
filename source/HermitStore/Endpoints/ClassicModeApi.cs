@@ -103,7 +103,6 @@ public static class ClassicModeApi
     {
         var leaderboardMetric = new LeaderboardMetric
         {
-            id = Guid.NewGuid(),
             leaderboard_id = leaderboardMetricDto.leaderboard_id,
             metric_name = leaderboardMetricDto.metric_name,
         };
@@ -112,7 +111,7 @@ public static class ClassicModeApi
 
         await dbContext.SaveChangesAsync();
 
-        return Results.Created($"/leaderboards/{leaderboardMetric.id}", leaderboardMetric);
+        return Results.Created($"/leaderboards/{leaderboardMetric.leaderboard_id}, {leaderboardMetric.metric_name}", leaderboardMetric);
     }
 
     private static async Task<IResult> AddOrUpdateMetricValue(

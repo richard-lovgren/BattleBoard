@@ -172,10 +172,7 @@ namespace HermitStore
         public required string metric_name { get; set; }
     }
 
-    public class LeaderboardMetric : LeaderboardMetricDto
-    {
-        public required Guid id { get; set; }
-    }
+    public class LeaderboardMetric : LeaderboardMetricDto;
 
     public class LeaderboardEntryDto
     {
