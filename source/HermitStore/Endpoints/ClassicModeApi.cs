@@ -57,14 +57,25 @@ public static class ClassicModeApi
             .Produces<LeaderboardEntry>(StatusCodes.Status200OK)
             .WithDescription("Get the sum of a user's metric value for a classic mode leaderboard.")
             .Produces(StatusCodes.Status404NotFound);
-        
+
         app.MapGet(
                 "/competition/{competition_id}/leaderboard",
                 async (HermitDbContext dbContext, Guid competition_id) =>
-                await GetLeaderboardMegaObj(dbContext, competition_id)
+                    await GetLeaderboardMegaObj(dbContext, competition_id)
             )
             .Produces<LeaderboardMegaObj>(StatusCodes.Status200OK)
             .WithDescription("Get an all you need object for displaying a leaderboard.")
+            .Produces(StatusCodes.Status404NotFound);
+
+        app.MapPost(
+                "/competition/{competition_id}/leaderboard",
+                async (HermitDbContext dbContext, LeaderboardMegaObjDto leaderboardMegaObjDto) =>
+                    await createOrUpdateLeaderboard(dbContext, leaderboardMegaObjDto)
+            )
+            .Produces<Leaderboard>(StatusCodes.Status201Created)
+            .WithDescription("Create a leaderboard.")
+            .Produces<Leaderboard>(StatusCodes.Status200OK)
+            .WithDescription("Update a leaderboard.")
             .Produces(StatusCodes.Status404NotFound);
 
         Console.WriteLine("Classic mode endpoints mapped.");
@@ -120,7 +131,10 @@ public static class ClassicModeApi
 
         await dbContext.SaveChangesAsync();
 
-        return Results.Created($"/leaderboards/{leaderboardMetric.leaderboard_id}, {leaderboardMetric.metric_name}", leaderboardMetric);
+        return Results.Created(
+            $"/leaderboards/{leaderboardMetric.leaderboard_id}, {leaderboardMetric.metric_name}",
+            leaderboardMetric
+        );
     }
 
     private static async Task<IResult> AddOrUpdateMetricValue(
@@ -128,9 +142,14 @@ public static class ClassicModeApi
         LeaderboardEntryDto leaderboardEntryDto
     )
     {
-        var entryExists = dbContext.leaderboard_entry
-            .Where(l => l.metric_name == leaderboardEntryDto.metric_name && l.user_name == leaderboardEntryDto.user_name)
-            .ToList().Count != 0;
+        var entryExists =
+            dbContext
+                .leaderboard_entry.Where(l =>
+                    l.metric_name == leaderboardEntryDto.metric_name
+                    && l.user_name == leaderboardEntryDto.user_name
+                )
+                .ToList()
+                .Count != 0;
 
         if (!entryExists)
         {
@@ -204,9 +223,14 @@ public static class ClassicModeApi
         return Results.Ok(leaderboardEntry.metric_value);
     }
 
-    private static async Task<IResult> GetLeaderboardMegaObj (HermitDbContext dbContext, Guid competition_id)
+    private static async Task<IResult> GetLeaderboardMegaObj(
+        HermitDbContext dbContext,
+        Guid competition_id
+    )
     {
-        var leaderboard = await dbContext.leaderboard.FirstOrDefaultAsync(l => l.competition_id == competition_id);
+        var leaderboard = await dbContext.leaderboard.FirstOrDefaultAsync(l =>
+            l.competition_id == competition_id
+        );
 
         if (leaderboard == null)
         {
@@ -214,16 +238,19 @@ public static class ClassicModeApi
         }
 
         List<string> column_names = ["name"];
-        var columns = await dbContext.leaderboard_metric
-            .Where(l => l.leaderboard_id == leaderboard.id)
+        var columns = await dbContext
+            .leaderboard_metric.Where(l => l.leaderboard_id == leaderboard.id)
             .Select(l => l.metric_name)
             .OrderBy(l => l)
             .ToListAsync();
 
-        column_names = columns != null ? [.. column_names, .. columns] : column_names; 
-        
+        column_names = columns != null ? [.. column_names, .. columns] : column_names;
 
-        var user_names = await dbContext.leaderboard_entry.Where(l => l.leaderboard_id == leaderboard.id).Select(l => l.user_name).Distinct().ToListAsync();
+        var user_names = await dbContext
+            .leaderboard_entry.Where(l => l.leaderboard_id == leaderboard.id)
+            .Select(l => l.user_name)
+            .Distinct()
+            .ToListAsync();
 
         List<Dictionary<string, string>> leaderboad_entries = [];
 
@@ -241,12 +268,12 @@ public static class ClassicModeApi
 
                 if (leaderboardEntry == null)
                 {
-                    
-                    if(column_name == "name")
+                    if (column_name == "name")
                     {
                         user_column_values.Add(column_name, user_name);
                     }
-                    else {
+                    else
+                    {
                         user_column_values.Add(column_name, "0");
                     }
                 }
@@ -258,15 +285,133 @@ public static class ClassicModeApi
 
             leaderboad_entries.Add(user_column_values);
 
-            megaObj = new LeaderboardMegaObj() 
+            megaObj = new LeaderboardMegaObj()
             {
                 competition_id = competition_id,
                 leaderboard_id = leaderboard.id,
                 leaderbord_entries = leaderboad_entries,
                 column_names = column_names,
             };
-            
         }
-        return megaObj != null ? Results.Ok(megaObj) : Results.NotFound(); 
+        return megaObj != null ? Results.Ok(megaObj) : Results.NotFound();
+    }
+
+    private static async Task<Leaderboard> CreateNewLeaderboardDB(
+        HermitDbContext dbContext,
+        LeaderboardMegaObjDto leaderboardMegaObjDto
+    )
+    {
+        var leaderboard = new Leaderboard
+        {
+            id = Guid.NewGuid(),
+            competition_id = leaderboardMegaObjDto.competition_id,
+        };
+
+        dbContext.leaderboard.Add(leaderboard);
+        await dbContext.SaveChangesAsync();
+
+        var metrics = leaderboardMegaObjDto.column_names.Where(c => c != "name").ToList();
+
+        foreach (var metric in metrics)
+        {
+            var leaderboardMetric = new LeaderboardMetric
+            {
+                leaderboard_id = leaderboard.id,
+                metric_name = metric,
+            };
+
+            dbContext.leaderboard_metric.Add(leaderboardMetric);
+            await dbContext.SaveChangesAsync();
+        }
+
+        var leaderboad_entries = leaderboardMegaObjDto.leaderbord_entries;
+        foreach (var leaderboard_entry in leaderboad_entries)
+        {
+            var user_name = leaderboard_entry["name"];
+            foreach (var metric in metrics)
+            {
+                var leaderboardEntry = new LeaderboardEntry
+                {
+                    id = Guid.NewGuid(),
+                    leaderboard_id = leaderboard.id,
+                    user_name = user_name,
+                    metric_name = metric,
+                    metric_value = Int32.Parse(leaderboard_entry[metric]),
+                };
+
+                dbContext.leaderboard_entry.Add(leaderboardEntry);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
+        Console.WriteLine("Leaderboard created.");
+
+        return leaderboard;
+    }
+
+    private static async Task<Leaderboard?> UpdateLeaderboardDB(
+        HermitDbContext dbContext,
+        Leaderboard leaderboard,
+        LeaderboardMegaObjDto leaderboardMegaObjDto
+    )
+    {
+        var metrics = leaderboardMegaObjDto.column_names.Where(c => c != "name").ToList();
+        var leaderboad_entries = leaderboardMegaObjDto.leaderbord_entries;
+        var user_names = leaderboad_entries.Select(l => l["name"]).ToList();
+
+        foreach (var user_name in user_names)
+        {
+            foreach (var metric in metrics)
+            {
+                var leaderboardEntry = await dbContext.leaderboard_entry.FirstOrDefaultAsync(l =>
+                    l.metric_name == metric
+                    && l.user_name == user_name
+                    && l.leaderboard_id == leaderboard.id
+                );
+
+                if (leaderboardEntry == null)
+                {
+                    return null;
+                }
+
+                var metric_value = leaderboardMegaObjDto
+                    .leaderbord_entries.Where(l => l["name"] == user_name)
+                    .Select(l => l[metric])
+                    .FirstOrDefault();
+
+                if (metric_value == null)
+                {
+                    return null;
+                }
+
+                leaderboardEntry.metric_value = Int32.Parse(metric_value);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+        Console.WriteLine("Leaderboard updated.");
+        return leaderboard;
+    }
+
+    private static async Task<IResult> createOrUpdateLeaderboard(
+        HermitDbContext dbContext,
+        LeaderboardMegaObjDto leaderboardMegaObjDto
+    )
+    {
+        var leaderboard = await dbContext.leaderboard.FirstOrDefaultAsync(l =>
+            l.competition_id == leaderboardMegaObjDto.competition_id
+        );
+
+        if (leaderboard == null)
+        {
+            leaderboard = await CreateNewLeaderboardDB(dbContext, leaderboardMegaObjDto);
+            return Results.Created($"/leaderboards/{leaderboard.id}", leaderboard);
+        }
+
+        var updatedLeaderboard = await UpdateLeaderboardDB(
+            dbContext,
+            leaderboard,
+            leaderboardMegaObjDto
+        );
+        return Results.Ok(updatedLeaderboard);
     }
 }

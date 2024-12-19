@@ -9,6 +9,9 @@ import CompetitionData from "@/models/interfaces/CompetitionData";
 import { Button } from "@mui/material";
 import { parse } from "papaparse";
 
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from '@mui/material/styles';
+
 import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
 import LeaderboardEntryDTO from "@/models/dtos/leaderboard-entry-dto";
 import LeaderboardMetricDTO from "@/models/dtos/leaderboard-metric-dto";
@@ -19,17 +22,26 @@ interface GameData {
   game_name: string;
 }
 
-function parseCsv<T>(fileContent: string): T[] {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+function parseCsv<T>(fileContent: string): T[] | string {
   const { data, errors } = parse<T>(fileContent, {
     header: true, // Treat the first row as the header
     skipEmptyLines: true, // Ignore empty rows
   });
-
   if (errors.length > 0) {
-    console.error("CSV Parsing Errors:", errors);
-    throw new Error("Failed to parse CSV file");
+    return errors[0].message;
   }
-
   return data;
 }
 
@@ -80,15 +92,32 @@ async function createClassicLeaderboard(competitionId: string) {
   return await response.json();
 }
 
+async function handleFileSubmit(files: FileList | null) : Promise<string | null> {
+  if (!files) {
+    return "No files selected";
+  }
+  const reader = new FileReader();
+  for(const file of files) {
+    reader.readAsText(file);
+    const data = parseCsv(reader.result as string);
+    if (typeof data === "string") {
+      return data;
+    }
+  }
+  return null;
+}
+
 const CompetitionPage = () => {
   const params = useParams();
   const { competition } = params;
   const { data: session } = useSession();
   const username = session?.user?.name;
 
-  const [competitionData, setCompetitionData] = useState<CompetitionData | null>(null);
+  const [competitionData, setCompetitionData] =
+    useState<CompetitionData | null>(null);
   const [gameName, setGameName] = useState<string | null>(null);
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
+  const [fileHelperText, setFileHelperText] = useState<string | null>(null);
 
   // Fetch competition data and game name
   useEffect(() => {
@@ -180,6 +209,24 @@ const CompetitionPage = () => {
       </div>
       <div>
         <PlayerGrid />
+      </div>
+
+      <div>
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
+        >
+          Upload CSV
+          <VisuallyHiddenInput
+            type="file"
+            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => setFileHelperText(await handleFileSubmit(event.target.files))}
+            multiple
+          />
+        </Button>
+        <p>{fileHelperText}</p>
       </div>
 
       {username === competitionData.creator_name && (
