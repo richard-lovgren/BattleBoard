@@ -3,7 +3,8 @@ import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
 
-const baseUrl = process.env.VERCEL_URL;
+var baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+baseUrl = baseUrl?.includes("localhost") ? baseUrl : "https://" + baseUrl;
 interface CommunityData {
   community_name: string;
   community_id: string;
