@@ -3,7 +3,7 @@ import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
 
-const baseUrl = process.env.BASE_URL;
+const baseUrl = process.env.VERCEL_URL;
 interface CommunityData {
   community_name: string;
   community_id: string;
