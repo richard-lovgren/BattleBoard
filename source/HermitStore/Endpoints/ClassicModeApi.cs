@@ -128,11 +128,11 @@ public static class ClassicModeApi
         LeaderboardEntryDto leaderboardEntryDto
     )
     {
-        if (
-            dbContext.leaderboard_entry.FirstOrDefault(l =>
-                l.metric_name == leaderboardEntryDto.metric_name
-            ) == null
-        )
+        var entryExists = dbContext.leaderboard_entry
+            .Where(l => l.metric_name == leaderboardEntryDto.metric_name && l.user_name == leaderboardEntryDto.user_name)
+            .ToList().Count != 0;
+
+        if (!entryExists)
         {
             var leaderboardEntry = new LeaderboardEntry
             {
