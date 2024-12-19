@@ -77,12 +77,12 @@ CREATE TABLE "leaderboard_metric" (
     PRIMARY KEY (leaderboard_id, metric_name)
 );
 
-CREATE TABLE "leaderboard_user_score" ( 
+CREATE TABLE "leaderboard_entry" ( 
     id UUID PRIMARY KEY,
     leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
     user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
     metric_name VARCHAR(30),
-    score INT NOT NULL,
+    metric_value INT NOT NULL,
     FOREIGN KEY (leaderboard_id, metric_name) REFERENCES leaderboard_metric(leaderboard_id, metric_name) ON DELETE CASCADE
 );
 
@@ -167,3 +167,30 @@ VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'dummy2', 'Kapp clash 10', '10th 
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
 VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'dummy3', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 1, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  2, 1318571109418926136);
+
+INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
+VALUES('152c3928-5b50-45a1-92cf-c9695af931e7', 'dummy1', 'Valorant IT Leaderboard', 'Classic mode leaderboard', 2, 1, '151e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926135);
+
+--Leaderboard
+INSERT INTO leaderboard(id, competition_id)
+VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', '152c3928-5b50-45a1-92cf-c9695af931e7');
+
+--Leaderboard metrics
+INSERT INTO leaderboard_metric(leaderboard_id, metric_name)
+VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'kills');
+
+INSERT INTO leaderboard_metric(leaderboard_id, metric_name)
+VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'deaths');
+
+--Leaderboard metric values
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d13264e', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy1', 'kills', 50);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-557e-4c25-8756-19c60d13464e', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy1', 'deaths', 10);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d13264f', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy2', 'kills', 20);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c24-8756-19c60d13264f', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy2', 'deaths', 16);

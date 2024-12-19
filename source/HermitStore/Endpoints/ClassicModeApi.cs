@@ -11,7 +11,7 @@ public static class ClassicModeApi
                 async (HermitDbContext dbContext, LeaderboardDto leaderboardDto) =>
                     await CreateLeaderboard(dbContext, leaderboardDto)
             )
-            .Produces<Competition>(StatusCodes.Status201Created)
+            .Produces<Leaderboard>(StatusCodes.Status201Created)
             .WithDescription("Create a new leaderboard for a classic mode competition.")
             .Produces(StatusCodes.Status400BadRequest);
 
@@ -20,7 +20,7 @@ public static class ClassicModeApi
                 async (HermitDbContext dbContext, Guid competition_id) =>
                     await GetLeaderboardByCompetitionId(dbContext, competition_id)
             )
-            .Produces<Competition>(StatusCodes.Status200OK)
+            .Produces<Leaderboard>(StatusCodes.Status200OK)
             .WithDescription("Get a leaderboard by competition id.")
             .Produces(StatusCodes.Status404NotFound);
 
@@ -29,7 +29,7 @@ public static class ClassicModeApi
                 async (HermitDbContext dbContext, LeaderboardMetricDto leaderboardMetricDto) =>
                     await AddMetric(dbContext, leaderboardMetricDto)
             )
-            .Produces<Competition>(StatusCodes.Status201Created)
+            .Produces<LeaderboardMetric>(StatusCodes.Status201Created)
             .WithDescription("Add a metric to a classic mode leaderboard.")
             .Produces(StatusCodes.Status400BadRequest);
 
@@ -38,7 +38,7 @@ public static class ClassicModeApi
                 async (HermitDbContext dbContext, LeaderboardEntryDto leaderboardEntryDto) =>
                     await AddOrUpdateMetricValue(dbContext, leaderboardEntryDto)
             )
-            .Produces<Competition>(StatusCodes.Status200OK)
+            .Produces<LeaderboardEntry>(StatusCodes.Status200OK)
             .WithDescription("Update a metric value for a classic mode leaderboard.")
             .Produces(StatusCodes.Status201Created)
             .WithDescription("Create a new metric value for a classic mode leaderboard.")
@@ -54,8 +54,17 @@ public static class ClassicModeApi
                     string metric_name
                 ) => await GetUserSumForMetric(dbContext, competition_id, metric_name, user_name)
             )
-            .Produces<Competition>(StatusCodes.Status200OK)
+            .Produces<LeaderboardEntry>(StatusCodes.Status200OK)
             .WithDescription("Get the sum of a user's metric value for a classic mode leaderboard.")
+            .Produces(StatusCodes.Status404NotFound);
+        
+        app.MapGet(
+                "/competition/{competition_id}/leaderboard",
+                async (HermitDbContext dbContext, Guid competition_id) =>
+                await GetLeaderboardMegaObj(dbContext, competition_id)
+            )
+            .Produces<LeaderboardMegaObj>(StatusCodes.Status200OK)
+            .WithDescription("Get an all you need object for displaying a leaderboard.")
             .Produces(StatusCodes.Status404NotFound);
 
         Console.WriteLine("Classic mode endpoints mapped.");
@@ -195,7 +204,7 @@ public static class ClassicModeApi
         return Results.Ok(leaderboardEntry.metric_value);
     }
 
-    private static async Task<IResult> GetEntireFuckingCompetitionAsMegaJsonObjectMaxxingRot (HermitDbContext dbContext, Guid competition_id)
+    private static async Task<IResult> GetLeaderboardMegaObj (HermitDbContext dbContext, Guid competition_id)
     {
         var leaderboard = await dbContext.leaderboard.FirstOrDefaultAsync(l => l.competition_id == competition_id);
 
@@ -204,16 +213,24 @@ public static class ClassicModeApi
             return Results.NotFound();
         }
 
-        var column_names = await dbContext.leaderboard_metric.Where(l => l.leaderboard_id == leaderboard.id).Select(l => l.metric_name).ToListAsync();
-        column_names.Prepend("Name");
+        List<string> column_names = ["name"];
+        var columns = await dbContext.leaderboard_metric
+            .Where(l => l.leaderboard_id == leaderboard.id)
+            .Select(l => l.metric_name)
+            .OrderBy(l => l)
+            .ToListAsync();
+
+        column_names = columns != null ? [.. column_names, .. columns] : column_names; 
+        
 
         var user_names = await dbContext.leaderboard_entry.Where(l => l.leaderboard_id == leaderboard.id).Select(l => l.user_name).Distinct().ToListAsync();
 
-        var user_column_values_dict = new Dictionary<string, Dictionary<string, int>>();
+        List<Dictionary<string, string>> leaderboad_entries = [];
 
+        LeaderboardMegaObj? megaObj = null;
         foreach (var user_name in user_names)
         {
-            var user_column_values = new Dictionary<string, int>();
+            var user_column_values = new Dictionary<string, string>();
             foreach (var column_name in column_names)
             {
                 var leaderboardEntry = await dbContext.leaderboard_entry.FirstOrDefaultAsync(l =>
@@ -224,19 +241,32 @@ public static class ClassicModeApi
 
                 if (leaderboardEntry == null)
                 {
-                    user_column_values.Add(column_name, 0);
+                    
+                    if(column_name == "name")
+                    {
+                        user_column_values.Add(column_name, user_name);
+                    }
+                    else {
+                        user_column_values.Add(column_name, "0");
+                    }
                 }
                 else
                 {
-                    user_column_values.Add(column_name, leaderboardEntry.metric_value);
+                    user_column_values.Add(column_name, leaderboardEntry.metric_value.ToString());
                 }
             }
 
-            user_column_values_dict.Add(user_name, user_column_values);
-        }
+            leaderboad_entries.Add(user_column_values);
 
-        //var
-        return Results.Ok(user_column_values_dict); 
-    
+            megaObj = new LeaderboardMegaObj() 
+            {
+                competition_id = competition_id,
+                leaderboard_id = leaderboard.id,
+                leaderbord_entries = leaderboad_entries,
+                column_names = column_names,
+            };
+            
+        }
+        return megaObj != null ? Results.Ok(megaObj) : Results.NotFound(); 
     }
 }
