@@ -165,6 +165,21 @@ app.MapGet(
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Get all competitions for a community");
 
+app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, ulong id) =>
+{
+    var users = await dbContext
+        .user_community.Where(x => x.community_id == id)
+        .Select(x => x.user_name)
+        .ToListAsync();
+
+    if (users == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(users);
+});
+
 app.MapGet(
         "/competitions/public",
         async (HermitDbContext dbContext) =>

@@ -1,3 +1,4 @@
 source/HermitStore/obj/*
 source/HermitStore/bin/*
 .env
+.DS_Store
