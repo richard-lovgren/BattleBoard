@@ -1,18 +1,17 @@
-
-
 import * as React from 'react';
-import { Paper, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
 
 interface CompetitionModeWrapperProps {
     mode: number;
+    competitionId: string;
 }
 
-const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode }) => {
+const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, competitionId }) => {
     const renderContent = () => {
         switch (mode) {
             case 1:
-                return <ClassicMode />;
+                return <ClassicMode competitionId={competitionId} />;
             case 1:
                 return (
                     <div className="w-full flex items-center justify-center">
@@ -34,7 +33,7 @@ const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode }) 
         }
     };
 
-    return renderContent(); // Call the function to get the JSX
+    return renderContent();
 };
 
 export default CompetitonModeWrapper;

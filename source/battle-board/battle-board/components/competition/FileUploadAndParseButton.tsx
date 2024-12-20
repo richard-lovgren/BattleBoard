@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { parse } from "papaparse";
 import { Leaderboard } from "@/models/leaderboard";
@@ -163,6 +164,7 @@ const FileUploadAndParseButton: React.FC<FileUploadAndParseComponentProps> = ({
       <Button
         component="label"
         variant="contained"
+        startIcon={<CloudUploadIcon />}
       >
         Upload Results using CSV
         <VisuallyHiddenInput

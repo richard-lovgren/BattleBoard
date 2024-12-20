@@ -82,7 +82,7 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
       </Suspense>
       {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
       <LeaderboardComponent competitionId={competitionData.id} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />
-      <CompetitonModeWrapper mode={competitionData.competition_type} />
+      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionData.id} />
     </div>
   );
 }
