@@ -1,5 +1,4 @@
 using HermitStore;
-using Microsoft.AspNetCore.StaticAssets;
 using Microsoft.EntityFrameworkCore;
 
 public static class ClassicModeApi

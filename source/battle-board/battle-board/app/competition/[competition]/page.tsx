@@ -5,6 +5,7 @@ import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
 import fetchCompetitionData from '@/lib/leaderboard/fetchCompetitionData';
 import fetchGameName from '@/lib/leaderboard/fetchGameName';
 import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
+import fetchCompetitionUsers from '@/lib/leaderboard/fetchCompetitionUsers';
 import FileUploadComponent from '@/components/competition/FileUploadButton';
 import EditCompetitionButton from '@/components/competition/EditCompetitionButton';
 
@@ -16,14 +17,15 @@ async function getCompetitionData(competitionId: string) {
   }
   const gameName = await fetchGameName(competitionData.game_id);
   const leaderboard = await fetchClassicLeaderBoard(competitionId);
-  return { competitionData, gameName, leaderboard };
+  const competitionUsers = await fetchCompetitionUsers(competitionId);
+  return { competitionData, gameName, leaderboard, competitionUsers };
 }
 
 type CompetitionPageProps = Promise<{ competition: string }>;
 
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
-  const { competitionData, gameName, leaderboard } = await getCompetitionData((await props.params).competition);
+  const { competitionData, gameName, leaderboard, competitionUsers } = await getCompetitionData((await props.params).competition);
 
   let competitionMainElement: JSX.Element = <></>;
   if (competitionData.competition_type === 1) {
@@ -78,9 +80,11 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
         </div>
       </div>
 
+      <Suspense fallback={<p>Loading players...</p>}>
       <div>
-        <PlayerGrid />
+        <PlayerGrid playerList={competitionUsers} />
       </div>
+      </Suspense>
 
       <Suspense fallback={<p>Loading components...</p>}>
         <FileUploadComponent />
