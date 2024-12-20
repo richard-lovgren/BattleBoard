@@ -22,9 +22,9 @@ const UserPageBanner: React.FC<UserProps> = ({
 }) => {
   const { data: session } = useSession();
 
-  const { data, error } = useCountryLocaleFlag(
-    "https://flagsapi.com/BE/flat/64.png"
-  );
+  // const { data, error } = useCountryLocaleFlag(
+  //   "https://flagsapi.com/BE/flat/64.png"
+  // );
   if (session?.user) {
     return (
       <main className="  text-white flex flex-col items-center px-2 py-2 font-nunito ">
@@ -44,7 +44,7 @@ const UserPageBanner: React.FC<UserProps> = ({
               <h1 className="text-4xl font-bold font-odibee my-2">
                 {user_name}
               </h1>
-              <h3 className="">{data}</h3>
+              {/* <h3 className="">{data}</h3> */}
             </div>
             <h2 className="font-bold">{display_name}</h2>
             <LolUsernameBox></LolUsernameBox>

@@ -83,7 +83,7 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
         <CompetitionList
           competitions={communityCompetitionData}
         ></CompetitionList>
-        <CommunityMembersList community_id="101010"></CommunityMembersList>
+        <CommunityMembersList community_id={community}></CommunityMembersList>
       </div>
     </div>
   );

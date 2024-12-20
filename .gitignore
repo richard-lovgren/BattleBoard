@@ -1,3 +1,4 @@
 source/HermitStore/obj/*
 source/HermitStore/bin/*
 .env
+source/BattleBot/venv
