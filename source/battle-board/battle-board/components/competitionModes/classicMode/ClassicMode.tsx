@@ -25,43 +25,77 @@ const rows: RowData[] = [
   { rank: 5, name: 'user5', calories: 356, fat: 16.0, carbs: 49, protein: 3.9 },
 ]
 
-export default function ClassicMode() {
+interface ClassicModeProps {
+  mode: number;
+}
+
+
+const ClassicMode: React.FC<ClassicModeProps> = ({ mode }) => {
+
+
   const columns = rows.length > 0 ? Object.keys(rows[0]) : []
 
-  return (
-    <Box style={{ width: '60vw', margin: '0 0 100px 0' }}>
-      <TableContainer >
-        <Table sx={{ minWidth: 650 }} aria-label="dynamic table">
-          <TableHead>
-            <TableRow >
-              {columns.map((column) => (
-                <TableCell key={column}>
-                  <Typography className="h3">{column}</Typography>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody >
-            {rows.map((row, rowIndex) => (
-              <TableRow
-                key={rowIndex}
-                sx={{
-                  backgroundColor: rowIndex % 2 === 0 ? 'var(--purple-light)' : 'var(--purple-lighter)',
-                  '&:last-child td, &:last-child th': { border: 0 },
-                }}
-              >
-                {columns.map((column) => (
-                  <TableCell key={column} sx={{ color: 'white', border:'none' }}>
-                  <Typography className="breadText">{row[column]}</Typography>
-                    
-                    
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-  )
-}
+  const renderContent = () => {
+    switch (mode) {
+      case 1:
+        return <LeaderboardVisualizer />
+      case 2:
+        return <div className='w-full flex items-center justify-center'>
+          <Paper className='w-1/2 p-5'>
+            <Typography className='text-xl'>Rival Mode</Typography>
+          </Paper>
+        </div>
+      case 3: return <div className='w-full flex items-center justify-center'>
+        tournament
+        <Paper className='w-1/2 p-5'>
+          <Typography className='text-xl'>Tournament Mode</Typography>
+        </Paper>
+      </div>
+      default:
+        return <div className='w-full flex items-center justify-center'>
+          <Paper className='w-1/2 p-5'>
+            <Typography className='text-xl'>Classic Mode</Typography>
+          </Paper>
+        </div>
+
+
+
+        return (
+          <Box style={{ width: '60vw', margin: '0 0 100px 0' }}>
+            <TableContainer >
+              <Table sx={{ minWidth: 650 }} aria-label="dynamic table">
+                <TableHead>
+                  <TableRow >
+                    {columns.map((column) => (
+                      <TableCell key={column}>
+                        <Typography className="h3">{column}</Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody >
+                  {rows.map((row, rowIndex) => (
+                    <TableRow
+                      key={rowIndex}
+                      sx={{
+                        backgroundColor: rowIndex % 2 === 0 ? 'var(--purple-light)' : 'var(--purple-lighter)',
+                        '&:last-child td, &:last-child th': { border: 0 },
+                      }}
+                    >
+                      {columns.map((column) => (
+                        <TableCell key={column} sx={{ color: 'white', border: 'none' }}>
+                          <Typography className="breadText">{row[column]}</Typography>
+
+
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        )
+    }
+
+    export default ClassicMode

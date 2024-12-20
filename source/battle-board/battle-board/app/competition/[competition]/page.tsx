@@ -6,9 +6,8 @@ import fetchCompetitionData from '@/lib/leaderboard/fetchCompetitionData';
 import fetchGameName from '@/lib/leaderboard/fetchGameName';
 import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
 import fetchCompetitionUsers from '@/lib/leaderboard/fetchCompetitionUsers';
-import EditCompetitionButton from '@/components/competition/EditCompetitionButton';
-import FileUploadComponent from '@/components/competition/FileUploadAndParseButton';
 import LeaderboardComponent from '@/components/competition/LeaderboardComponent';
+
 
 // Server-side data fetching
 async function getCompetitionData(competitionId: string) {
@@ -23,6 +22,10 @@ async function getCompetitionData(competitionId: string) {
 }
 
 type CompetitionPageProps = Promise<{ competition: string }>;
+
+
+
+
 
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
@@ -83,14 +86,18 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
 
       {/* List players in competition */}
       <Suspense fallback={<p>Loading players...</p>}>
-      <div>
-        <PlayerGrid playerList={competitionUsers} />
-      </div>
+        <div>
+          <PlayerGrid playerList={competitionUsers} />
+        </div>
       </Suspense>
       {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
-      <LeaderboardComponent competitionId={competitionData.id} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />      
+      <LeaderboardComponent competitionId={competitionData.id} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />
 
       <div>{competitionMainElement}</div>
+
+      <ClassicMode mode={competitionData.competition_type} />
+
+
     </div>
   );
 }
