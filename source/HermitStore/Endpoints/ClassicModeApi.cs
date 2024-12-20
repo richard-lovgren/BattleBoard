@@ -307,6 +307,7 @@ public static class ClassicModeApi
         };
 
         dbContext.leaderboard.Add(leaderboard);
+        await dbContext.SaveChangesAsync();
 
         var metrics = leaderboardMegaObjDto.column_names.Where(c => c != "name").ToList();
         foreach (var metric in metrics)
@@ -319,6 +320,7 @@ public static class ClassicModeApi
 
             dbContext.leaderboard_metric.Add(leaderboardMetric);
         }
+        await dbContext.SaveChangesAsync();
 
         var leaderboad_entries = leaderboardMegaObjDto.leaderboard_entries;
         foreach (var leaderboard_entry in leaderboad_entries)
