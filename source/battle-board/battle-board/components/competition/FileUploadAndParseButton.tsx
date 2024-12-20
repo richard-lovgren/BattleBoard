@@ -22,22 +22,22 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 async function postLeaderboard(leaderboard: LeaderboardDTO): Promise<Leaderboard> {
-    const response = await fetch(
-        `/api/competitions/leaderboard?competitionId=${leaderboard.competition_id}`,
-        {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(leaderboard),
-        }
-    );
-    
-    if (!response.ok) {
-        throw new Error("Failed to post leaderboard");
+  const response = await fetch(
+    `/api/competitions/leaderboard?competitionId=${leaderboard.competition_id}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(leaderboard),
     }
-    
-    return response.json();
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to post leaderboard");
+  }
+
+  return response.json();
 
 }
 
@@ -90,22 +90,22 @@ function parseCsv<T = Record<string, string>>(
         ),
       };
     });
-    
+
     const leaderboard_dto: LeaderboardDTO = {
-        competition_id: competitionId,
-        column_names: columnNames,
-        leaderboard_entries: entries,
+      competition_id: competitionId,
+      column_names: columnNames,
+      leaderboard_entries: entries,
     }
 
     console.log("leaderboard_dto", leaderboard_dto);
 
     postLeaderboard(leaderboard_dto).then((leaderboard) => {
-        if (leaderboard) {
-            return leaderboard;
-        }
-        return "oof";
+      if (leaderboard) {
+        return leaderboard;
+      }
+      return "oof";
     });
-}
+  }
 
   return "oof";
 }

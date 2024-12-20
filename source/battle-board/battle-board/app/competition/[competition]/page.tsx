@@ -1,13 +1,11 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
 import PlayerGrid from '@/components/playerGrid/PlayerGrid';
-import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
+import CompetitonModeWrapper from '@/components/competition/CompetitionModeWrapper';
 import fetchCompetitionData from '@/lib/leaderboard/fetchCompetitionData';
 import fetchGameName from '@/lib/leaderboard/fetchGameName';
 import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
 import fetchCompetitionUsers from '@/lib/leaderboard/fetchCompetitionUsers';
-import EditCompetitionButton from '@/components/competition/EditCompetitionButton';
-import FileUploadComponent from '@/components/competition/FileUploadAndParseButton';
 import LeaderboardComponent from '@/components/competition/LeaderboardComponent';
 
 // Server-side data fetching
@@ -27,11 +25,6 @@ type CompetitionPageProps = Promise<{ competition: string }>;
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
   const { competitionData, gameName, leaderboard, competitionUsers } = await getCompetitionData((await props.params).competition);
-
-  let competitionMainElement: JSX.Element = <></>;
-  if (competitionData.competition_type === 1) {
-    competitionMainElement = <ClassicMode />;
-  }
 
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -83,14 +76,13 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
 
       {/* List players in competition */}
       <Suspense fallback={<p>Loading players...</p>}>
-      <div>
-        <PlayerGrid playerList={competitionUsers} />
-      </div>
+        <div>
+          <PlayerGrid playerList={competitionUsers} />
+        </div>
       </Suspense>
       {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
-      <LeaderboardComponent competitionId={competitionData.id} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />      
-
-      <div>{competitionMainElement}</div>
+      <LeaderboardComponent competitionId={competitionData.id} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />
+      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionData.id} />
     </div>
   );
 }
