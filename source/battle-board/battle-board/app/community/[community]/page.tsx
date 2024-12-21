@@ -15,7 +15,6 @@ type CommunityPageProps = Promise<{ community: string }>;
 
 // Fetch community data directly inside the server component
 async function fetchCommunityData(communityId: string): Promise<CommunityData> {
-  console.log("Inside fetch community data: ", communityId);
   const response = await fetch(
     `${baseUrl}/api/community?communityId=${communityId}`
   );
@@ -28,7 +27,6 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
 async function fetchCommunityCompetitionData(
   communityId: string
 ): Promise<CompetitionData[]> {
-  console.log("Community ID: lol", communityId);
 
   const response = await fetch(
     `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
@@ -44,8 +42,6 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
   // Extract community ID from the URL
   const params = await props.params;
   const community = params.community;
-
-  console.log("COMMUNITY ID", community);
 
 
   // Fetch community data from the API
@@ -83,7 +79,7 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
         <CompetitionList
           competitions={communityCompetitionData}
         ></CompetitionList>
-        <CommunityMembersList community_id="101010"></CommunityMembersList>
+        <CommunityMembersList community_id={community}></CommunityMembersList>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+'use client'
 import {
   Table,
   TableBody,
@@ -8,54 +9,79 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface CommunityMembersProps {
+import styles from "./communityMembers.module.css";
+import { useState, useEffect } from "react";
+
+interface CommunityData {
   community_id: string;
 }
 
-const CommunityMembersList: React.FC<CommunityMembersProps> = ({
+var baseUrl = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+
+async function fetchUserCommunityMembers(
+  communityId: string
+): Promise<any> {
+  const url = `${baseUrl}/api/community/users?communityId=${communityId}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    return {};
+  }
+  const data = await response.json();
+  return data;
+}
+
+
+const CommunityMembersList: React.FC<any> = ({
   community_id,
 }) => {
-  console.log("Community ID: ", community_id);
 
-  const testMembers = [
-    {
-      name: "John",
-      role: "Admin",
-    },
-    {
-      name: "Jane",
-      role: "Member",
-    },
-  ];
+  const [communityData, setCommunityData] = useState< any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await fetchUserCommunityMembers(community_id);
+      setCommunityData(data);
+      setLoading(false);
+    };
+
+    if (community_id) {
+      fetchData();
+    }
+  }, [community_id]);
+
+  if (loading) {
+    return <div>Loading community data...</div>;
+  }
+
+  if (!communityData) {
+    return <div>Failed to load community data.</div>;
+  }
+
+ 
 
   return (
-    <div className="flex flex-col border-4 border-accent p-4 rounded-md">
+    <div className={styles.wrapper}> 
       <h1 className="text-3xl flex font-bold font-odibee">
-        Community Members:
+        Community Members
       </h1>
-      <div className="flex">
-        <Table>
-          <TableCaption>
-            The current community members and their roles.
-          </TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Member</TableHead>
-              <TableHead>Role</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">
-                {testMembers[0].name}
-              </TableCell>
-              <TableCell>{testMembers[0].role}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      <div className={styles.membersListWrapper}>
+        {communityData.map((member: any, index:any) => (
+          <div className={styles.member} key={index}>
+            {member} 
+          </div>
+        ))}
+       
       </div>
     </div>
   );
 };
 
 export default CommunityMembersList;
+
+
+
+
+
+

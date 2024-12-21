@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
-        const url = `${db_conn_str}/competitions/public`;
+        const { searchParams } = new URL(req.url);
+        const competitionId = searchParams.get("competitionId");
+        const url = `${db_conn_str}/competitions/${competitionId}/users`;
         const response = await fetch(
             url,
             {
@@ -22,7 +24,7 @@ export async function GET() {
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
-        console.error("Error fetching public competitions:", error);
+        console.error("Error fetching users for competition:", error);
         return NextResponse.json({ message: "Internal server error"}, { status: 500 });
     }
 }

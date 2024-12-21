@@ -25,8 +25,9 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
   };
 
   return (
-    <div className="flex  flex-row flex-wrap gap-4 w-full  py-10">
-      {competitions.map((competition) => (
+    <div className="flex  flex-row flex-wrap gap-4 w-full  py-10" >
+      {competitions.length > 0 ? 
+      competitions.map((competition) => (
         <Card key={competition.id} className="w-[350px]">
           <CardHeader>
             <CardTitle className="font-thin text-3xl">
@@ -45,7 +46,12 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
             </Button>
           </CardFooter>
         </Card>
-      ))}
+      )) :
+      <div>
+        <h3 className="h3">
+          No competitions found
+          </h3>
+        </div>}
     </div>
   );
 };

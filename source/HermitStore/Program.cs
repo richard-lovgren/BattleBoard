@@ -165,6 +165,21 @@ app.MapGet(
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Get all competitions for a community");
 
+app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, ulong id) =>
+{
+    var users = await dbContext
+        .user_community.Where(x => x.community_id == id)
+        .Select(x => x.user_name)
+        .ToListAsync();
+
+    if (users == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(users);
+});
+
 app.MapGet(
         "/competitions/public",
         async (HermitDbContext dbContext) =>
@@ -205,6 +220,28 @@ app.MapGet(
     .Produces<Competition>(StatusCodes.Status200OK)
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Get a competition by ID");
+
+app.MapGet(
+        "/competitions/{id}/users",
+        async (HermitDbContext dbContext, Guid id) =>
+        {
+            var users = await dbContext
+                .user_competition.Where(x => x.competition_id == id)
+                .Select(x => x.user_name)
+                .ToListAsync();
+
+            if (users == null)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.Ok(users);
+        }
+    )
+    .Produces<List<string>>(StatusCodes.Status200OK)
+    .WithDescription("Get all users in a competition")
+    .Produces(StatusCodes.Status404NotFound)
+    .WithDescription("Competition not found");
 
 app.MapPost(
         "/competitions",

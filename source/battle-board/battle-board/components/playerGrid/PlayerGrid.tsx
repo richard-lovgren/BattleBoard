@@ -1,22 +1,33 @@
 import * as React from 'react'
-import { Box, Paper, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
-export default function PlayerGrid() {
+const noPlayersBox = (
+  <Box
+    style={{
+      width: '95vw',
+      margin: '40px',
+      border: '3px solid #fff',
+      borderRadius: '15px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '20px',
+      padding: '50px',
+    }}
+  >
+    <Typography className="h2">Players</Typography>
+    <Typography className="h3" style={{ color: 'gray' }}>
+      No players available.
+    </Typography>
+  </Box>
+);
+
+export default function PlayerGrid({ playerList }: { playerList: string[] | null }) {
   // Extract column headers dynamically from the first row
-  type PlayerType = {
-    name: string // Specify that name is a string
-  }
-
-  const players: PlayerType[] = [
-    { name: 'nattap' },
-    { name: 'user2' },
-    { name: 'user3' },
-    { name: 'user4' },
-    { name: 'user5' },
-  ]
 
   // Rename the component to avoid conflict
-  const PlayerComponent = ({ player }: { player: PlayerType }) => {
+  const PlayerComponent = ({ player }: { player: string }) => {
     return (
       <Box
         style={{
@@ -28,9 +39,13 @@ export default function PlayerGrid() {
           justifyContent: 'center',
         }}
       >
-        <Typography className='h3'>{player.name}</Typography>
+        <Typography className='h3'>{player}</Typography>
       </Box>
     )
+  }
+
+  if (!playerList || playerList.length === 0) {
+    return noPlayersBox;
   }
 
   return (
@@ -58,7 +73,7 @@ export default function PlayerGrid() {
           gap: '20px',
         }}
       >
-        {players.map((player, index) => (
+        {playerList.map((player, index) => (
           <PlayerComponent key={index} player={player} />
         ))}
       </Box>
