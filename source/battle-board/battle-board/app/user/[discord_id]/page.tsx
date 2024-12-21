@@ -1,12 +1,10 @@
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
 import CompetitionList from "@/components/CompetitionList";
-import CompetitionData from "@/models/interfaces/CompetitionData";
-import { CommunityData, UserPageProps, UserData } from "@/models/interfaces/UserPage";
+import { UserPageProps } from "@/models/interfaces/UserPage";
 import { fetchUserData } from "@/lib/users/fetchUserData";
 import { fetchUserCommunitiesData } from "@/lib/users/fetchUserCommunitiesData";
 import { fetchUserCompetitionIds } from "@/lib/users/fetchUserCompetitionIds";
-import { fetchCompetitionData } from "@/lib/users/fetchCompetitionData";
 import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
 
 // Server component
@@ -24,7 +22,6 @@ const UserPage = async (props: { params: UserPageProps }) => {
   const userCompetitionsList = await fetchUserCompetitionIds(
     user_name
   );
-
 
   const userCommunitiesMap = Object.entries(userCommunitiesData).map(
     ([id, name]) => ({
