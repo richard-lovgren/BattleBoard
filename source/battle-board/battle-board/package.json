@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/material": "^6.2.0",
+    "@mui/icons-material": "^6.2.1",
+    "@mui/material": "^6.2.1",
+    "@mui/material-nextjs": "^6.2.1",
     "@mui/x-date-pickers": "^7.23.2",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-select": "^2.1.3",
