@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
@@ -21,7 +21,9 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-async function postLeaderboard(leaderboard: LeaderboardDTO): Promise<Leaderboard> {
+async function postLeaderboard(
+  leaderboard: LeaderboardDTO
+): Promise<Leaderboard> {
   const response = await fetch(
     `/api/competitions/leaderboard?competitionId=${leaderboard.competition_id}`,
     {
@@ -38,24 +40,23 @@ async function postLeaderboard(leaderboard: LeaderboardDTO): Promise<Leaderboard
   }
 
   return response.json();
-
 }
 
 // Utility function to parse CSV
-function parseCsv<T = Record<string, string>>(
+async function parseCsv<T = Record<string, string>>(
   fileContent: string,
   userNames: string[],
   competitionId: string,
   prevLeaderboard: Leaderboard | null
-): Leaderboard | LeaderboardDTO | string {
+): Promise<Leaderboard | LeaderboardDTO | string> {
   const { data, errors } = parse<T>(fileContent, {
     header: true,
     skipEmptyLines: true,
   });
+
   if (errors.length > 0) {
     return errors.map((error) => error.message).join(", ");
   }
-  // I am sorry for this - LT
 
   console.log("Data:", data);
 
@@ -69,52 +70,73 @@ function parseCsv<T = Record<string, string>>(
     return "Data contains rows with inconsistent column counts";
   }
 
-  const userNamesInCSV = Object.keys(data[0] as Record<string, string>).filter(
-    (key) => key !== "name"
+  const userNamesInCSV = data.map(
+    (obj) => (obj as Record<string, string>).name
   );
-  userNames.forEach((element) => {
-    if (!userNamesInCSV.includes(element)) {
-      return "Data does not contain all users";
+
+  for (const element of userNamesInCSV) {
+    if (!userNames.includes(element)) {
+      return "Data contains unknown users";
     }
+  }
+
+  for (const element of userNames) {
+    if (!userNamesInCSV.includes(element)) {
+      return "Data does not contain all users in the competition";
+    }
+  }
+
+  const columnNames = Object.keys(data[0] as Record<string, string>);
+  const entries = data.map((entry) => {
+    return {
+      ...Object.fromEntries(Object.entries(entry as Record<string, string>)),
+    };
   });
 
-  //check that all objects are same length
-
-  if (!prevLeaderboard) {
-    const columnNames = Object.keys(data[0] as Record<string, string>);
-
-    const entries = data.map((entry) => {
-      return {
-        ...Object.fromEntries(
-          Object.entries(entry as Record<string, string>)
-        ),
-      };
-    });
-
-    const leaderboard_dto: LeaderboardDTO = {
-      competition_id: competitionId,
-      column_names: columnNames,
-      leaderboard_entries: entries,
+  if (prevLeaderboard) { // Assert columns unchanged
+    const prevColumnNames = prevLeaderboard.column_names;
+    if (columnNames.length !== prevColumnNames.length) {
+      return "Column count mismatch between loaded data and previous leaderboard";
     }
 
-    console.log("leaderboard_dto", leaderboard_dto);
-
-    postLeaderboard(leaderboard_dto).then((leaderboard) => {
-      if (leaderboard) {
-        return leaderboard;
+    prevColumnNames.forEach(element => {
+      if (!columnNames.includes(element)) {
+        return "Column names mismatch between loaded data and previous leaderboard";
       }
-      return "oof";
+    });
+
+    columnNames.forEach(element => {
+      if (!prevColumnNames.includes(element)) {
+        return "Column names mismatch between loaded data and previous leaderboard";
+      }
     });
   }
 
-  return "oof";
+  const leaderboard_dto: LeaderboardDTO = {
+    competition_id: competitionId,
+    column_names: columnNames,
+    leaderboard_entries: entries,
+  };
+
+  try {
+    const leaderboard = await postLeaderboard(leaderboard_dto);
+    if (leaderboard) {
+      console.log("Success - returned leaderboard");
+      return leaderboard;
+    } else {
+      return "Failed to save leaderboard";
+    }
+  } catch (error) {
+    console.error("Error saving leaderboard:", error);
+    return "Big oof";
+  }
 }
 
 interface FileUploadAndParseComponentProps {
   prevLeaderboard: Leaderboard | null;
   userNames: string[];
   competitionId: string;
-  handleCompetitionDataParsed: (data: Leaderboard) => void;
+  handleCompetitionDataParsed: () => void;
 }
 
 const FileUploadAndParseButton: React.FC<FileUploadAndParseComponentProps> = ({
@@ -140,15 +162,33 @@ const FileUploadAndParseButton: React.FC<FileUploadAndParseComponentProps> = ({
 
     const file = files[0];
     const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const data = parseCsv(result, userNames, competitionId, prevLeaderboard);
-      if (typeof data === "string") {
-        setFileHelperText(`Parsing errors: ${data}`);
-      } else {
-        setFileHelperText("File parsed successfully!");
-        setTimeout(() => setFileHelperText(null), 3000);
-        console.log("Parsed Data:", data); // Handle parsed data
+
+    reader.onload = async () => {
+      try {
+        const result = reader.result as string;
+        const data = await parseCsv(
+          result,
+          userNames,
+          competitionId,
+          prevLeaderboard
+        );
+
+        if (typeof data === "string") {
+          setFileHelperText(`Parsing errors: ${data}`);
+        } else {
+          setFileHelperText("File parsed successfully!");
+          setTimeout(() => setFileHelperText(null), 3000);
+          console.log("Parsed Data:", data); // Handle parsed data here
+          handleCompetitionDataParsed();
+        }
+      } catch (error) {
+        console.error("Error parsing CSV:", error);
+        setFileHelperText(
+          "An unexpected error occurred while parsing the file."
+        );
+      }
+      finally {
+        event.target.value = ""; // Reset file input to allow same file to be uploaded again (might have been changed -> new data)
       }
     };
 
