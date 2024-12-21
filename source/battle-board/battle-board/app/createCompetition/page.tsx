@@ -11,6 +11,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs, { Dayjs } from "dayjs";
+import GeneralButton from "@/components/general-btn";
 
 export default function CreateCompetition() {
   const [games, setGames] = useState<Game[]>([]);
@@ -120,6 +121,10 @@ export default function CreateCompetition() {
     router.push(`/competition/${competition_id}`);
   }
 
+  const radioButtonLabelClasses = `font-nunito textshadow text-xl hover:cursor-pointer w-fit flex items-center`;
+  const radioButtonClasses = `appearance-none peer`;
+  const radioButtonSpanClasses = `w-4 h-4 mr-2 rounded-full border-solid border-[2px] border-white shadow-lg shadow-indigo-500/50 peer-checked:bg-buttonprimary hover:bg-buttonprimaryhover`;
+
   return (
     <div className="bg-background flex flex-col items-center">
       <main className="flex-auto item font-odibee text-9xl">
@@ -170,32 +175,32 @@ export default function CreateCompetition() {
           {/* Cover Image */}
           <div className="createGroup">
             <label className="text-5xl">Add a cover image</label>
-            <button type="button" className="uploadButton font-nunito">
-              Upload image
-            </button>
+            <GeneralButton text="Upload image" type="button" />
           </div>
 
           {/* Settings */}
           <div className="createGroup">
             <div className="text-5xl">Settings</div>
-            <label className="font-nunito textshadow text-xl hover:cursor-pointer w-fit">
+            <label className={radioButtonLabelClasses}>
               <input
-                className="appearance-auto"
+                className={radioButtonClasses}
                 type="radio"
                 name="isPublic"
                 value={1}
                 defaultChecked
-              />{" "}
-              Public
+              />
+              <span className={radioButtonSpanClasses}></span>
+              <span className="ml-2">Public</span>
             </label>
-            <label className="font-nunito textshadow text-xl hover:cursor-pointer w-fit">
+            <label className={radioButtonLabelClasses}>
               <input
-                className="appearance-auto"
+                className={radioButtonClasses}
                 type="radio"
                 name="isPublic"
                 value={0}
-              />{" "}
-              Private
+              />
+              <span className={radioButtonSpanClasses}></span>
+              <span className="ml-2">Private</span>
             </label>
           </div>
 
@@ -223,33 +228,36 @@ export default function CreateCompetition() {
           {/* Modes */}
           <div className="createGroup">
             <div className="text-5xl">Choose mode</div>
-            <label className="font-nunito textshadow text-xl hover:cursor-pointer w-fit">
+            <label className={radioButtonLabelClasses}>
               <input
-                className="appearance-auto"
+                className={radioButtonClasses}
                 type="radio"
                 name="competitionType"
                 value={1}
                 defaultChecked
-              />{" "}
-              Tournament
+              />
+              <span className={radioButtonSpanClasses}></span>
+              <span className="ml-2"> Tournament </span>
             </label>
-            <label className="font-nunito textshadow text-xl hover:cursor-pointer w-fit">
+            <label className={radioButtonLabelClasses}>
               <input
-                className="appearance-auto"
+                className={radioButtonClasses}
                 type="radio"
                 name="competitionType"
                 value={2}
-              />{" "}
-              Classic
+              />
+              <span className={radioButtonSpanClasses}></span>
+              <span className="ml-2"> Classic </span>
             </label>
-            <label className="font-nunito textshadow text-xl hover:cursor-pointer w-fit">
+            <label className={radioButtonLabelClasses}>
               <input
-                className="appearance-auto"
+                className={radioButtonClasses}
                 type="radio"
                 name="competitionType"
                 value={3}
-              />{" "}
-              Rival
+              />
+              <span className={radioButtonSpanClasses}></span>
+              <span className="ml-2"> Rival </span>
             </label>
           </div>
 
@@ -269,10 +277,7 @@ export default function CreateCompetition() {
               </select>
             </div>
           </div>
-
-          <button type="submit" className="createButton font-nunito">
-            Create competition
-          </button>
+          <GeneralButton text="Create competition" type="submit" />
         </form>
       </main>
     </div>
