@@ -1,73 +1,13 @@
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
-
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
-
 import { CommunityData, UserPageProps, UserData } from "@/models/interfaces/UserPage";
-
-let baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-baseUrl = baseUrl?.includes("localhost") ? baseUrl : "https://" + baseUrl;
-
-async function fetchUserData(discord_id: number): Promise<UserData> {
-  // Example API endpoint; replace with your actual API request
-  const response = await fetch(`${baseUrl}/api/users?userId=${discord_id}`);
-  if (!response.ok) {
-    return {
-      id: "",
-      discord_id: 0,
-      user_name: "",
-      display_name: "",
-      league_puuid: "",
-    };
-  }
-  return response.json();
-}
-
-async function fetchUserCommunitiesData(
-  user_name: string
-): Promise<CommunityData> {
-  const response = await fetch(
-    `${baseUrl}/api/users/communities?user_name=${user_name}` // Correct URL
-  );
-  if (!response.ok) {
-    return { community_id: "", community_name: "" };
-  }
-  return response.json();
-}
-
-async function fetchUserCompetitionIds(
-  competition_id: string
-): Promise<string[]> {
-  const response = await fetch(
-    `${baseUrl}/api/users/competitions?user_name=${competition_id}` // Correct URL
-  );
-  if (!response.ok) {
-    return [];
-  }
-  return response.json();
-}
-
-async function fetchCompetitionData(
-  competitionId: string
-): Promise<CompetitionData> {
-  const response = await fetch(
-    `${baseUrl}/api/competitions?competitionId=${competitionId}`
-  );
-  return response.json();
-}
-
-async function fetchAllCompetitionsData(
-  competitionIds: string[]
-): Promise<CompetitionData[]> {
-  const competitionsData: CompetitionData[] = [];
-  for (const competitionId of competitionIds) {
-    const competitionData = await fetchCompetitionData(competitionId);
-    competitionsData.push(competitionData);
-  }
-  return competitionsData;
-}
-
+import { fetchUserData } from "@/lib/users/fetchUserData";
+import { fetchUserCommunitiesData } from "@/lib/users/fetchUserCommunitiesData";
+import { fetchUserCompetitionIds } from "@/lib/users/fetchUserCompetitionIds";
+import { fetchCompetitionData } from "@/lib/users/fetchCompetitionData";
+import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
 
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
