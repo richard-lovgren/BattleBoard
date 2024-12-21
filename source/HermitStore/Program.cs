@@ -270,49 +270,58 @@ app.MapPost(
 
 app.MapPost(
         "/competitions/join",
-        async (HermitDbContext dbContext, UserCompetitionDto userCompetitionDto) =>
+        async (HermitDbContext dbContext, JoinCompetitionDto joinCompetitionDto) =>
         {
-            var competition_id = userCompetitionDto.competition_id;
-            var user_name = userCompetitionDto.user_name;
-
+            var competition_id = joinCompetitionDto.competition_id;
             var competition = await dbContext.competition.FindAsync(competition_id);
             if (competition == null)
             {
                 return Results.NotFound();
             }
 
-            var user = await dbContext
-                .users.Where(x => x.user_name == user_name)
-                .FirstOrDefaultAsync();
-            if (user == null)
-            {
-                return Results.NotFound();
-            }
+            User? user;
+            foreach(var user_name in joinCompetitionDto.user_names) {
+                user = await dbContext
+                    .users.Where(x => x.user_name == user_name)
+                    .FirstOrDefaultAsync();
 
-            var userCompetition = new UserCompetition
-            {
-                id = Guid.NewGuid(),
-                user_name = user_name,
-                competition_id = competition_id,
+                if (user == null)
+                {
+                    return Results.NotFound();
+                }
+
+                // Check if user is already a participant in the competition
+                bool userIsAlreadyParticipant = await dbContext.user_competition.Where(x=> x.user_name == user_name && x.competition_id == competition_id).FirstOrDefaultAsync() != null;
+                if (userIsAlreadyParticipant)
+                {
+                    return Results.BadRequest($"User {user_name} is already a participant");
+                }
+
+                var userCompetition = new UserCompetition
+                {
+                    id = Guid.NewGuid(),
+                    user_name = user_name,
+                    competition_id = competition_id,
+                };
+
+                dbContext.user_competition.Add(userCompetition);
+
+                competition.participants++;
+
+                logger.LogInformation(
+                    "User {userName} joined competition {competitionId}",
+                    user_name,
+                    competition_id
+                );
             };
 
-            dbContext.user_competition.Add(userCompetition);
-
-            competition.participants++;
             await dbContext.SaveChangesAsync();
-
-            logger.LogInformation(
-                "User {userName} joined competition {competitionId}",
-                user_name,
-                competition_id
-            );
-
             return Results.Created();
         }
     )
-    .Produces(StatusCodes.Status201Created)
+    .Produces<UserCompetition>(StatusCodes.Status201Created)
     .Produces(StatusCodes.Status404NotFound)
-    .WithDescription("Join a competition");
+    .WithDescription("Join one or multiple users to a competition.");
 
 app.MapGet(
         "/games",

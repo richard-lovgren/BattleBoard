@@ -110,6 +110,12 @@ namespace HermitStore
         public required Guid id { get; set; }
     }
 
+    public class JoinCompetitionDto
+    {
+        public required Guid competition_id { get; set; }
+        public required string[] user_names { get; set; }
+    }
+    
     public class UserCompetitionDto
     {
         public required Guid competition_id { get; set; }
