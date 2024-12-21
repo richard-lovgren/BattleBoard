@@ -7,23 +7,17 @@ export default function SearchToggleButton(data: ButtonData) {
     data.handleOnClick();
   }
 
+  const buttonClasses = `appearance-none group flex items-center shadow-sm rounded-full h-7 w-16 p-1 hover:cursor-pointer transition-all ease-in-out duration-200 ${
+    data.isOn ? ' bg-white shadow-white hover:bg-slate-300' : 'justify-start bg-buttonprimary shadow-buttonprimary hover:bg-buttonprimaryhover'
+  }`;
+
+  const divClasses = `h-6 w-6 rounded-full transition-all ease-in-out duration-200 transform ${
+    data.isOn ? 'translate-x-8 bg-buttonprimary group-hover:bg-buttonprimaryhover' : 'translate-x-0 bg-white group-hover:bg-slate-300'
+  }`;
+
   return (
-    <>
-      {data.isOn ? (
-        <button
-          className="flex items-center justify-end appearance-none bg-white shadow-sm shadow-white rounded-full h-8 w-20 p-1 ease-in-out"
-          onClick={handleClick}
-        >
-          <div className="appearence-none h-7 w-7 rounded-full bg-buttonprimary hover:bg-buttonprimaryhover hover:cursor-pointer ease-in-out"></div>
-        </button>
-      ) : (
-        <button
-          className="appearence-none flex items-center justify-start appearance-none bg-buttonprimary shadow-sm shadow-buttonprimary rounded-full h-8 w-20 p-1 ease-in-out"
-          onClick={handleClick}
-        >
-          <div className="h-7 w-7 rounded-full bg-white hover:bg-slate-300 hover:cursor-pointer ease-in-out"></div>
-        </button>
-      )}
-    </>
+    <button className={buttonClasses} onClick={handleClick}>
+      <div className={divClasses}></div>
+    </button>
   );
 }

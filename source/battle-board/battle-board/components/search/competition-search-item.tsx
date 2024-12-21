@@ -5,6 +5,7 @@ import GeneralButton from "../general-btn";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import formatDate from "@/app/modules/helpers";
+import Link from "next/link";
 
 async function fetchGameName(gameId: string): Promise<string | null> {
   const response = await fetch(`/api/game?gameId=${gameId}`);
@@ -94,7 +95,9 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
           </span>
         </div>
         <div className="flex items-center justify-center">
-          <GeneralButton text="View" />
+          <Link href={`/competition/${competition.id}`}>
+            <GeneralButton text="View" />
+          </Link>
         </div>
       </div>
     </div>
