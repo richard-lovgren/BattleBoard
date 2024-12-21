@@ -67,8 +67,8 @@ const CommunityMembersList: React.FC<any> = ({
         Community Members
       </h1>
       <div className={styles.membersListWrapper}>
-        {communityData.map((member: any) => (
-          <div className={styles.member}>
+        {communityData.map((member: any, index:any) => (
+          <div className={styles.member} key={index}>
             {member} 
           </div>
         ))}
