@@ -23,6 +23,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import JoinCompetitionDto from "@/models/dtos/join-competition-dto";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -137,6 +138,34 @@ export default function CreateCompetitionPage() {
     return null;
   }
 
+  async function postJoinCompetitionData(
+    body: JoinCompetitionDto
+  ): Promise<string | null> {
+    try {
+      console.log("Creating UserCompetition with body:", body);
+      const url = `/api/competitions/join`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error creating UserCompetition: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      const id = result.id;
+      return id;
+    } catch (error) {
+      console.error("Error in postJoinCompetitionData:", error);
+    }
+    return null;
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -163,7 +192,20 @@ export default function CreateCompetitionPage() {
 
     if (!competition_id) {
       console.error("Error creating competition");
+      console.log("No users joined");
       router.push(`/`);
+      return;
+    }
+
+    else {
+      const joinCompetitionBody: JoinCompetitionDto = {
+        competition_id: competition_id!,
+        user_names: participants,
+      };
+
+      if(joinCompetitionBody.user_names.length > 0) {
+        await postJoinCompetitionData(joinCompetitionBody);   
+      }
     }
 
     router.push(`/competition/${competition_id}`);
@@ -330,7 +372,7 @@ export default function CreateCompetitionPage() {
                 renderValue={(selected) => (selected as string[]).join(', ')}
                 MenuProps={MenuProps}
               >
-                {users.map((user) => (
+                {users.filter((user) => user.user_name != username).map((user) => (
                   <MenuItem key={user.id} value={user.user_name}>
                     <Checkbox checked={participants.includes(user.user_name)} />
                     <ListItemText primary={user.user_name} />

@@ -266,9 +266,14 @@ app.MapPost(
         {
             var competition_id = joinCompetitionDto.competition_id;
             var competition = await dbContext.competition.FindAsync(competition_id);
+            var createdUserCompetitionsIds = new List<Guid>();
+
             if (competition == null)
             {
-                return Results.NotFound();
+                return Results.BadRequest("Competition not found");
+            }
+            if(joinCompetitionDto.user_names.Length == 0) {
+                return Results.BadRequest("No users to join");
             }
 
             User? user;
@@ -279,7 +284,7 @@ app.MapPost(
 
                 if (user == null)
                 {
-                    return Results.NotFound();
+                    return Results.BadRequest($"User {user_name} not found");
                 }
 
                 // Check if user is already a participant in the competition
@@ -297,7 +302,7 @@ app.MapPost(
                 };
 
                 dbContext.user_competition.Add(userCompetition);
-
+                createdUserCompetitionsIds.Add(userCompetition.id);
                 competition.participants++;
 
                 logger.LogInformation(
@@ -308,11 +313,11 @@ app.MapPost(
             };
 
             await dbContext.SaveChangesAsync();
-            return Results.Created();
+            return Results.Created<List<Guid>>("/competitions/join", createdUserCompetitionsIds);
         }
     )
-    .Produces<UserCompetition>(StatusCodes.Status201Created)
-    .Produces(StatusCodes.Status404NotFound)
+    .Produces<List<Guid>>(StatusCodes.Status201Created)
+    .Produces(StatusCodes.Status400BadRequest)
     .WithDescription("Join one or multiple users to a competition.");
 
 app.MapGet(
