@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
 import PlayerGrid from '@/components/playerGrid/PlayerGrid';
-import CompetitonModeWrapper from '@/components/competition/CompetitionModeWrapper';
 import fetchCompetitionData from '@/lib/leaderboard/fetchCompetitionData';
 import fetchGameName from '@/lib/leaderboard/fetchGameName';
 import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
@@ -25,7 +24,7 @@ type CompetitionPageProps = Promise<{ competition: string }>;
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
   const { competitionData, gameName, leaderboard, competitionUsers } = await getCompetitionData((await props.params).competition);
-
+  
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
       <div className="w-full flex text-slate-50 text-3xl flex-row items-center gap-4 px-10 py-0">
@@ -81,8 +80,7 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
         </div>
       </Suspense>
       {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
-      <LeaderboardComponent competitionId={competitionData.id} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />
-      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionData.id} />
+      <LeaderboardComponent competitionId={competitionData.id} competitionData={competitionData} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />
     </div>
   );
 }
