@@ -1,4 +1,4 @@
-import Community from "@/models/community";
+import Community from "@/models/interfaces/community";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
 import formatDate from "@/app/modules/helpers";
