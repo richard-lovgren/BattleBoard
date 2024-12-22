@@ -30,12 +30,12 @@ const LeaderboardComponent = ({
   }
 
   if (userNames === null) {
-    return <p>silli :P</p>;
+    return <p> Failed to load usernames for competition! </p>;
   }
 
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
-      epic leaderboard
+
       <EditCompetitionButton competitionCreator={creatorName} />
       <FileUploadAndParseComponent
         prevLeaderboard={initialLeaderboard}
@@ -45,7 +45,6 @@ const LeaderboardComponent = ({
       />
 
       <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
-
 
     </Suspense>
   );

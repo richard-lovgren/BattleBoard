@@ -42,8 +42,6 @@ const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, co
             {renderContent()}
         </Fragment>
     );
-
-    //return renderContent();
 };
 
 export default CompetitonModeWrapper;
