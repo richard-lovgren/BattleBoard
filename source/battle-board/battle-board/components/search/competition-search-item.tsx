@@ -5,6 +5,7 @@ import GeneralButton from "../general-btn";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import formatDate from "@/app/modules/helpers";
+import Link from "next/link";
 
 import { useRouter } from "next/navigation";
 async function fetchGameName(gameId: string): Promise<string | null> {
