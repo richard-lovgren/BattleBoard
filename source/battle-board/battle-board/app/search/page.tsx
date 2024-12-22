@@ -8,8 +8,8 @@ import CompetitionData from "@/models/interfaces/CompetitionData";
 import Community from "@/models/community";
 
 import { useEffect, useState } from "react";
-import ButtonData from "@/models/button-data";
-import SearchBarData from "@/models/search-bar-data";
+import ButtonData from "@/models/component-props/button-data";
+import SearchBarData from "@/models/component-props/search-bar-data";
 
 async function getCompetitions(): Promise<CompetitionData[]> {
   const response = await fetch("/api/competitions/public");

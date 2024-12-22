@@ -1,4 +1,4 @@
-import ButtonData from "@/models/button-data";
+import ButtonData from "@/models/component-props/button-data";
 
 export default function SearchToggleButton(data: ButtonData) {
   

@@ -1,4 +1,3 @@
-
 export default interface CompetitionData {
     participants: number,
     id: string,

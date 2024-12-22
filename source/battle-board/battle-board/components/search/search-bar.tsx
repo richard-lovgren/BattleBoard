@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import SearchBarData from "@/models/search-bar-data";
+import SearchBarData from "@/models/component-props/search-bar-data";
 
 export default function SearchBar(data: SearchBarData) {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
