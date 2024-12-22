@@ -71,7 +71,9 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    triggerReload();
+    setTimeout(() => {
+        triggerReload();
+        }, 500);
   };
 
   const handleModalSave = (columns: string[], rows: string[][]) => {

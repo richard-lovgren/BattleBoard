@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FC } from 'react';
+import React, { useState, useEffect, ChangeEvent, FC } from 'react';
 import ReactDOM from 'react-dom';
 import { Leaderboard } from '@/models/leaderboard';
 
@@ -9,23 +9,28 @@ interface TableModalProps {
   onSave: (columns: string[], rows: string[][]) => void;
 }
 
-const TableModal: FC<TableModalProps> = ({ isOpen, onClose }) => {
-  
-  //We love a little state
+const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, onClose, onSave }) => {
   const [columns, setColumns] = useState<string[]>(['name']);
   const [rows, setRows] = useState<string[][]>([['']]);
+  const isEditing = !!leaderboard;
 
-  if (!isOpen) return null; // If closed -> render nothing
+  useEffect(() => {
+    if (leaderboard) {
+      setColumns(leaderboard.column_names);
+      setRows(
+        leaderboard.leaderboard_entries.map((entry) =>
+          leaderboard.column_names.map((col) => entry[col] || '')
+        )
+      );
+    }
+  }, [leaderboard]);
 
+  if (!isOpen) return null;
 
   const handleAddColumn = () => {
     const newColumnName = prompt('Enter the new column name', `Column ${columns.length + 1}`);
     setColumns((prev) => [...prev, newColumnName || `Column ${columns.length + 1}`]);
-
-    // For each row, add an empty cell
-    setRows((prevRows) =>
-      prevRows.map((row) => [...row, ''])
-    );
+    setRows((prevRows) => prevRows.map((row) => [...row, '']));
   };
 
   const handleAddRow = () => {
@@ -44,7 +49,11 @@ const TableModal: FC<TableModalProps> = ({ isOpen, onClose }) => {
     });
   };
 
-  // Kanske har vi CSS styles redan men jag icke förstå css
+  const handleSave = () => {
+    onSave(columns, rows);
+    onClose();
+  };
+
   const modalStyles: React.CSSProperties = {
     position: 'fixed',
     top: 0,
@@ -65,13 +74,13 @@ const TableModal: FC<TableModalProps> = ({ isOpen, onClose }) => {
     maxWidth: '80%',
     maxHeight: '80%',
     overflow: 'auto',
-    color: 'black'
+    color: 'black',
   };
 
   return ReactDOM.createPortal(
     <div style={modalStyles}>
       <div style={contentStyles}>
-        <h2>Create leaderboard</h2>
+        <h2>{isEditing ? 'Edit Leaderboard' : 'Create Leaderboard'}</h2>
         <p>The column &quot;name&quot; must be present and contain the users in the competition!</p>
 
         <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: '1rem', color: 'black' }}>
@@ -106,8 +115,13 @@ const TableModal: FC<TableModalProps> = ({ isOpen, onClose }) => {
         </table>
 
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={handleAddColumn}>Add Column</button>
-          <button onClick={handleAddRow}>Add Row</button>
+          {!isEditing && (
+            <>
+              <button onClick={handleAddColumn}>Add Column</button>
+              <button onClick={handleAddRow}>Add Row</button>
+            </>
+          )}
+          <button onClick={handleSave}>Save</button>
           <button onClick={onClose}>Close</button>
         </div>
       </div>
