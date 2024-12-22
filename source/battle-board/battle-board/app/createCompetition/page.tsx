@@ -1,17 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CompetitionDto from "@/models/dtos/competition-dto";
-import "./createCompetition.css";
-import Game from "@/models/game";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import "./createCompetition.css";
+import CompetitionDto from "@/models/dtos/competition-dto";
+import Game from "@/models/game";
+import User from "@/models/user";
+import GeneralButton from "@/components/general-btn";
+
+import dayjs, { Dayjs } from "dayjs";
+import 'dayjs/locale/sv';
+
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import dayjs, { Dayjs } from "dayjs";
-import GeneralButton from "@/components/general-btn";
 
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -20,7 +23,6 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import User from "@/models/user";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,14 +35,6 @@ const MenuProps = {
   },
 };
 
-const placeholderUsers: string[] = [
-  "laswer5",
-  ".nattap",
-  "cafg",
-  "richard",
-  "nagnub",
-];
-
 export default function CreateCompetitionPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [game, setGame] = useState('');
@@ -52,7 +46,6 @@ export default function CreateCompetitionPage() {
   const router = useRouter();
   const username = session.data?.user.name || "undefined";
   
-
   const handleParticipantsChange = (event: SelectChangeEvent<typeof participants>) => {
     const {
       target: { value },
@@ -154,6 +147,7 @@ export default function CreateCompetitionPage() {
     const body: CompetitionDto = {
       competition_name: formJson.competitionName.toString(),
       creator_name: username,
+      competition_start_date: selectedDate?.add(1, 'day').toISOString() || new Date().toISOString(),
       competition_description: formJson.competitionDesc.toString(),
       competition_type: parseInt(formJson.competitionType.toString()),
       format: 1,
@@ -162,7 +156,6 @@ export default function CreateCompetitionPage() {
       game_id: game,
       rank_alg: 1,
       is_public: !!formJson.isPublic,
-      //competition_date: selectedDate?.toISOString() || null, // TODO: add to db
     };
 
     console.log(body);
@@ -203,7 +196,7 @@ export default function CreateCompetitionPage() {
             <div className="ml-32 createGroup">
               <label className="text-5xl">Start date</label>
               <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[20vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="sv">
                   <DatePicker
                     label="Select date"
                     onChange={(newValue) => setSelectedDate(newValue)}
@@ -261,20 +254,6 @@ export default function CreateCompetitionPage() {
           <div className="createGroup">
             <label className="text-5xl">Choose game</label>
             <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-              {/* {loading ? (
-                <div>Loading games...</div>
-              ) : (
-                <select
-                  className="decorated text-3xl text-left w-full bg-[#0E0030] rounded-full focus:outline-none"
-                  name="game"
-                >
-                  {games.map((game) => (
-                    <option key={game.id} value={game.id}>
-                      {game.game_name}
-                    </option>
-                  ))}
-                </select>
-              )} */}
               {loading ? (
                 <div className=" font-nunito textshadow">Loading games...</div>
               ) : (
@@ -337,16 +316,6 @@ export default function CreateCompetitionPage() {
           <div className="createGroup">
             <label className="text-5xl">Invite players</label>
             <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-              {/* <select
-                className="decorated text-3xl text-left w-full bg-[#0E0030] rounded-full focus:outline-none"
-                name="invitedUsers"
-              >
-                {placeholderUsers.map((user) => (
-                  <option key={user} value={user}>
-                    {user}
-                  </option>
-                ))}
-              </select> */}
             <FormControl
               sx={{ m: 1, width: '28vw' }}
             >

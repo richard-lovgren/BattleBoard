@@ -43,11 +43,12 @@ CREATE TABLE user_community (
 -- Competition table
 CREATE TABLE competition (
     id UUID PRIMARY KEY,
-    creator_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
     competition_name VARCHAR(30) NOT NULL,
+    creator_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
+    competition_start_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     competition_description VARCHAR(250),
     competition_type INT NOT NULL,
-    format INT NOT NULL,
+    format INT NOT NULL DEFAULT 0,
     competition_image BYTEA,
     is_open BOOLEAN NOT NULL DEFAULT TRUE,
     is_running BOOLEAN NOT NULL DEFAULT FALSE,
