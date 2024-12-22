@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, FC } from 'react';
 import { Typography } from '@mui/material';
 import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
 
@@ -8,7 +8,7 @@ interface CompetitionModeWrapperProps {
     reloadTrigger: number;
 }
 
-const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger }) => {
+const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger }) => {
     const renderContent = () => {
 
         console.log("Loading competition mode:", mode);

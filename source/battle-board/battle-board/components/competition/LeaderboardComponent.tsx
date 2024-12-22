@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import EditCompetitionButton from "@/components/competition/EditCompetitionButton";
+import EditCompetitionButton from "@/components/competition/ManualEditCompetition";
 import FileUploadAndParseComponent from "@/components/competition/FileUploadAndParseButton";
 import { Leaderboard } from "@/models/leaderboard";
 import CompetitionData from "@/models/interfaces/CompetitionData";
@@ -25,8 +25,8 @@ const LeaderboardComponent = ({
   const [reload, setReload] = useState(0);
 
   const triggerReload = () => {
-    console.log("triggering reload");
     setReload((prev) => prev + 1);
+    console.log("Triggered reload of leaderboard!");
   }
 
   if (userNames === null) {
@@ -36,7 +36,7 @@ const LeaderboardComponent = ({
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
 
-      <EditCompetitionButton competitionCreator={creatorName} />
+      <EditCompetitionButton competitionCreator={creatorName} leaderboard={initialLeaderboard} triggerReload={triggerReload} competitionId={competitionId} userNames={userNames} />
       <FileUploadAndParseComponent
         prevLeaderboard={initialLeaderboard}
         userNames={userNames}

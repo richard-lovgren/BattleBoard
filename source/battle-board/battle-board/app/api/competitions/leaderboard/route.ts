@@ -40,8 +40,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "competitionId is required" }, { status: 400 });
         }
 
-        console.log("competition_id", competition_id);
-
         // Build the target URL
         const url = `${db_conn_str}/competition/${competition_id}/leaderboard`;
 
