@@ -1,12 +1,11 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
 import PlayerGrid from '@/components/playerGrid/PlayerGrid';
-import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
 import fetchCompetitionData from '@/lib/leaderboard/fetchCompetitionData';
 import fetchGameName from '@/lib/leaderboard/fetchGameName';
 import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
-import FileUploadComponent from '@/components/competition/FileUploadButton';
-import EditCompetitionButton from '@/components/competition/EditCompetitionButton';
+import fetchCompetitionUsers from '@/lib/leaderboard/fetchCompetitionUsers';
+import LeaderboardComponent from '@/components/competition/LeaderboardComponent';
 
 // Server-side data fetching
 async function getCompetitionData(competitionId: string) {
@@ -16,24 +15,20 @@ async function getCompetitionData(competitionId: string) {
   }
   const gameName = await fetchGameName(competitionData.game_id);
   const leaderboard = await fetchClassicLeaderBoard(competitionId);
-  return { competitionData, gameName, leaderboard };
+  const competitionUsers = await fetchCompetitionUsers(competitionId);
+  return { competitionData, gameName, leaderboard, competitionUsers };
 }
 
 type CompetitionPageProps = Promise<{ competition: string }>;
 
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
-  const { competitionData, gameName, leaderboard } = await getCompetitionData((await props.params).competition);
-
-  let competitionMainElement: JSX.Element = <></>;
-  if (competitionData.competition_type === 1) {
-    competitionMainElement = <ClassicMode />;
-  }
-
+  const { competitionData, gameName, leaderboard, competitionUsers } = await getCompetitionData((await props.params).competition);
+  
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
       <div className="w-full flex text-slate-50 text-3xl flex-row items-center gap-4 px-10 py-0">
-        <div className="relative inline-block flex-grow flex-shrink-0 w-96 h-96">
+        <div className="relative inline-block flex-shrink-0 w-96 h-96">
           <Image
             src="/competition-placeholder.jpg"
             alt="example"
@@ -44,7 +39,7 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
           <div className="absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black"></div>
         </div>
 
-        <div className="flex flex-col gap-4 h-full pl-12 pr-36">
+        <div className="flex flex-col gap-4 h-full pl-12 pr-36 flex-grow">
           <h1 className="flex text-8xl font-odibee text-white">
             {competitionData.competition_name}
           </h1>
@@ -58,14 +53,14 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
           <Image
             src="/rival_mode_icon.svg"
             alt="Competition Type Image"
-            width={100}
-            height={100}
+            width={50}
+            height={50}
           />
           <Image
             src="/user.svg"
             alt="Players Icon Image"
-            width={100}
-            height={100}
+            width={50}
+            height={50}
           />
           <div className="flex flex-col gap-0 items-center">
             <h1 className="flex text-xl font-odibee text-white py-0 my-0">
@@ -78,16 +73,14 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
         </div>
       </div>
 
-      <div>
-        <PlayerGrid />
-      </div>
-
-      <Suspense fallback={<p>Loading components...</p>}>
-        <FileUploadComponent />
-        <EditCompetitionButton competitionCreator={competitionData.creator_name} />
+      {/* List players in competition */}
+      <Suspense fallback={<p>Loading players...</p>}>
+        <div>
+          <PlayerGrid playerList={competitionUsers} />
+        </div>
       </Suspense>
-
-      <div>{competitionMainElement}</div>
+      {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
+      <LeaderboardComponent competitionId={competitionData.id} competitionData={competitionData} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} />
     </div>
   );
 }

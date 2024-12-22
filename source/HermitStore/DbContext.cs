@@ -195,7 +195,7 @@ namespace HermitStore
     public class LeaderboardMegaObjDto
     {
         public required Guid competition_id { get; set; }
-        public required List<Dictionary<string,string>> leaderbord_entries { get; set; }
+        public required List<Dictionary<string,string>> leaderboard_entries { get; set; }
         public required List<string> column_names { get; set; }
     }
 

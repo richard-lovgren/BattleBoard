@@ -1,5 +1,4 @@
 using HermitStore;
-using Microsoft.AspNetCore.StaticAssets;
 using Microsoft.EntityFrameworkCore;
 
 public static class ClassicModeApi
@@ -289,7 +288,7 @@ public static class ClassicModeApi
             {
                 competition_id = competition_id,
                 leaderboard_id = leaderboard.id,
-                leaderbord_entries = leaderboad_entries,
+                leaderboard_entries = leaderboad_entries,
                 column_names = column_names,
             };
         }
@@ -311,7 +310,6 @@ public static class ClassicModeApi
         await dbContext.SaveChangesAsync();
 
         var metrics = leaderboardMegaObjDto.column_names.Where(c => c != "name").ToList();
-
         foreach (var metric in metrics)
         {
             var leaderboardMetric = new LeaderboardMetric
@@ -321,10 +319,10 @@ public static class ClassicModeApi
             };
 
             dbContext.leaderboard_metric.Add(leaderboardMetric);
-            await dbContext.SaveChangesAsync();
         }
+        await dbContext.SaveChangesAsync();
 
-        var leaderboad_entries = leaderboardMegaObjDto.leaderbord_entries;
+        var leaderboad_entries = leaderboardMegaObjDto.leaderboard_entries;
         foreach (var leaderboard_entry in leaderboad_entries)
         {
             var user_name = leaderboard_entry["name"];
@@ -340,12 +338,12 @@ public static class ClassicModeApi
                 };
 
                 dbContext.leaderboard_entry.Add(leaderboardEntry);
-                await dbContext.SaveChangesAsync();
             }
         }
 
-        Console.WriteLine("Leaderboard created.");
+        await dbContext.SaveChangesAsync();
 
+        Console.WriteLine("Leaderboard created.");
         return leaderboard;
     }
 
@@ -356,7 +354,7 @@ public static class ClassicModeApi
     )
     {
         var metrics = leaderboardMegaObjDto.column_names.Where(c => c != "name").ToList();
-        var leaderboad_entries = leaderboardMegaObjDto.leaderbord_entries;
+        var leaderboad_entries = leaderboardMegaObjDto.leaderboard_entries;
         var user_names = leaderboad_entries.Select(l => l["name"]).ToList();
 
         foreach (var user_name in user_names)
@@ -371,16 +369,18 @@ public static class ClassicModeApi
 
                 if (leaderboardEntry == null)
                 {
+                    Console.WriteLine("\nLeaderboard entry not found. Aborting.\n");
                     return null;
                 }
 
                 var metric_value = leaderboardMegaObjDto
-                    .leaderbord_entries.Where(l => l["name"] == user_name)
+                    .leaderboard_entries.Where(l => l["name"] == user_name)
                     .Select(l => l[metric])
                     .FirstOrDefault();
 
                 if (metric_value == null)
                 {
+                    Console.WriteLine("Metric value not found. Aborting.");
                     return null;
                 }
 
@@ -388,7 +388,7 @@ public static class ClassicModeApi
                 await dbContext.SaveChangesAsync();
             }
         }
-        Console.WriteLine("Leaderboard updated.");
+        Console.WriteLine("\nLeaderboard updated.\n");
         return leaderboard;
     }
 
@@ -403,15 +403,20 @@ public static class ClassicModeApi
 
         if (leaderboard == null)
         {
+            Console.WriteLine("\n Chose to create new leaderboard. \n");
             leaderboard = await CreateNewLeaderboardDB(dbContext, leaderboardMegaObjDto);
             return Results.Created($"/leaderboards/{leaderboard.id}", leaderboard);
         }
+
+        Console.WriteLine("\nLeaderboard found: " + leaderboard.id + "\n");
+        Console.WriteLine("\n Chose to update leaderboard. \n");
 
         var updatedLeaderboard = await UpdateLeaderboardDB(
             dbContext,
             leaderboard,
             leaderboardMegaObjDto
         );
+
         return Results.Ok(updatedLeaderboard);
     }
 }

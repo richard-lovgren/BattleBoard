@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import formatDate from "@/app/modules/helpers";
 
+import { useRouter } from "next/navigation";
 async function fetchGameName(gameId: string): Promise<string | null> {
   const response = await fetch(`/api/game?gameId=${gameId}`);
   if (!response.ok) return null;
@@ -42,6 +43,12 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
 
     loadGameName();
   }, [competition.game_id]);
+
+   const router = useRouter();
+  
+    const handleNavigation = (id: string) => {
+      router.replace(`/competition/${id}`);
+    };
 
   return (
     <div className="flex flex-none flex-col h-[450px] w-[329px] rounded-[2.5rem] bg-gradient-to-br from-[#4E35BE] to-[#241958]">
@@ -94,7 +101,9 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
           </span>
         </div>
         <div className="flex items-center justify-center">
-          <GeneralButton text="View" />
+          <GeneralButton text="View" 
+            onClick={() => handleNavigation((competition.id).toString())}
+            />
         </div>
       </div>
     </div>
