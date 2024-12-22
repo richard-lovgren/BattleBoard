@@ -88,7 +88,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
               width={50}
               height={50}
             />
-            Start date
+            Begins {formatDate(competition.competition_start_date)}
           </span>
           <span className="flex items-center ml-12 my-2">
             {competitionTypeEnum[competition.competition_type]}
