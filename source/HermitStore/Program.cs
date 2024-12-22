@@ -213,8 +213,9 @@ app.MapPost(
             var competition = new Competition
             {
                 id = Guid.NewGuid(),
-                creator_name = competitionDto.creator_name,
                 competition_name = competitionDto.competition_name,
+                creator_name = competitionDto.creator_name,
+                competition_start_date = competitionDto.competition_start_date.ToUniversalTime(),
                 competition_description = competitionDto.competition_description,
                 competition_type = competitionDto.competition_type,
                 format = competitionDto.format,
@@ -225,16 +226,7 @@ app.MapPost(
                 participants = 0,
                 community_id = competitionDto.community_id,
             };
-
-            //if (competition.community_id != null)
-            //{
-            //    var community = await dbContext.community.FindAsync(competition.community_id);
-            //    if (community == null)
-            //    {
-            //        return Results.NotFound("Community not found");
-            //    }
-            //}
-
+            
             if (competition.creator_name != null)
             {
                 var user = await dbContext
