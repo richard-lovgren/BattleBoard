@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import "./createCompetition.css";
 import CompetitionDto from "@/models/dtos/competition-dto";
 import Game from "@/models/interfaces/game";
-import User from "@/models/user";
+import User from "@/models/interfaces/user";
 import GeneralButton from "@/components/general-btn";
 
 import dayjs, { Dayjs } from "dayjs";
