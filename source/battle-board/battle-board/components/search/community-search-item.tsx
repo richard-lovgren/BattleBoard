@@ -2,9 +2,19 @@ import Community from "@/models/community";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
 import formatDate from "@/app/modules/helpers";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+
 export default function CommunitySearchItem(community: Community) {
+
+  console.log(community);
+  const router = useRouter();
+
+  const handleNavigation = (id: string) => {
+    router.replace(`/community/${id}`);
+  };
+
   return (
     <div className="flex flex-none flex-col h-[420px] w-[329px] rounded-[2.5rem] bg-gradient-to-br from-[#4E35BE] to-[#241958]">
       <div className="flex flex-none items-center justify-center rounded-t-[2.5rem] bg-[#D9D9D9] h-[173px] ">
@@ -53,9 +63,9 @@ export default function CommunitySearchItem(community: Community) {
           </span>
         </div>
         <div className="flex items-center justify-center">
-          <Link href={`/community/${community.id}`}>
-            <GeneralButton text="View" />
-          </Link>
+          <GeneralButton text="View" 
+            onClick={() => handleNavigation((community.id).toString())}
+          />
         </div>
       </div>
     </div>
