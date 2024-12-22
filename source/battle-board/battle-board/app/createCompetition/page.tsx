@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import "./createCompetition.css";
 import CompetitionDto from "@/models/dtos/competition-dto";
-import Game from "@/models/game";
+import Game from "@/models/interfaces/game";
 import User from "@/models/user";
 import GeneralButton from "@/components/general-btn";
 
