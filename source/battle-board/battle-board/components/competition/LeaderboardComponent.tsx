@@ -1,47 +1,51 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState } from "react";
 import EditCompetitionButton from "@/components/competition/EditCompetitionButton";
 import FileUploadAndParseComponent from "@/components/competition/FileUploadAndParseButton";
 import { Leaderboard } from "@/models/leaderboard";
+import CompetitionData from "@/models/interfaces/CompetitionData";
+import CompetitonModeWrapper from '@/components/competition/CompetitionModeWrapper';
 
 const LeaderboardComponent = ({
   competitionId,
+  competitionData,
   creatorName,
   initialLeaderboard,
   userNames,
 }: {
   competitionId: string;
+  competitionData: CompetitionData;
   creatorName: string;
   initialLeaderboard: Leaderboard | null;
   userNames: string[] | null;
 }) => {
-  const [leaderboardData, setLeaderboardData] = useState<Leaderboard | null>(
-    null
-  );
+  
 
-  useEffect(() => {
-    setLeaderboardData(initialLeaderboard);
-  }, [initialLeaderboard]);
+  const [reload, setReload] = useState(0);
 
-  const handleCompetitionDataParsed = (data: Leaderboard) => {
-    setLeaderboardData(data);
-  };
+  const triggerReload = () => {
+    console.log("triggering reload");
+    setReload((prev) => prev + 1);
+  }
 
   if (userNames === null) {
-    return <p>silli :P</p>;
+    return <p> Failed to load usernames for competition! </p>;
   }
 
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
-      epic leaderboard
+
       <EditCompetitionButton competitionCreator={creatorName} />
       <FileUploadAndParseComponent
-        prevLeaderboard={leaderboardData}
+        prevLeaderboard={initialLeaderboard}
         userNames={userNames}
-        handleCompetitionDataParsed={handleCompetitionDataParsed}
+        handleCompetitionDataParsed={triggerReload}
         competitionId={competitionId}
       />
+
+      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
+
     </Suspense>
   );
 };

@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 
 export default function LolUsernameBox() {
   const { data: session } = useSession();
-  // console.log("Session data:", session);
   const userId = session?.user?.id;
 
   const [league_username, setUsername] = useState("");

@@ -104,10 +104,10 @@ export default function Search() {
       <main className="flex-auto item font-odibee text-9xl text-center">
         <div className="flex flex-col items-center">
           <div className="flex items-center justify-between w-[50vw]">
-            <div className="text-10xl">Search</div>
+            <div className="text-8xl">Search</div>
 
-            <div className="flex items-center mt-10 h-8">
-              <div className="textshadow text-3xl mr-5 font-nunito font-semibold">
+            <div className="flex items-center h-8">
+              <div className="textshadow text-2xl mr-5 font-nunito font-semibold">
                 {toggleCompetitions ? "Competitions" : "Communities"}
               </div>
               <SearchToggleButton {...buttonData} />
@@ -118,7 +118,7 @@ export default function Search() {
             <SearchBar {...searchBarData} />
           </div>
 
-          <div className="flex flex-wrap gap-10 justify-center mt-32 min-h-[80vh] w-[80vw] p-20">
+          <div className="flex flex-wrap gap-10 justify-center mt-10 min-h-[80vh] w-[80vw] p-8">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error}</div>}
             {!loading && !error && toggleCompetitions && (

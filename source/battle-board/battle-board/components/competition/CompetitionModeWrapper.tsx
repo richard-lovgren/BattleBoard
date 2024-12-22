@@ -1,14 +1,18 @@
-import * as React from 'react';
+import { Fragment } from 'react';
 import { Typography } from '@mui/material';
 import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
 
 interface CompetitionModeWrapperProps {
     mode: number;
     competitionId: string;
+    reloadTrigger: number;
 }
 
-const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, competitionId }) => {
+const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger }) => {
     const renderContent = () => {
+
+        console.log("Loading competition mode:", mode);
+
         switch (mode) {
             case 1:
                 return <ClassicMode competitionId={competitionId} />;
@@ -33,7 +37,11 @@ const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, co
         }
     };
 
-    return renderContent();
+    return ( // Reload component when reloadTrigger changes
+        <Fragment key={reloadTrigger}> 
+            {renderContent()}
+        </Fragment>
+    );
 };
 
 export default CompetitonModeWrapper;

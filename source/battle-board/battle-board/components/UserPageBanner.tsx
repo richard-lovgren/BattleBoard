@@ -22,9 +22,6 @@ const UserPageBanner: React.FC<UserProps> = ({
 }) => {
   const { data: session } = useSession();
 
-  // const { data, error } = useCountryLocaleFlag(
-  //   "https://flagsapi.com/BE/flat/64.png"
-  // );
   if (session?.user) {
     return (
       <main className="  text-white flex flex-col items-center px-2 py-2 font-nunito ">

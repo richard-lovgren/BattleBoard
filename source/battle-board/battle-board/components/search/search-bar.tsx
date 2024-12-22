@@ -9,16 +9,14 @@ export default function SearchBar(data: SearchBarData) {
   }
 
   return (
-    <div className="search-bar flex items-center rounded-full border-solid border-white border-[6px] h-[100px] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-      <Link href="/search" className="mr-2">
+    <div className="search-bar flex items-center rounded-full border-solid border-white border-[6px] h-[5vh] w-[50vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
         <Image
           src="/search.svg"
           alt="search"
-          className="h-16 w-16"
+          className="h-11 w-11"
           height={100}
           width={100}
         />
-      </Link>
       <input value={data.searchString}  onChange={handleChange} className=" text-3xl text-left w-full bg-background text-white"></input>
     </div>
   );
