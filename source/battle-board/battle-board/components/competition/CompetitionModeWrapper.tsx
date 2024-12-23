@@ -16,7 +16,7 @@ const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, co
         switch (mode) {
             case 1:
                 return <ClassicMode competitionId={competitionId} />;
-            case 1:
+            case 2:
                 return (
                     <div className="w-full flex items-center justify-center">
                         <Typography className="text-3xl font-odibee">Rival Mode</Typography>
@@ -38,7 +38,7 @@ const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, co
     };
 
     return ( // Reload component when reloadTrigger changes
-        <Fragment key={reloadTrigger}> 
+        <Fragment key={reloadTrigger}>
             {renderContent()}
         </Fragment>
     );

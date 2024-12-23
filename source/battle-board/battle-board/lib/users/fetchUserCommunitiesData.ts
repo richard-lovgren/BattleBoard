@@ -2,7 +2,6 @@ import { CommunityData } from "@/models/interfaces/UserPage";
 
 
 let baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-baseUrl = baseUrl?.includes("localhost") ? baseUrl : "https://" + baseUrl;
 
 export async function fetchUserCommunitiesData(
   user_name: string
