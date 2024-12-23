@@ -25,6 +25,9 @@ const LeaderboardComponent = ({
   const triggerReload = () => {
     setReload((prev) => prev + 1);
     console.log("Triggered reload of leaderboard!");
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   };
 
   if (userNames === null) {
