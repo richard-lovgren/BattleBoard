@@ -5,11 +5,11 @@ import CompetitonSearchItem from "@/components/search/competition-search-item";
 import CommunitySearchItem from "@/components/search/community-search-item";
 
 import CompetitionData from "@/models/interfaces/CompetitionData";
-import Community from "@/models/community";
+import Community from "@/models/interfaces/community";
 
 import { useEffect, useState } from "react";
-import ButtonData from "@/models/button-data";
-import SearchBarData from "@/models/search-bar-data";
+import ButtonData from "@/models/component-props/button-data";
+import SearchBarData from "@/models/component-props/search-bar-data";
 
 async function getCompetitions(): Promise<CompetitionData[]> {
   const response = await fetch("/api/competitions/public");
