@@ -199,11 +199,15 @@ namespace HermitStore
         public required Guid id { get; set; }
     }
 
-    public class LeaderboardMegaObj
+    public class LeaderboardMegaObjDto
     {
         public required Guid competition_id { get; set; }
-        public required Guid leaderboard_id {get; set; }
-        public required List<Dictionary<string,string>> leaderbord_entries { get; set; }
+        public required List<Dictionary<string,string>> leaderboard_entries { get; set; }
         public required List<string> column_names { get; set; }
+    }
+
+    public class LeaderboardMegaObj: LeaderboardMegaObjDto
+    {
+        public required Guid leaderboard_id {get; set; }
     }
 }

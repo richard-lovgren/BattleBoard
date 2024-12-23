@@ -8,8 +8,6 @@ import Image from "next/image";
 export default function LoginBtn() {
   const { data: session } = useSession();
 
-  console.log("Session Data:", session); // Log the session data to debug
-
   if (session?.user) {
     return (
       <Link href={`/user/${session.user.id}`}>
