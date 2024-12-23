@@ -16,12 +16,10 @@ interface CommunityData {
   community_id: string;
 }
 
-var baseUrl = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
-
 async function fetchUserCommunityMembers(
   communityId: string
 ): Promise<any> {
-  const url = `${baseUrl}/api/community/users?communityId=${communityId}`;
+  const url = `/api/community/users?communityId=${communityId}`;
   const response = await fetch(url);
   if (!response.ok) {
     return {};
@@ -35,7 +33,7 @@ const CommunityMembersList: React.FC<any> = ({
   community_id,
 }) => {
 
-  const [communityData, setCommunityData] = useState< any>(null);
+  const [communityData, setCommunityData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -59,20 +57,20 @@ const CommunityMembersList: React.FC<any> = ({
     return <div>Failed to load community data.</div>;
   }
 
- 
+
 
   return (
-    <div className={styles.wrapper}> 
+    <div className={styles.wrapper}>
       <h1 className="text-3xl flex font-bold font-odibee">
         Community Members
       </h1>
       <div className={styles.membersListWrapper}>
-        {communityData.map((member: any, index:any) => (
+        {communityData.map((member: any, index: any) => (
           <div className={styles.member} key={index}>
-            {member} 
+            {member}
           </div>
         ))}
-       
+
       </div>
     </div>
   );

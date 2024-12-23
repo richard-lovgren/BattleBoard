@@ -1,11 +1,9 @@
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
-
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
+import baseUrl from "@/lib/baseUrl";
 
-let baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-baseUrl = baseUrl?.includes("localhost") ? baseUrl : "https://" + baseUrl;
 interface CommunityData {
   community_id: string;
   community_name: string;

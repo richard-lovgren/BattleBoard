@@ -1,4 +1,5 @@
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+import baseUrl from "@/lib/baseUrl";
+
 async function fetchCompetitionData(
     competitionId: string
 ): Promise<string[] | null> {

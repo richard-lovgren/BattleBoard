@@ -1,6 +1,6 @@
 import { Leaderboard } from "@/models/leaderboard";
+import baseUrl from "@/lib/baseUrl";
 
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 async function fetchClassicLeaderBoard(competitionId: string): Promise<Leaderboard | null> {
     const response = await fetch(
         `${baseUrl}/api/competitions/leaderboard?competitionId=${competitionId}`

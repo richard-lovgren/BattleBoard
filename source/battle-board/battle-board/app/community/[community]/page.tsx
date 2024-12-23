@@ -2,9 +2,7 @@ import Image from "next/image";
 import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
-
-var baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-baseUrl = baseUrl?.includes("localhost") ? baseUrl : "https://" + baseUrl;
+import baseUrl from "@/lib/baseUrl";
 interface CommunityData {
   community_name: string;
   community_id: string;
