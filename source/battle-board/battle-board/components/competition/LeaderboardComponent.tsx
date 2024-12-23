@@ -1,11 +1,11 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import EditCompetitionButton from "@/components/competition/EditCompetitionButton";
+import EditCompetitionButton from "@/components/competition/ManualEditCompetition";
 import FileUploadAndParseComponent from "@/components/competition/FileUploadAndParseButton";
 import { Leaderboard } from "@/models/leaderboard";
 import CompetitionData from "@/models/interfaces/CompetitionData";
-import CompetitonModeWrapper from '@/components/competition/CompetitionModeWrapper';
+import CompetitonModeWrapper from "@/components/competition/CompetitionModeWrapper";
 
 const LeaderboardComponent = ({
   competitionId,
@@ -20,14 +20,15 @@ const LeaderboardComponent = ({
   initialLeaderboard: Leaderboard | null;
   userNames: string[] | null;
 }) => {
-  
-
   const [reload, setReload] = useState(0);
 
   const triggerReload = () => {
-    console.log("triggering reload");
     setReload((prev) => prev + 1);
-  }
+    console.log("Triggered reload of leaderboard!");
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
+  };
 
   if (userNames === null) {
     return <p> Failed to load usernames for competition! </p>;
@@ -35,8 +36,13 @@ const LeaderboardComponent = ({
 
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
-
-      <EditCompetitionButton competitionCreator={creatorName} />
+      <EditCompetitionButton
+        competitionCreator={creatorName}
+        leaderboard={initialLeaderboard}
+        triggerReload={triggerReload}
+        competitionId={competitionId}
+        userNames={userNames}
+      />
       <FileUploadAndParseComponent
         prevLeaderboard={initialLeaderboard}
         userNames={userNames}
@@ -44,8 +50,11 @@ const LeaderboardComponent = ({
         competitionId={competitionId}
       />
 
-      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
-
+      <CompetitonModeWrapper
+        mode={competitionData.competition_type}
+        competitionId={competitionId}
+        reloadTrigger={reload}
+      />
     </Suspense>
   );
 };
