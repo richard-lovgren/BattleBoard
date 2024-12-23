@@ -1,7 +1,7 @@
 import Community from "@/models/interfaces/community";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
-import formatDate from "@/app/modules/helpers";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 
 export default function CommunitySearchItem(community: Community) {

@@ -4,7 +4,7 @@ import CompetitionData from "@/models/interfaces/CompetitionData";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import formatDate from "@/app/modules/helpers";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 
 async function fetchGameName(gameId: string): Promise<string | null> {
