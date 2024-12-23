@@ -53,7 +53,7 @@ export default function CommunitySearchItem(community: Community) {
           </span>
         </div>
         <div className="flex items-center justify-center">
-          <Link href={`/community/${community.id}`}>
+          <Link href={`/community/${community.id}`} passHref>
             <GeneralButton text="View" />
           </Link>
         </div>
