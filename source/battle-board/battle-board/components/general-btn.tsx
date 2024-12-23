@@ -14,3 +14,4 @@ export default function GeneralButton({
       {text}
     </button>
   );
+}

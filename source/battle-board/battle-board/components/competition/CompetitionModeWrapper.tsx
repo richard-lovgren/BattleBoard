@@ -38,7 +38,7 @@ const CompetitonModeWrapper: React.FC<CompetitionModeWrapperProps> = ({ mode, co
     };
 
     return ( // Reload component when reloadTrigger changes
-        <Fragment key={reloadTrigger}>
+        <Fragment key={reloadTrigger}> 
             {renderContent()}
         </Fragment>
     );
