@@ -9,7 +9,7 @@ import Game from "@/models/interfaces/game";
 import User from "@/models/interfaces/user";
 import GeneralButton from "@/components/general-btn";
 
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import 'dayjs/locale/sv';
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -24,17 +24,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import JoinCompetitionDto from "@/models/dtos/join-competition-dto";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+import RadioButton from "@/components/form-components/radio-button";
+import * as createCompetition from "@/lib/create-compitition";
+import NotLoggedIn from "@/components/not-logged-in";
 
 export default function CreateCompetitionPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -46,7 +38,27 @@ export default function CreateCompetitionPage() {
   const session = useSession();
   const router = useRouter();
   const username = session.data?.user.name || "undefined";
+
+  // load API data
+  useEffect(() => {
+    loadAPIData();
+  }, []);
   
+  async function loadAPIData() {
+    try {
+      const games = await createCompetition.getGames();
+      const users = await createCompetition.getUsers();
+
+      setGames(games);
+      setUsers(users);
+    } catch (error) {
+      console.error("Error in loadAPIData:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* Handlers */
   const handleParticipantsChange = (event: SelectChangeEvent<typeof participants>) => {
     const {
       target: { value },
@@ -60,111 +72,6 @@ export default function CreateCompetitionPage() {
   const handleGameChange = (event: SelectChangeEvent) => {
     setGame(event.target.value as string);
   };
-
-  const fetchGameData = async () => {
-    try {
-      const response = await fetch(`/api/games`);
-      if (!response.ok) {
-        throw new Error(`Error fetching games: ${response.statusText}`);
-      }
-      const result: Game[] = await response.json();
-      setGames(result);
-    } catch (error) {
-      console.error("Error in fetchGameData:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(`/api/users`);
-      if (!response.ok) {
-        throw new Error(`Error fetching users: ${response.statusText}`);
-      }
-      const result: User[] = await response.json();
-      setUsers(result);
-    } catch (error) {
-      console.error("Error in fetchUserData:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch game data
-  useEffect(() => {
-    fetchGameData();
-    fetchUserData();
-  }, []);
-
-  if (!session.data) {
-    return (
-      <div className="bg-background flex flex-col items-center">
-        <main className="flex-auto item font-odibee text-9xl">
-          <div className="text-6xl">
-            You must be logged in to create a competition
-            <hr />
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  async function postCompetitionData(
-    body: CompetitionDto
-  ): Promise<string | null> {
-    try {
-      console.log("Creating competition with body:", body);
-      const url = `/api/competitions`;
-
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error creating competition: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      const id = result.id;
-      return id;
-    } catch (error) {
-      console.error("Error in postCompetitionData:", error);
-    }
-    return null;
-  }
-
-  async function postJoinCompetitionData(
-    body: JoinCompetitionDto
-  ): Promise<string | null> {
-    try {
-      console.log("Creating UserCompetition with body:", body);
-      const url = `/api/competitions/join`;
-
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error creating UserCompetition: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      const id = result.id;
-      return id;
-    } catch (error) {
-      console.error("Error in postJoinCompetitionData:", error);
-    }
-    return null;
-  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -184,11 +91,11 @@ export default function CreateCompetitionPage() {
       is_running: true,
       game_id: game,
       rank_alg: 1,
-      is_public: !!formJson.isPublic,
+      is_public: (parseInt(formJson.isPublic.toString())) > 0 ? true : false,
     };
 
     console.log(body);
-    const competition_id = await postCompetitionData(body);
+    const competition_id = await createCompetition.postCompetitionData(body);
 
     if (!competition_id) {
       console.error("Error creating competition");
@@ -204,16 +111,18 @@ export default function CreateCompetitionPage() {
       };
 
       if(joinCompetitionBody.user_names.length > 0) {
-        await postJoinCompetitionData(joinCompetitionBody);   
+        await createCompetition.postJoinCompetitionData(joinCompetitionBody);   
       }
     }
 
     router.push(`/competition/${competition_id}`);
   }
 
-  const radioButtonLabelClasses = `font-nunito textshadow text-xl hover:cursor-pointer w-fit flex items-center`;
-  const radioButtonClasses = `appearance-none peer`;
-  const radioButtonSpanClasses = `w-4 h-4 mr-2 rounded-full border-solid border-[2px] border-white shadow-lg shadow-indigo-500/50 peer-checked:bg-buttonprimary hover:bg-buttonprimaryhover`;
+  if (!session.data) {
+    return (
+      <NotLoggedIn />
+    );
+  }
 
   return (
     <div className="bg-background flex flex-col items-center">
@@ -261,36 +170,13 @@ export default function CreateCompetitionPage() {
           </div>
 
           {/* Cover Image */}
-          <div className="createGroup">
+          {/* <div className="createGroup">
             <label className="text-5xl">Add a cover image</label>
             <GeneralButton text="Upload image" type="button" />
-          </div>
+          </div> */}
 
           {/* Settings */}
-          <div className="createGroup">
-            <div className="text-5xl">Settings</div>
-            <label className={radioButtonLabelClasses}>
-              <input
-                className={radioButtonClasses}
-                type="radio"
-                name="isPublic"
-                value={1}
-                defaultChecked
-              />
-              <span className={radioButtonSpanClasses}></span>
-              <span className="ml-2">Public</span>
-            </label>
-            <label className={radioButtonLabelClasses}>
-              <input
-                className={radioButtonClasses}
-                type="radio"
-                name="isPublic"
-                value={0}
-              />
-              <span className={radioButtonSpanClasses}></span>
-              <span className="ml-2">Private</span>
-            </label>
-          </div>
+          <RadioButton {...createCompetition.getSettingsRadioButtonProps()} />
 
           {/* Games */}
           <div className="createGroup">
@@ -302,8 +188,8 @@ export default function CreateCompetitionPage() {
                 <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Select game</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="simple-select-label"
+                  id="simple-select"
                   value={game}
                   label="Select game"
                   onChange={handleGameChange}
@@ -317,43 +203,9 @@ export default function CreateCompetitionPage() {
 
             </div>
           </div>
-
           {/* Modes */}
-          <div className="createGroup">
-            <div className="text-5xl">Choose mode</div>
-            <label className={radioButtonLabelClasses}>
-              <input
-                className={radioButtonClasses}
-                type="radio"
-                name="competitionType"
-                value={1}
-                defaultChecked
-              />
-              <span className={radioButtonSpanClasses}></span>
-              <span className="ml-2"> Tournament </span>
-            </label>
-            <label className={radioButtonLabelClasses}>
-              <input
-                className={radioButtonClasses}
-                type="radio"
-                name="competitionType"
-                value={2}
-              />
-              <span className={radioButtonSpanClasses}></span>
-              <span className="ml-2"> Classic </span>
-            </label>
-            <label className={radioButtonLabelClasses}>
-              <input
-                className={radioButtonClasses}
-                type="radio"
-                name="competitionType"
-                value={3}
-              />
-              <span className={radioButtonSpanClasses}></span>
-              <span className="ml-2"> Rival </span>
-            </label>
-          </div>
-
+          <RadioButton {...createCompetition.getModeRadioButtonProps()} />
+          
           {/* Players */}
           <div className="createGroup">
             <label className="text-5xl">Invite players</label>
@@ -370,7 +222,7 @@ export default function CreateCompetitionPage() {
                 onChange={handleParticipantsChange}
                 input={<OutlinedInput label="Select layers" />}
                 renderValue={(selected) => (selected as string[]).join(', ')}
-                MenuProps={MenuProps}
+                MenuProps={createCompetition.getMUIMenuProps()}
               >
                 {users.filter((user) => user.user_name != username).map((user) => (
                   <MenuItem key={user.id} value={user.user_name}>
@@ -382,7 +234,6 @@ export default function CreateCompetitionPage() {
             </FormControl>
             </div>
           </div>
-
           <GeneralButton text="Create competition" type="submit" />
         </form>
       </main>
