@@ -28,6 +28,8 @@ import RadioButton from "@/components/form-components/radio-button";
 import * as createCompetition from "@/lib/create-compitition";
 import NotLoggedIn from "@/components/not-logged-in";
 
+import SelectCommunity from "@/components/competition/selectCommunity"; // This is the component we want to extract
+
 export default function CreateCompetitionPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [game, setGame] = useState('');
@@ -38,7 +40,6 @@ export default function CreateCompetitionPage() {
   const session = useSession();
   const router = useRouter();
   const username = session.data?.user.name || "undefined";
-  const [community, setCommunity] = useState<string>("");
   const [communityIds, setCommunityIds] = useState<string[]>([]);
 
   // load API data
@@ -50,10 +51,12 @@ export default function CreateCompetitionPage() {
     try {
       const games = await createCompetition.getGames();
       const users = await createCompetition.getUsers();
-      const communities = await createCompetition.getCommunities();
+      //const communityIds = await createCompetition.getCommunities();
+      const communityIds = ["1", "2", "3", "4", "5"];
 
       setGames(games);
       setUsers(users);
+      setCommunityIds(communityIds);
     } catch (error) {
       console.error("Error in loadAPIData:", error);
     } finally {
@@ -70,11 +73,6 @@ export default function CreateCompetitionPage() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
-  };
-
-  const handleCommunityChange = (e) => {
-    setCommunity(e.target.value);
-    console.log(community);
   };
 
   const handleGameChange = (event: SelectChangeEvent) => {
@@ -243,25 +241,7 @@ export default function CreateCompetitionPage() {
             </div>
           </div>
           <div>
-            <label className="text-5xl">Invite players</label>
-            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-              <FormControl
-                sx={{ m: 1, width: '28vw' }}
-              >
-                <InputLabel id="multiple-checkbox-label">Select players</InputLabel>
-                <Select
-                  labelId="multiple-checkbox-label"
-                  id="single-checkbox"
-                  multiple={false}
-                  value={community}
-                  onChange={handleCommunityChange}
-                  input={<OutlinedInput label="Select layers" />}
-                  renderValue={(selected) => (selected as string)}
-                  MenuProps={createCompetition.getMUIMenuProps()}
-                >
-                </Select>
-              </FormControl>
-            </div>
+            <SelectCommunity communityIds={['1', '2', '3', '4']} />
           </div>
           <GeneralButton text="Create competition" type="submit" />
         </form>
