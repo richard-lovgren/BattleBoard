@@ -1,10 +1,8 @@
-import Community from "@/models/community";
+import Community from "@/models/interfaces/community";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
-import formatDate from "@/app/modules/helpers";
-import { useRouter } from "next/navigation";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
-
 
 export default function CommunitySearchItem(community: Community) {
 
@@ -63,11 +61,10 @@ export default function CommunitySearchItem(community: Community) {
           </span>
         </div>
         <div className="flex items-center justify-center">
-          <GeneralButton text="View" 
-            onClick={() => handleNavigation((community.id).toString())}
-          />
+          <Link href={`/community/${community.id}`} passHref>
+            <GeneralButton text="View" />
+          </Link>
         </div>
       </div>
     </div>
   );
-}

@@ -4,7 +4,7 @@ import CompetitionData from "@/models/interfaces/CompetitionData";
 import GeneralButton from "../general-btn";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import formatDate from "@/app/modules/helpers";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
@@ -95,16 +95,16 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
               width={50}
               height={50}
             />
-            Start date
+            Begins {formatDate(competition.competition_start_date)}
           </span>
           <span className="flex items-center ml-12 my-2">
             {competitionTypeEnum[competition.competition_type]}
           </span>
         </div>
         <div className="flex items-center justify-center">
-          <GeneralButton text="View" 
-            onClick={() => handleNavigation((competition.id).toString())}
-            />
+          <Link href={`/competition/${competition.id}`} passHref>
+            <GeneralButton text="View" />
+          </Link>
         </div>
       </div>
     </div>

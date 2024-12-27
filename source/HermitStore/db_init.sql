@@ -43,11 +43,12 @@ CREATE TABLE user_community (
 -- Competition table
 CREATE TABLE competition (
     id UUID PRIMARY KEY,
-    creator_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
     competition_name VARCHAR(30) NOT NULL,
+    creator_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
+    competition_start_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     competition_description VARCHAR(250),
     competition_type INT NOT NULL,
-    format INT NOT NULL,
+    format INT NOT NULL DEFAULT 0,
     competition_image BYTEA,
     is_open BOOLEAN NOT NULL DEFAULT TRUE,
     is_running BOOLEAN NOT NULL DEFAULT FALSE,
@@ -158,7 +159,7 @@ INSERT INTO community(id, community_name, community_members) VALUES(131857110941
 
 -- Competitions
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival leauge in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926131);
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926131);
 
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)

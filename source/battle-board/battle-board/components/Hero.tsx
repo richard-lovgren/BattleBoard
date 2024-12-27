@@ -7,8 +7,8 @@ export default function Hero() {
         src="/hero.png"
         alt="Hero"
         className=" m-0 p-0 "
-        height={1100}
-        width={1100}
+        height={800}
+        width={800}
       />
     </div>
   );

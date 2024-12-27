@@ -1,4 +1,5 @@
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+import baseUrl from "@/lib/baseUrl";
+
 async function fetchGameName(gameId: string): Promise<string | null> {
     const response = await fetch(`${baseUrl}/api/game?gameId=${gameId}`);
     if (!response.ok) return null;

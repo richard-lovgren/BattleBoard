@@ -22,11 +22,12 @@ async function fetchUserCommunityMembers(
   return data;
 }
 
-const CommunityMembersList: React.FC<CommunityMembersListProps> = ({
+
+const CommunityMembersList: React.FC<any> = ({
   community_id,
 }) => {
 
-  const [communityData, setCommunityData] = useState<UserNames>(null);
+  const [communityData, setCommunityData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

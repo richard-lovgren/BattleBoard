@@ -1,5 +1,6 @@
 import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+import baseUrl from "@/lib/baseUrl";
+
 async function createClassicLeaderboard(competitionId: string) {
     const leaderboardDto: LeaderboardDTO = {
         competition_id: competitionId,

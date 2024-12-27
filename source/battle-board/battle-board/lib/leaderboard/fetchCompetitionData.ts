@@ -1,5 +1,6 @@
 import CompetitionData from "@/models/interfaces/CompetitionData";
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+import baseUrl from "@/lib/baseUrl";
+
 async function fetchCompetitionData(
     competitionId: string
 ): Promise<CompetitionData | null> {

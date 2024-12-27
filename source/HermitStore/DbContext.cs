@@ -91,6 +91,7 @@ namespace HermitStore
     {
         public required string competition_name { get; set; }
         public required string creator_name { get; set; }
+        public required DateTime competition_start_date { get; set; }
         public string? competition_description { get; set; }
         public required int competition_type { get; set; }
         public required int format { get; set; }
@@ -110,6 +111,12 @@ namespace HermitStore
         public required Guid id { get; set; }
     }
 
+    public class JoinCompetitionDto
+    {
+        public required Guid competition_id { get; set; }
+        public required string[] user_names { get; set; }
+    }
+    
     public class UserCompetitionDto
     {
         public required Guid competition_id { get; set; }
