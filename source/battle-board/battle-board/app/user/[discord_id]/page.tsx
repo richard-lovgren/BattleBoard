@@ -2,6 +2,10 @@ import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
+
+import useCountryLocaleFlag from "@/hooks/useCountryLocaleFlag";
+
+
 import baseUrl from "@/lib/baseUrl";
 
 interface CommunityData {
