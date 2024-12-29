@@ -3,7 +3,6 @@ import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
 import baseUrl from "@/lib/baseUrl";
 import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
-
 interface CommunityData {
   community_name: string;
   community_id: string;

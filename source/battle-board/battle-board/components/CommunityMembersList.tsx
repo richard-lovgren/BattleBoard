@@ -1,22 +1,28 @@
 'use client'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import styles from "./communityMembers.module.css";
 import { useState, useEffect } from "react";
 
-interface CommunityMembersListProps {
+interface CommunityData {
   community_id: string;
 }
 
-type UserNames = string[] | null;
-
-var baseUrl = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
-
 async function fetchUserCommunityMembers(
   communityId: string
-): Promise<UserNames> {
-  const url = `${baseUrl}/api/community/users?communityId=${communityId}`;
+): Promise<any> {
+  const url = `/api/community/users?communityId=${communityId}`;
   const response = await fetch(url);
   if (!response.ok) {
-    return [];
+    return {};
   }
   const data = await response.json();
   return data;

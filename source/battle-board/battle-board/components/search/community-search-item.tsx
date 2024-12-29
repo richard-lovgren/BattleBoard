@@ -3,15 +3,16 @@ import GeneralButton from "../general-btn";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+//import { useRouter } from "next/router";
 
 export default function CommunitySearchItem(community: Community) {
 
   console.log(community);
-  const router = useRouter();
+  /*const router = useRouter();
 
   const handleNavigation = (id: string) => {
     router.replace(`/community/${id}`);
-  };
+  };*/
 
   return (
     <div className="flex flex-none flex-col h-[420px] w-[329px] rounded-[2.5rem] bg-gradient-to-br from-[#4E35BE] to-[#241958]">
@@ -68,3 +69,4 @@ export default function CommunitySearchItem(community: Community) {
       </div>
     </div>
   );
+}
