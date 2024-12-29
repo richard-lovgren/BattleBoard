@@ -20,6 +20,16 @@ export async function getUsers(): Promise<User[]> {
     return await userResponse.json();
 }
 
+export async function getCommunities(
+  user_name: string
+): Promise<Record<string, string>> {
+  const communitiesResponse = await fetch(`/api/users/communities?user_name=${user_name}`);
+  if (!communitiesResponse.ok) {
+    throw new Error(`Error fetching users communities: ${communitiesResponse.statusText}`);
+  }
+  return await communitiesResponse.json();
+}
+
 export function getSettingsRadioButtonProps(): RadioButtonProps {
     return {
         main_label: "Settings",

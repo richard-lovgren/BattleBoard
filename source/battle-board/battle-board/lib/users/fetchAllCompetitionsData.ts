@@ -1,5 +1,4 @@
 import CompetitionData from "@/models/interfaces/CompetitionData";
-
 import { fetchCompetitionData } from "./fetchCompetitionData";
 
 export async function fetchAllCompetitionsData(

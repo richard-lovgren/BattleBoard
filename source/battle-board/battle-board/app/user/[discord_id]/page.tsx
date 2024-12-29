@@ -33,12 +33,6 @@ const UserPage = async (props: { params: UserPageProps }) => {
   const userCompetitionsData = await fetchAllCompetitionsData(
     userCompetitionsList);
 
-  console.log(
-    "Communities for user: " + userDataHeader.user_name,
-    userCommunitiesMap
-  );
-  console.log("Competitions for user: ", user_name, userCompetitionsList);
-
   return (
     <div className="min-h-screen w-full flex flex-col">
       <UserPageBanner

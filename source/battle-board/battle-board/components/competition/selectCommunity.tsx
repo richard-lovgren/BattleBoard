@@ -1,16 +1,19 @@
+"use client"
 // Code for selecting a community
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material';
 
 interface SelectCommunityProps {
-    communityIds: string[];
+    communityData: Record<string, string>
+    community: string
+    setCommunity: (community: string) => void
 }
 
-const SelectCommunity: FC<SelectCommunityProps> = ({ communityIds }) => {
-    const [community, setCommunity] = useState('');
+const SelectCommunity: FC<SelectCommunityProps> = ({ communityData, community, setCommunity }) => {
 
     const handleCommunityChange = (event: SelectChangeEvent) => {
-        setCommunity(event.target.value);
+        setCommunity(event.target.value)
+
     };
 
     return (
@@ -26,11 +29,12 @@ const SelectCommunity: FC<SelectCommunityProps> = ({ communityIds }) => {
                         onChange={handleCommunityChange}
                         input={<OutlinedInput label="Select community" />}
                     >
-                        {communityIds.map((communityId) => (
-                            <MenuItem key={communityId} value={communityId}>
-                                Community {communityId}
+                        {Object.entries(communityData).map(([community_id, community_name]) => (
+                            <MenuItem key={community_id} value={community_id}>
+                                {community_name}
                             </MenuItem>
                         ))}
+
                     </Select>
                 </FormControl>
             </div>

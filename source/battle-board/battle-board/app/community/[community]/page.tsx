@@ -1,8 +1,9 @@
 import Image from "next/image";
 import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
-import CompetitionData from "@/models/interfaces/CompetitionData";
 import baseUrl from "@/lib/baseUrl";
+import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
+
 interface CommunityData {
   community_name: string;
   community_id: string;
@@ -24,7 +25,7 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
 
 async function fetchCommunityCompetitionData(
   communityId: string
-): Promise<CompetitionData[]> {
+): Promise<string[]> {
 
   const response = await fetch(
     `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
@@ -49,6 +50,12 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
     community
   );
 
+
+  const userCompetitionsData = await fetchAllCompetitionsData(
+    communityCompetitionData);
+
+
+
   console.log("Competition ids: ", communityCompetitionData);
 
   return (
@@ -66,7 +73,6 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
             <div className="absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black"></div>
           </div>
         )}
-
         <div className="flex flex-col gap-4 h-full pl-12 pr-36 flex-grow self-center py-0 bg-transparent">
           <h1 className="flex text-8xl font-odibee text-white">
             {communityDataHeader.community_name}
@@ -74,9 +80,12 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
         </div>
       </div>
       <div className=" text-accent w-full flex text-6xl flex-row justify-end px-10">
-        <CompetitionList
-          competitions={communityCompetitionData}
-        ></CompetitionList>
+        {userCompetitionsData.length > 0 && (
+          <div className="flex flex-col items-start px-48">
+            <h1 className="text-2xl font-semibold text-accent text-white">Competitions:</h1>
+            <CompetitionList competitions={userCompetitionsData}></CompetitionList>
+          </div>
+        )}
         <CommunityMembersList community_id={community}></CommunityMembersList>
       </div>
     </div>

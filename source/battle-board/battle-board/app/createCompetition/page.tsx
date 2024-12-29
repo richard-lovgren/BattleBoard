@@ -40,23 +40,25 @@ export default function CreateCompetitionPage() {
   const session = useSession();
   const router = useRouter();
   const username = session.data?.user.name || "undefined";
-  const [communityIds, setCommunityIds] = useState<string[]>([]);
+  const [communityData, setCommunityData] = useState<Record<string, string>>({});
+  const [community, setCommunity] = useState<string>("")
 
   // load API data
   useEffect(() => {
     loadAPIData();
-  }, []);
+  }, [username]);
 
   async function loadAPIData() {
     try {
       const games = await createCompetition.getGames();
       const users = await createCompetition.getUsers();
-      //const communityIds = await createCompetition.getCommunities();
-      const communityIds = ["1", "2", "3", "4", "5"];
-
+      if (username != "undefined") {
+        const communityData = await createCompetition.getCommunities(username);
+        console.log(communityData);
+        setCommunityData(communityData);
+      }
       setGames(games);
       setUsers(users);
-      setCommunityIds(communityIds);
     } catch (error) {
       console.error("Error in loadAPIData:", error);
     } finally {
@@ -98,6 +100,7 @@ export default function CreateCompetitionPage() {
       game_id: game,
       rank_alg: 1,
       is_public: (parseInt(formJson.isPublic.toString())) > 0 ? true : false,
+      community_id: community
     };
 
     console.log(body);
@@ -206,7 +209,6 @@ export default function CreateCompetitionPage() {
                   </Select>
                 </FormControl>
               )}
-
             </div>
           </div>
           {/* Modes */}
@@ -241,7 +243,7 @@ export default function CreateCompetitionPage() {
             </div>
           </div>
           <div>
-            <SelectCommunity communityIds={['1', '2', '3', '4']} />
+            <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
           </div>
           <GeneralButton text="Create competition" type="submit" />
         </form>

@@ -1,6 +1,5 @@
 export interface CommunityData {
-    community_id: string;
-    community_name: string;
+    communityData: Record<string, string>
 }
 
 export type UserPageProps = Promise<{ discord_id: number }>;
