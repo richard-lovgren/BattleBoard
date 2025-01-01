@@ -13,22 +13,13 @@ const CountryFlag: FC<Props> = ({ langcode }) => {
   useEffect(() => {
     const fetchFlag = async () => {
       try {
-        console.log("Fetching flags.json...");
-
         const flagsModule = await import("@/public/flags.json");
-        console.log("Flags module imported:", flagsModule);
-
         const flags = flagsModule.default;
-        console.log("Parsed flags:", flags);
 
         const country = flags.find(
           (country: any) =>
             country.code === langcode.slice(3, 5)
         );
-        console.log("Matched country:", country);
-
-        console.log("Slice: ", langcode.slice(3, 5))
-
         if (!country) {
           throw new Error(`No country found for langcode: ${langcode}`);
         }
