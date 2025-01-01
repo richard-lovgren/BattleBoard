@@ -3,9 +3,6 @@ import CommunitiesList from "@/components/CommunitiesList";
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
 
-import useCountryLocaleFlag from "@/hooks/useCountryLocaleFlag";
-
-
 import baseUrl from "@/lib/baseUrl";
 
 interface CommunityData {
@@ -82,7 +79,6 @@ async function fetchAllCompetitionsData(
   return competitionsData;
 }
 
-
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
   // Extract community ID from the URL
@@ -98,7 +94,6 @@ const UserPage = async (props: { params: UserPageProps }) => {
   const userCompetitionsList = await fetchUserCompetitionIds(
     user_name
   );
-
 
   const userCommunitiesMap = Object.entries(userCommunitiesData).map(
     ([id, name]) => ({
@@ -124,6 +119,7 @@ const UserPage = async (props: { params: UserPageProps }) => {
         user_name={userDataHeader.user_name}
         display_name={userDataHeader.display_name}
         league_puuid={userDataHeader.league_puuid}
+        langcode={"en-US"}
       ></UserPageBanner>
       {userCommunitiesMap.length > 0 && (
         <div className=" flex  flex-col items-start px-48">
