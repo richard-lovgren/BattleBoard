@@ -1,6 +1,6 @@
 import { FilteredMatchData } from "@/models/interfaces/leagueMatchData";
 
-async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ...otherPUUIDs: string[]): Promise<FilteredMatchData[]> {
+async function getMatches(puuid: string, targetMatches: number, ...otherPUUIDs: string[]): Promise<FilteredMatchData[]> {
     const matches: FilteredMatchData[] = [];
     let totalMatches = 0;
     const matchSet = new Set<string>();
@@ -45,4 +45,4 @@ async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ..
     }
 }
 
-export default getMatchesForLeaderboard;
+export default getMatches;

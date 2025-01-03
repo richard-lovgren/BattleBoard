@@ -1,3 +1,4 @@
+
 export type RawMatchData = {
     metadata: {
         matchId: string;
@@ -33,3 +34,6 @@ export type FilteredMatchData = {
     participants: FilteredParticipant[];
     startTime: number;
 };
+
+//Metrics that are used for Leaderboard in DB
+const lolLeaderboardMetricsDTO: string[] = ["Name", "Champion", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Win"]
