@@ -9,6 +9,7 @@ function filterMatchData(rawData: RawMatchData): FilteredMatchData {
         return {
             summonerName: p.summonerName,
             summonerId: p.summonerId,
+            puuid: p.puuid,
             championName: p.championName,
             championId: p.championId,
             teamId: p.teamId,

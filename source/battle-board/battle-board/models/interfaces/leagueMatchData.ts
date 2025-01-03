@@ -13,6 +13,7 @@ export type RawMatchData = {
 export type FilteredParticipant = {
     summonerName: string;
     summonerId: string;
+    puuid: string;
     championName: string;
     championId: number;
     teamId: number;

@@ -1,6 +1,6 @@
 import { FilteredMatchData } from "@/models/interfaces/leagueMatchData";
 
-async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ...summonerIDs: string[]): Promise<FilteredMatchData[]> {
+async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ...otherPUUIDs: string[]): Promise<FilteredMatchData[]> {
     const matches: FilteredMatchData[] = [];
     let totalMatches = 0;
     const matchSet = new Set<string>();
@@ -16,7 +16,7 @@ async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ..
 
             for (const match of data) {
                 if (!matchSet.has(match.matchId) &&
-                    (summonerIDs.length === 0 || match.participants.some(p => summonerIDs.includes(p.summonerId)))) {
+                    (otherPUUIDs.length === 0 || match.participants.some(p => otherPUUIDs.includes(p.puuid)))) {
                     matches.push(match);
                     matchSet.add(match.matchId);
                 }
