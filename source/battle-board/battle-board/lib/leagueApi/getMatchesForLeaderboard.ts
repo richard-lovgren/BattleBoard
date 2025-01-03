@@ -1,4 +1,5 @@
 import { FilteredMatchData } from "@/models/interfaces/leagueMatchData";
+import baseUrl from "@/lib/baseUrl";
 
 async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ...otherPUUIDs: string[]): Promise<FilteredMatchData[]> {
     const matches: FilteredMatchData[] = [];
@@ -6,7 +7,7 @@ async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ..
     const matchSet = new Set<string>();
     const MAX_MATCHES = 250;
     try {
-        let response = await fetch(`https://api.example.com/matches?puuid=${puuid}`);
+        let response = await fetch(`${baseUrl}/lol/get-matches-by-puuid?puuid=${puuid}`);
         if (!response.ok) {
             throw new Error(`API Error: ${response.status}`);
         }
@@ -31,7 +32,7 @@ async function getMatchesForLeaderboard(puuid: string, targetMatches: number, ..
             if (matches.length === targetMatches || totalMatches >= MAX_MATCHES) {
                 break;
             }
-            response = await fetch(`https://api.example.com/matches?puuid=${puuid}&start=${totalMatches}`);
+            response = await fetch(`${baseUrl}/lol/get-matches-by-puuid?puuid=${puuid}&start=${totalMatches}`);
             if (!response.ok) {
                 throw new Error(`API Error: ${response.status}`);
             }
