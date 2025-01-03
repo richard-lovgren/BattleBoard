@@ -1,37 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-type RawMatchData = {
-    metadata: {
-        matchId: string;
-        participants: string[];
-        [key: string]: any;
-    };
-    info: {
-        participants: any[];
-        [key: string]: any;
-    };
-};
-
-type FilteredParticipant = {
-    summonerName: string;
-    summonerId: string;
-    championName: string;
-    championId: number;
-    teamId: number;
-    kills: number;
-    deaths: number;
-    assists: number;
-    totalDamageDealtToChampions: number;
-    totalDamageTaken: number;
-    goldEarned: number;
-    items: number[];
-    summonerSpells: number[];
-    win: boolean;
-};
-
-type FilteredMatchData = {
-    matchId: string;
-    participants: FilteredParticipant[];
-};
+import { RawMatchData, FilteredMatchData, FilteredParticipant } from "@/models/interfaces/leagueMatchData";
 
 function filterMatchData(rawData: RawMatchData): FilteredMatchData {
     const { metadata, info } = rawData;
@@ -66,12 +34,14 @@ function filterMatchData(rawData: RawMatchData): FilteredMatchData {
     return {
         matchId,
         participants: filteredParticipants,
+        startTime: info.gameStartTimestamp,
     };
 }
 //Gets an array of match data for a given user puuid.
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const puuid = searchParams.get("puuid");
+    const start = searchParams.get("start");
 
     if (!puuid) {
         return NextResponse.json({ message: "Missing puuid" }, { status: 400 });
@@ -81,10 +51,10 @@ export async function GET(req: NextRequest) {
         const riotApiKey = process.env.RIOT_API_KEY;
         if (!riotApiKey) return NextResponse.json({ message: "Missing Riot API key" }, { status: 500 });
         const response = await fetch(
-            `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${encodeURIComponent(puuid)}/ids`,
+            `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${encodeURIComponent(puuid)}/ids?start=${start || ""}`,
             {
                 headers: {
-                    "X-Riot-Token": riotApiKey!,
+                    "X-Riot-Token": process.env.RIOT_API_KEY!,
                 },
             }
         );
