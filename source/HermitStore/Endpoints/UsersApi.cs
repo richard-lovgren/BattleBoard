@@ -100,6 +100,7 @@ public static class UsersApi
             user_name = userDto.user_name,
             display_name = userDto.display_name,
             id = Guid.NewGuid(),
+            locale = userDto.locale,
         };
 
         if (await dbContext.users.AnyAsync(u => u.discord_id == user.discord_id))

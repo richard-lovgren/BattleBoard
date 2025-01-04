@@ -2,6 +2,7 @@ import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
 import CompetitionList from "@/components/CompetitionList";
 import CompetitionData from "@/models/interfaces/CompetitionData";
+
 import baseUrl from "@/lib/baseUrl";
 
 interface CommunityData {
@@ -17,6 +18,7 @@ interface UserData {
   user_name: string;
   display_name: string;
   league_puuid: string;
+  locale: string;
 }
 
 async function fetchUserData(discord_id: number): Promise<UserData> {
@@ -29,6 +31,7 @@ async function fetchUserData(discord_id: number): Promise<UserData> {
       user_name: "",
       display_name: "",
       league_puuid: "",
+      locale: "",
     };
   }
   return response.json();
@@ -78,7 +81,6 @@ async function fetchAllCompetitionsData(
   return competitionsData;
 }
 
-
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
   // Extract community ID from the URL
@@ -95,7 +97,6 @@ const UserPage = async (props: { params: UserPageProps }) => {
     user_name
   );
 
-
   const userCommunitiesMap = Object.entries(userCommunitiesData).map(
     ([id, name]) => ({
       id: id,
@@ -110,7 +111,15 @@ const UserPage = async (props: { params: UserPageProps }) => {
     "Communities for user: " + userDataHeader.user_name,
     userCommunitiesMap
   );
+
+  console.log("langcode: ", userDataHeader.locale);
+
+
   console.log("Competitions for user: ", user_name, userCompetitionsList);
+
+  console.log("langcode: ", userDataHeader.locale);
+
+
 
   return (
     <div className="min-h-screen w-full flex flex-col">
@@ -120,6 +129,7 @@ const UserPage = async (props: { params: UserPageProps }) => {
         user_name={userDataHeader.user_name}
         display_name={userDataHeader.display_name}
         league_puuid={userDataHeader.league_puuid}
+        langcode={userDataHeader.locale}
       ></UserPageBanner>
       {userCommunitiesMap.length > 0 && (
         <div className=" flex  flex-col items-start px-48">
