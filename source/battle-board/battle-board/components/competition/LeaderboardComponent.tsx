@@ -47,7 +47,15 @@ const LeaderboardComponent = ({
         prevLeaderboard={initialLeaderboard}
         userNames={userNames}
         handleCompetitionDataParsed={triggerReload}
+
         competitionId={competitionId}
+      />
+
+      <CompetitonModeWrapper
+        mode={competitionData.competition_type}
+
+        competitionId={competitionId}
+        reloadTrigger={reload}
       />
 
       <CompetitonModeWrapper
@@ -55,6 +63,15 @@ const LeaderboardComponent = ({
         competitionId={competitionId}
         reloadTrigger={reload}
       />
+
+      <CompetitonModeWrapper
+        mode={competitionData.competition_type}
+        competitionId={competitionId}
+        reloadTrigger={reload}
+      />
+
+      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
+
     </Suspense>
   );
 };

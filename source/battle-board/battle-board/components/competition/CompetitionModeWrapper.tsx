@@ -16,7 +16,7 @@ const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competit
         switch (mode) {
             case 1:
                 return <ClassicMode competitionId={competitionId} />;
-            case 1:
+            case 2:
                 return (
                     <div className="w-full flex items-center justify-center">
                         <Typography className="text-3xl font-odibee">Rival Mode</Typography>

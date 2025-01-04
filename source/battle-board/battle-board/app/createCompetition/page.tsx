@@ -28,6 +28,10 @@ import RadioButton from "@/components/form-components/radio-button";
 import * as createCompetition from "@/lib/create-compitition";
 import NotLoggedIn from "@/components/not-logged-in";
 
+
+import SelectCommunity from "@/components/competition/selectCommunity"; // This is the component we want to extract
+
+
 export default function CreateCompetitionPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [game, setGame] = useState('');
@@ -38,17 +42,23 @@ export default function CreateCompetitionPage() {
   const session = useSession();
   const router = useRouter();
   const username = session.data?.user.name || "undefined";
+  const [communityData, setCommunityData] = useState<Record<string, string>>({});
+  const [community, setCommunity] = useState<string>("")
 
   // load API data
   useEffect(() => {
     loadAPIData();
-  }, []);
-  
+  }, [username]);
+
+
   async function loadAPIData() {
     try {
       const games = await createCompetition.getGames();
       const users = await createCompetition.getUsers();
-
+      if (username != "undefined") {
+        const communityData = await createCompetition.getCommunities(username);
+        setCommunityData(communityData);
+      }
       setGames(games);
       setUsers(users);
     } catch (error) {
@@ -92,6 +102,7 @@ export default function CreateCompetitionPage() {
       game_id: game,
       rank_alg: 1,
       is_public: (parseInt(formJson.isPublic.toString())) > 0 ? true : false,
+      community_id: community
     };
 
     console.log(body);
@@ -110,8 +121,10 @@ export default function CreateCompetitionPage() {
         user_names: participants,
       };
 
-      if(joinCompetitionBody.user_names.length > 0) {
-        await createCompetition.postJoinCompetitionData(joinCompetitionBody);   
+
+      if (joinCompetitionBody.user_names.length > 0) {
+        await createCompetition.postJoinCompetitionData(joinCompetitionBody);
+
       }
     }
 
@@ -151,7 +164,9 @@ export default function CreateCompetitionPage() {
                   <DatePicker
                     label="Select date"
                     onChange={(newValue) => setSelectedDate(newValue)}
-                    sx={{ width: '20vw'}}
+
+                    sx={{ width: '20vw' }}
+
                   />
                 </LocalizationProvider>
               </div>
@@ -210,30 +225,35 @@ export default function CreateCompetitionPage() {
           <div className="createGroup">
             <label className="text-5xl">Invite players</label>
             <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-            <FormControl
-              sx={{ m: 1, width: '28vw' }}
-            >
-              <InputLabel id="multiple-checkbox-label">Select players</InputLabel>
-              <Select
-                labelId="multiple-checkbox-label"
-                id="multiple-checkbox"
-                multiple={true}
-                value={participants}
-                onChange={handleParticipantsChange}
-                input={<OutlinedInput label="Select layers" />}
-                renderValue={(selected) => (selected as string[]).join(', ')}
-                MenuProps={createCompetition.getMUIMenuProps()}
+
+              <FormControl
+                sx={{ m: 1, width: '28vw' }}
               >
-                {users.filter((user) => user.user_name != username).map((user) => (
-                  <MenuItem key={user.id} value={user.user_name}>
-                    <Checkbox checked={participants.includes(user.user_name)} />
-                    <ListItemText primary={user.user_name} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <InputLabel id="multiple-checkbox-label">Select players</InputLabel>
+                <Select
+                  labelId="multiple-checkbox-label"
+                  id="multiple-checkbox"
+                  multiple={true}
+                  value={participants}
+                  onChange={handleParticipantsChange}
+                  input={<OutlinedInput label="Select layers" />}
+                  renderValue={(selected) => (selected as string[]).join(', ')}
+                  MenuProps={createCompetition.getMUIMenuProps()}
+                >
+                  {users.filter((user) => user.user_name != username).map((user) => (
+                    <MenuItem key={user.id} value={user.user_name}>
+                      <Checkbox checked={participants.includes(user.user_name)} />
+                      <ListItemText primary={user.user_name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
           </div>
+          <div>
+            <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
+          </div>
+
           <GeneralButton text="Create competition" type="submit" />
         </form>
       </main>

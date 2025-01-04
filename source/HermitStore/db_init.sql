@@ -5,7 +5,8 @@ CREATE TABLE users (
     discord_id BIGINT NOT NULL,
     user_name VARCHAR(30) NOT NULL UNIQUE,
     display_name VARCHAR(30),
-    league_puuid VARCHAR(100)
+    league_puuid VARCHAR(100),
+    locale VARCHAR(30)
 );
 
 -- Community table
@@ -130,11 +131,11 @@ ALTER TABLE user_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id
 -- Dummy data
 
 -- Users
-INSERT INTO users(id, discord_id, user_name, display_name) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e1', 125874175400911360, 'dummy1', 'Dummy 1');
-INSERT INTO users(id, discord_id, user_name, display_name) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e2', 125854175400911360, 'dummy2', 'Dummy 2');
-INSERT INTO users(id, discord_id, user_name, display_name) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e3', 125834175400911360, 'dummy3', 'Dummy 3');
-INSERT INTO users(id, discord_id, user_name, display_name) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e4', 125814175400911360, 'dummy4', 'Dummy 4');
-INSERT INTO users(id, discord_id, user_name, display_name) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e5', 125894275400911360, 'dummy5', 'Dummy 5');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e1', 125874175400911360, 'dummy1', 'Dummy 1', 'en_US');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e2', 125854175400911360, 'dummy2', 'Dummy 2', 'es_ES');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e3', 125834175400911360, 'dummy3', 'Dummy 3', 'fr_FR');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e4', 125814175400911360, 'dummy4', 'Dummy 4', 'de_DE');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e5', 125894275400911360, 'dummy5', 'Dummy 5', 'it_IT');
 
 -- Games
 INSERT INTO game(id, game_name) VALUES('141e3728-5a50-45a1-92cf-c8695af932e1', 'Dota 2');
