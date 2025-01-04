@@ -10,4 +10,5 @@ export interface UserData {
     user_name: string;
     display_name: string;
     league_puuid: string;
+    locale: string;
 }
