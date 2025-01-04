@@ -12,6 +12,7 @@ export async function fetchUserData(discord_id: number): Promise<UserData> {
       user_name: "",
       display_name: "",
       league_puuid: "",
+      locale: "",
     };
   }
   return response.json();
