@@ -1,11 +1,13 @@
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
 import CompetitionList from "@/components/CompetitionList";
+
 import { UserPageProps } from "@/models/interfaces/UserPage";
 import { fetchUserData } from "@/lib/users/fetchUserData";
 import { fetchUserCommunitiesData } from "@/lib/users/fetchUserCommunitiesData";
 import { fetchUserCompetitionIds } from "@/lib/users/fetchUserCompetitionIds";
 import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
+
 
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
@@ -33,6 +35,8 @@ const UserPage = async (props: { params: UserPageProps }) => {
   const userCompetitionsData = await fetchAllCompetitionsData(
     userCompetitionsList);
 
+
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       <UserPageBanner
@@ -41,6 +45,7 @@ const UserPage = async (props: { params: UserPageProps }) => {
         user_name={userDataHeader.user_name}
         display_name={userDataHeader.display_name}
         league_puuid={userDataHeader.league_puuid}
+        langcode={userDataHeader.locale}
       ></UserPageBanner>
       {userCommunitiesMap.length > 0 && (
         <div className=" flex  flex-col items-start px-48">

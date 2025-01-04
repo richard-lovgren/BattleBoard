@@ -1,6 +1,6 @@
 "use client";
 
-import useCountryLocaleFlag from "@/hooks/useCountryLocaleFlag";
+import CountryFlag from "@/components/CountryFlag";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import LolUsernameBox from "./add-lol-box";
@@ -11,6 +11,7 @@ interface UserProps {
   user_name: string;
   display_name: string;
   league_puuid: string;
+  langcode: string;
 }
 
 const UserPageBanner: React.FC<UserProps> = ({
@@ -19,6 +20,7 @@ const UserPageBanner: React.FC<UserProps> = ({
   user_name,
   display_name,
   league_puuid,
+  langcode,
 }) => {
   const { data: session } = useSession();
 
@@ -41,6 +43,9 @@ const UserPageBanner: React.FC<UserProps> = ({
               <h1 className="text-4xl font-bold font-odibee my-2">
                 {user_name}
               </h1>
+
+              <CountryFlag langcode={langcode}></CountryFlag>
+
               {/* <h3 className="">{data}</h3> */}
             </div>
             <h2 className="font-bold">{display_name}</h2>

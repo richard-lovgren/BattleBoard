@@ -20,6 +20,7 @@ export async function getUsers(): Promise<User[]> {
     return await userResponse.json();
 }
 
+
 export async function getCommunities(
   user_name: string
 ): Promise<Record<string, string>> {
@@ -29,6 +30,7 @@ export async function getCommunities(
   }
   return await communitiesResponse.json();
 }
+
 
 export function getSettingsRadioButtonProps(): RadioButtonProps {
     return {
@@ -139,4 +141,6 @@ export async function postCompetitionData(
         };
 
         return MenuProps
+
     }
+

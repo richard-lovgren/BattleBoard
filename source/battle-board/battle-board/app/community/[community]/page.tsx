@@ -3,6 +3,7 @@ import CommunityMembersList from "@/components/CommunityMembersList";
 import CompetitionList from "@/components/CompetitionList";
 import baseUrl from "@/lib/baseUrl";
 import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
+
 interface CommunityData {
   community_name: string;
   community_id: string;
@@ -25,6 +26,7 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
 async function fetchCommunityCompetitionData(
   communityId: string
 ): Promise<string[]> {
+
 
   const response = await fetch(
     `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL

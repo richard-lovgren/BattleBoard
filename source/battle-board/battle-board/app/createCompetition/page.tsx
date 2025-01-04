@@ -28,7 +28,9 @@ import RadioButton from "@/components/form-components/radio-button";
 import * as createCompetition from "@/lib/create-compitition";
 import NotLoggedIn from "@/components/not-logged-in";
 
+
 import SelectCommunity from "@/components/competition/selectCommunity"; // This is the component we want to extract
+
 
 export default function CreateCompetitionPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -48,13 +50,13 @@ export default function CreateCompetitionPage() {
     loadAPIData();
   }, [username]);
 
+
   async function loadAPIData() {
     try {
       const games = await createCompetition.getGames();
       const users = await createCompetition.getUsers();
       if (username != "undefined") {
         const communityData = await createCompetition.getCommunities(username);
-        console.log(communityData);
         setCommunityData(communityData);
       }
       setGames(games);
@@ -119,8 +121,10 @@ export default function CreateCompetitionPage() {
         user_names: participants,
       };
 
+
       if (joinCompetitionBody.user_names.length > 0) {
         await createCompetition.postJoinCompetitionData(joinCompetitionBody);
+
       }
     }
 
@@ -160,7 +164,9 @@ export default function CreateCompetitionPage() {
                   <DatePicker
                     label="Select date"
                     onChange={(newValue) => setSelectedDate(newValue)}
+
                     sx={{ width: '20vw' }}
+
                   />
                 </LocalizationProvider>
               </div>
@@ -219,6 +225,7 @@ export default function CreateCompetitionPage() {
           <div className="createGroup">
             <label className="text-5xl">Invite players</label>
             <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+
               <FormControl
                 sx={{ m: 1, width: '28vw' }}
               >
@@ -246,6 +253,7 @@ export default function CreateCompetitionPage() {
           <div>
             <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
           </div>
+
           <GeneralButton text="Create competition" type="submit" />
         </form>
       </main>
