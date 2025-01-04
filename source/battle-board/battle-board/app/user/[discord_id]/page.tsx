@@ -1,85 +1,13 @@
 import UserPageBanner from "@/components/UserPageBanner";
 import CommunitiesList from "@/components/CommunitiesList";
 import CompetitionList from "@/components/CompetitionList";
-import CompetitionData from "@/models/interfaces/CompetitionData";
 
-import baseUrl from "@/lib/baseUrl";
+import { UserPageProps } from "@/models/interfaces/UserPage";
+import { fetchUserData } from "@/lib/users/fetchUserData";
+import { fetchUserCommunitiesData } from "@/lib/users/fetchUserCommunitiesData";
+import { fetchUserCompetitionIds } from "@/lib/users/fetchUserCompetitionIds";
+import { fetchAllCompetitionsData } from "@/lib/users/fetchAllCompetitionsData";
 
-interface CommunityData {
-  community_id: string;
-  community_name: string;
-}
-
-type UserPageProps = Promise<{ discord_id: number }>;
-
-interface UserData {
-  id: string;
-  discord_id: number;
-  user_name: string;
-  display_name: string;
-  league_puuid: string;
-  locale: string;
-}
-
-async function fetchUserData(discord_id: number): Promise<UserData> {
-  // Example API endpoint; replace with your actual API request
-  const response = await fetch(`${baseUrl}/api/users?userId=${discord_id}`);
-  if (!response.ok) {
-    return {
-      id: "",
-      discord_id: 0,
-      user_name: "",
-      display_name: "",
-      league_puuid: "",
-      locale: "",
-    };
-  }
-  return response.json();
-}
-
-async function fetchUserCommunitiesData(
-  user_name: string
-): Promise<CommunityData> {
-  const response = await fetch(
-    `${baseUrl}/api/users/communities?user_name=${user_name}` // Correct URL
-  );
-  if (!response.ok) {
-    return { community_id: "", community_name: "" };
-  }
-  return response.json();
-}
-
-async function fetchUserCompetitionIds(
-  competition_id: string
-): Promise<string[]> {
-  const response = await fetch(
-    `${baseUrl}/api/users/competitions?user_name=${competition_id}` // Correct URL
-  );
-  if (!response.ok) {
-    return [];
-  }
-  return response.json();
-}
-
-async function fetchCompetitionData(
-  competitionId: string
-): Promise<CompetitionData> {
-  const response = await fetch(
-    `${baseUrl}/api/competitions?competitionId=${competitionId}`
-  );
-  return response.json();
-}
-
-async function fetchAllCompetitionsData(
-  competitionIds: string[]
-): Promise<CompetitionData[]> {
-  const competitionsData: CompetitionData[] = [];
-  for (const competitionId of competitionIds) {
-    const competitionData = await fetchCompetitionData(competitionId);
-    competitionsData.push(competitionData);
-  }
-  return competitionsData;
-}
 
 // Server component
 const UserPage = async (props: { params: UserPageProps }) => {
@@ -106,18 +34,6 @@ const UserPage = async (props: { params: UserPageProps }) => {
 
   const userCompetitionsData = await fetchAllCompetitionsData(
     userCompetitionsList);
-
-  console.log(
-    "Communities for user: " + userDataHeader.user_name,
-    userCommunitiesMap
-  );
-
-  console.log("langcode: ", userDataHeader.locale);
-
-
-  console.log("Competitions for user: ", user_name, userCompetitionsList);
-
-  console.log("langcode: ", userDataHeader.locale);
 
 
 

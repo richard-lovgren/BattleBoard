@@ -43,7 +43,9 @@ const UserPageBanner: React.FC<UserProps> = ({
               <h1 className="text-4xl font-bold font-odibee my-2">
                 {user_name}
               </h1>
+
               <CountryFlag langcode={langcode}></CountryFlag>
+
               {/* <h3 className="">{data}</h3> */}
             </div>
             <h2 className="font-bold">{display_name}</h2>
