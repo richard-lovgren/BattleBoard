@@ -1,14 +1,35 @@
 import getMatches from "@/lib/leagueApi/getMatches";
-import { FilteredMatchData, usernamePUUID} from "@/models/interfaces/leagueMatchData";
+import { FilteredMatchData, usernamePUUID } from "@/models/interfaces/leagueMatchData";
 import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
 import Leaderboard from "@/models/interfaces/leaderboard";
 
-
-async function createLeagueCompetition(mainUser: usernamePUUID, targetMatches: number, competition_id: string, ...otherUsers: usernamePUUID[]) {
-    const matches = await getMatches(mainUser.puuid, targetMatches, ...otherUsers.map(user => user.puuid));
-    const allUsers = [mainUser, ...otherUsers];
+async function createLeagueCompetition(competition_id: string, targetMatches: number) {
+    const allUsers: usernamePUUID[] = await getAllUserNamePUUIDs(competition_id);
+    if (allUsers.length < 2) {
+        console.error("Not enough users to create competition");
+        return;
+    }
+    const firstUser = allUsers.shift()!;
+    const matches = await getMatches(firstUser.puuid, targetMatches, ...allUsers.map(user => user.puuid));
     for (const match of matches) {
         addMatchToCompetition(match, competition_id, allUsers);
+    }
+}
+
+async function getAllUserNamePUUIDs(competition_id: string): Promise<usernamePUUID[]> {
+    const users: string[] = await (await fetch(`/api/competitions/users?competitionId=${competition_id}`)).json();
+    const otherUsers: usernamePUUID[] = [];
+    for (const user of users) {
+        const user_data: usernamePUUID = await getUserNamePUUID(user);
+        otherUsers.push(user_data);
+    }
+    return otherUsers;
+}
+
+async function getUserNamePUUID(username: string): Promise<usernamePUUID> {
+    return {
+        username: username,
+        puuid: (await (await fetch(`/api/competitions/users/${username}`)).json()).league_puuid
     }
 }
 
@@ -18,7 +39,7 @@ async function addMatchToCompetition(match: FilteredMatchData, competition_id: s
         column_names: ["Name", "Summoner Name", "Champion", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Win"],
         leaderboard_entries: users.map((user) => {
             const participant = match.participants.find((participant) => participant.puuid === user.puuid);
-            if (!participant)   {
+            if (!participant) {
                 throw new Error("Participant not found in match data");
             }
             return {
@@ -69,3 +90,5 @@ async function postLeaderboard(
 
     return response.json();
 }
+
+export default createLeagueCompetition;
