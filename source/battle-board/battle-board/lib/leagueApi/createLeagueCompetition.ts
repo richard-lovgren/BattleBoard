@@ -2,48 +2,61 @@ import getMatches from "@/lib/leagueApi/getMatches";
 import { FilteredMatchData, usernamePUUID } from "@/models/interfaces/leagueMatchData";
 import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
 import Leaderboard from "@/models/interfaces/leaderboard";
+import user from "@/models/interfaces/user";
 
-async function createLeagueCompetition(competition_id: string, targetMatches: number) {
+async function createLeagueCompetition(competition_id: string, targetMatches: number): Promise<string> {
     const allUsers: usernamePUUID[] = await getAllUserNamePUUIDs(competition_id);
     if (allUsers.length < 2) {
-        console.error("Not enough users to create competition");
-        return;
+        return "Not enough users to create competition";
+    }
+    //Check if any users puuid is null
+    for (const user of allUsers) {
+        if (user.puuid === null) {
+            return "User" + user.username + " does not have a puuid";
+        }
     }
     const firstUser = allUsers.shift()!;
     const matches = await getMatches(firstUser.puuid, targetMatches, ...allUsers.map(user => user.puuid));
     for (const match of matches) {
         addMatchToCompetition(match, competition_id, allUsers);
     }
+    return "Competition created";
 }
 
 async function getAllUserNamePUUIDs(competition_id: string): Promise<usernamePUUID[]> {
-    const users: string[] = await (await fetch(`/api/competitions/users?competitionId=${competition_id}`)).json();
-    const otherUsers: usernamePUUID[] = [];
-    for (const user of users) {
-        const user_data: usernamePUUID = await getUserNamePUUID(user);
-        otherUsers.push(user_data);
-    }
-    return otherUsers;
+    console.log("Getting all users for competition", competition_id);
+    const users: user[] = await (await fetch(`/api/competitions/users?competitionId=${competition_id}`)).json();
+    console.log(users);
+    const usersPUUID: usernamePUUID[] = users.map((user) => {
+        return {
+            username: user.user_name,
+            puuid: user.league_puuid
+        };
+    });
+    console.log(usersPUUID);
+    return usersPUUID;
 }
 
 async function getUserNamePUUID(username: string): Promise<usernamePUUID> {
+    const puuid = (await (await fetch(`/api/users?userId=${username}`)).json()).league_puuid
+    console.log("Got puuid", puuid);
     return {
         username: username,
-        puuid: (await (await fetch(`/api/competitions/users/${username}`)).json()).league_puuid
+        puuid: puuid
     }
 }
 
 async function addMatchToCompetition(match: FilteredMatchData, competition_id: string, users: usernamePUUID[]) {
     const leaderboard_dto: LeaderboardDTO = {
         competition_id: competition_id,
-        column_names: ["Name", "Summoner Name", "Champion", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Win"],
+        column_names: ["name", "Summoner Name", "Champion", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Win"],
         leaderboard_entries: users.map((user) => {
             const participant = match.participants.find((participant) => participant.puuid === user.puuid);
             if (!participant) {
                 throw new Error("Participant not found in match data");
             }
             return {
-                "Name": user.username,
+                "name": user.username,
                 "Summoner Name": participant.summonerName,
                 "Champion": participant.championName,
                 "Kills": participant.kills.toString(),

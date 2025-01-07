@@ -230,7 +230,7 @@ app.MapGet(
                 .Join(dbContext.users, uc => uc.user_name, u => u.user_name, (uc, u) => u)
                 .ToListAsync();
 
-            if (users == null || !users.Any())
+            if (users == null || users.Count == 0)
             {
                 return Results.NotFound();
             }
