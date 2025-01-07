@@ -334,7 +334,7 @@ public static class ClassicModeApi
                     leaderboard_id = leaderboard.id,
                     user_name = user_name,
                     metric_name = metric,
-                    metric_value = Int32.Parse(leaderboard_entry[metric]),
+                    metric_value = leaderboard_entry[metric],
                 };
 
                 dbContext.leaderboard_entry.Add(leaderboardEntry);
@@ -370,6 +370,9 @@ public static class ClassicModeApi
                 if (leaderboardEntry == null)
                 {
                     Console.WriteLine("\nLeaderboard entry not found. Aborting.\n");
+                    Console.WriteLine("Metric: " + metric);
+                    Console.WriteLine("User: " + user_name);
+                    Console.WriteLine("Leaderboard id: " + leaderboard.id);
                     return null;
                 }
 
@@ -384,7 +387,7 @@ public static class ClassicModeApi
                     return null;
                 }
 
-                leaderboardEntry.metric_value = Int32.Parse(metric_value);
+                leaderboardEntry.metric_value = metric_value;
                 await dbContext.SaveChangesAsync();
             }
         }
