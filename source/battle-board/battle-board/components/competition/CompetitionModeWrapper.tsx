@@ -12,8 +12,6 @@ interface CompetitionModeWrapperProps {
 const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger }) => {
     const renderContent = () => {
 
-        console.log("Loading competition mode:", mode);
-
         switch (mode) {
             case 0:
                 return <TournamentMode competitionId={competitionId} />;
