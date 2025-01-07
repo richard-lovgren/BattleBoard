@@ -227,7 +227,6 @@ app.MapGet(
         {
             var users = await dbContext
                 .user_competition.Where(x => x.competition_id == id)
-                .Select(x => x.user_name)
                 .ToListAsync();
 
             if (users == null)
@@ -238,7 +237,7 @@ app.MapGet(
             return Results.Ok(users);
         }
     )
-    .Produces<List<string>>(StatusCodes.Status200OK)
+    .Produces<List<User>>(StatusCodes.Status200OK)
     .WithDescription("Get all users in a competition")
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Competition not found");
