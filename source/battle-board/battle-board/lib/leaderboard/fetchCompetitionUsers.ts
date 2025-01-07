@@ -1,4 +1,5 @@
 import baseUrl from "@/lib/baseUrl";
+import User from "@/models/interfaces/user";
 
 async function fetchCompetitionData(
     competitionId: string
@@ -7,7 +8,8 @@ async function fetchCompetitionData(
         `${baseUrl}/api/competitions/users?competitionId=${competitionId}`
     );
     if (!response.ok) return null;
-    return response.json();
+    const res: User[] = await response.json();
+    return res.map((user) => user.user_name);
 }
 
 export default fetchCompetitionData;
