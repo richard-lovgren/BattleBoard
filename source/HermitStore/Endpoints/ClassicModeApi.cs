@@ -387,7 +387,14 @@ public static class ClassicModeApi
                     return null;
                 }
 
-                leaderboardEntry.metric_value = metric_value;
+                if (double.TryParse(metric_value, out double parsed_metric_value) && double.TryParse(leaderboardEntry.metric_value, out double parsed_leaderboard_metric_value))
+                {
+                    leaderboardEntry.metric_value = (parsed_metric_value + parsed_leaderboard_metric_value).ToString();
+                }
+                else
+                {
+                    leaderboardEntry.metric_value = metric_value;
+                }
                 await dbContext.SaveChangesAsync();
             }
         }

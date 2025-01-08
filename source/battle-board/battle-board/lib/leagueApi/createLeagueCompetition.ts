@@ -49,7 +49,7 @@ async function getUserNamePUUID(username: string): Promise<usernamePUUID> {
 async function addMatchToCompetition(match: FilteredMatchData, competition_id: string, users: usernamePUUID[]) {
     const leaderboard_dto: LeaderboardDTO = {
         competition_id: competition_id,
-        column_names: ["name", "Summoner Name", "Champion", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Win"],
+        column_names: ["name", "Summoner Name", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Wins"],
         leaderboard_entries: users.map((user) => {
             const participant = match.participants.find((participant) => participant.puuid === user.puuid);
             if (!participant) {
@@ -58,13 +58,12 @@ async function addMatchToCompetition(match: FilteredMatchData, competition_id: s
             return {
                 "name": user.username,
                 "Summoner Name": participant.summonerName,
-                "Champion": participant.championName,
                 "Kills": participant.kills.toString(),
                 "Deaths": participant.deaths.toString(),
                 "Assists": participant.assists.toString(),
                 "Damage Dealt": participant.totalDamageDealtToChampions.toString(),
                 "Gold Earned": participant.goldEarned.toString(),
-                "Win": participant.win ? "true" : "false"
+                "Wins": participant.win ? "1" : "0"
             }
         })
     };
