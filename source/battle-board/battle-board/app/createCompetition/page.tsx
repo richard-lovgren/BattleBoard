@@ -102,7 +102,7 @@ export default function CreateCompetitionPage() {
       game_id: game,
       rank_alg: 1,
       is_public: (parseInt(formJson.isPublic.toString())) > 0 ? true : false,
-      community_id: community
+      community_id: !community ? undefined : community
     };
 
     console.log(body);
@@ -250,10 +250,12 @@ export default function CreateCompetitionPage() {
               </FormControl>
             </div>
           </div>
-          <div>
-            <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
-          </div>
-
+          {/* Select Community */}
+          {Object.keys(communityData).length > 0 &&
+            <div>
+              <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
+            </div>
+          }
           <GeneralButton text="Create competition" type="submit" />
         </form>
       </main>
