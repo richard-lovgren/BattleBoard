@@ -2,7 +2,6 @@
 
 import "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,22 +9,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+
 import CompetitionData from "@/models/interfaces/CompetitionData"
+import GeneralButton from "./general-btn";
+import Link from "next/link";
 
 interface CompetitionListProps {
   competitions: CompetitionData[];
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
-  const router = useRouter();
-
-  const handleNavigation = (id: string) => {
-    router.replace(`/competition/${id}`);
-  };
-
   return (
-    <div className="flex  flex-row flex-wrap gap-4 w-full  py-10" >
+    <div className="flex  flex-row flex-wrap gap-4 w-full  py-10 " >
       {competitions.length > 0 ? 
       competitions.map((competition) => (
         <Card key={competition.id} className="w-[350px]">
@@ -37,13 +32,10 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
             <h1 className="text-lg font-semibold">{competition.competition_name}</h1>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button
-              variant="outline"
-              onClick={() => handleNavigation(competition.id)}
-              className="hover:bg-foreground hover:border-foreground"
-            >
-              View
-            </Button>
+            <Link href={`/competition/${competition.id}`}>
+              <GeneralButton type="button" text="View"/>
+            </Link>
+            
           </CardFooter>
         </Card>
       )) :

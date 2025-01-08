@@ -6,6 +6,8 @@ import fetchGameName from '@/lib/leaderboard/fetchGameName';
 import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
 import fetchCompetitionUsers from '@/lib/leaderboard/fetchCompetitionUsers';
 import LeaderboardComponent from '@/components/competition/LeaderboardComponent';
+import { formatDate, getCompetitonTypeIcon } from "@/lib/utils";
+import { competitionTypeEnum } from '@/models/interfaces/competitionTypeEnum';
 
 // Server-side data fetching
 async function getCompetitionData(competitionId: string) {
@@ -24,7 +26,7 @@ type CompetitionPageProps = Promise<{ competition: string }>;
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
   const { competitionData, gameName, leaderboard, competitionUsers } = await getCompetitionData((await props.params).competition);
-  
+
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
       <div className="w-full flex text-slate-50 text-3xl flex-row items-center gap-4 px-10 py-0">
@@ -46,28 +48,26 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
           <h2 className="flex text-4xl font-odibee text-white">
             {competitionData.competition_description}
           </h2>
+          <h2 className="flex text-4xl font-odibee text-white">
+            {competitionTypeEnum[competitionData.competition_type] } mode
+          </h2>
           <h3 className="flex text-xl font-odibee text-white">{gameName}</h3>
         </div>
 
         <div className="flex flex-col gap-5 h-full items-center">
           <Image
-            src="/rival_mode_icon.svg"
+            src={getCompetitonTypeIcon(competitionData.competition_type)}
             alt="Competition Type Image"
             width={50}
             height={50}
           />
-          <Image
-            src="/user.svg"
-            alt="Players Icon Image"
-            width={50}
-            height={50}
-          />
           <div className="flex flex-col gap-0 items-center">
+          <h1 className="flex text-xl font-odibee text-white py-0 my-0"> Created by {competitionData.creator_name}</h1>
             <h1 className="flex text-xl font-odibee text-white py-0 my-0">
-              23/12
+              Starts
             </h1>
             <h1 className="flex text-xl font-odibee text-white py-0 my-0">
-              2024
+              {formatDate(competitionData.competition_start_date)}
             </h1>
           </div>
         </div>
