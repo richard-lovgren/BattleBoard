@@ -53,24 +53,9 @@ const LeaderboardComponent = ({
 
       <CompetitonModeWrapper
         mode={competitionData.competition_type}
-
         competitionId={competitionId}
         reloadTrigger={reload}
       />
-
-      <CompetitonModeWrapper
-        mode={competitionData.competition_type}
-        competitionId={competitionId}
-        reloadTrigger={reload}
-      />
-
-      <CompetitonModeWrapper
-        mode={competitionData.competition_type}
-        competitionId={competitionId}
-        reloadTrigger={reload}
-      />
-
-      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
 
     </Suspense>
   );

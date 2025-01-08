@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Box,
@@ -11,80 +12,77 @@ import {
 } from "@mui/material";
 import { Sword } from "lucide-react";
 
-const RivalMode: React.FC = () => {
+interface RivalModeProps {
+  competitionId: string;
+}
+
+const RivalMode: React.FC<RivalModeProps> = (competitionId) => {
   // Placeholder data for testing
-  const leftName = "Team Alpha";
-  const rightName = "Team Beta";
+  const leftName = "Anton";
+  const rightName = "Anton_2";
 
   const leftScores = [100, 90, 85]; // Scores for Team Alpha
   const rightScores = [80, 75, 70]; // Scores for Team Beta
 
-  // Calculate the number of rows (max scores between both players)
-  const maxRows = Math.max(leftScores.length, rightScores.length);
+  const renderTable = (name: string, scores: number[]) => (
+    <TableContainer className="">
+      <Table sx={{ minWidth: 300 }} aria-label={`${name} scores table`}>
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">
+              <Typography className="text-4xl font-odibee" align="center">{name}</Typography>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {scores.map((score, index) => (
+            <TableRow
+              key={index}
+              sx={{
+                backgroundColor:
+                  index % 2 === 0
+                    ? "#765DEA"
+                    : "#856BF9",
+                "&:last-child td, &:last-child th": { border: 0 },
+              }}
+            >
+              <TableCell align="center" sx={{ color: "white", border: "none" }}>
+                <Typography className="breadText">{score}</Typography>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer >
+  );
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <div className="flex flex-col items-center justify-start gap-4 border-2 border-accent p-4 rounded-xl">
       {/* Names and Sword */}
-      <div className="flex flex-row">
-        <p className="text-2xl font-bold">{leftName}</p>
-        <Sword
-          style={{ width: 32, height: 32, color: "var(--purple-light)" }}
-        />
-        <p className="text-2xl font-bold">{rightName}</p>
+      <div className="flex flex-row items-center justify-center gap-2">
+        <Typography variant="h4" sx={{ marginRight: 2 }}>
+          {leftName}
+        </Typography>
+        ⚔️
+        <Typography variant="h4" sx={{ marginLeft: 2 }}>
+          {rightName}
+        </Typography>
       </div>
-      {/* Single Table for Scores */}
-      <Box style={{ width: "60vw", margin: "0 10px" }}>
-        <TableContainer>
-          <Table sx={{ minWidth: 650 }} aria-label="rival scores table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">
-                  <Typography className="h3">{leftName}</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography className="h3">{rightName}</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Array.from({ length: maxRows }).map((_, rowIndex) => (
-                <TableRow
-                  key={rowIndex}
-                  sx={{
-                    backgroundColor:
-                      rowIndex % 2 === 0
-                        ? "var(--purple-light)"
-                        : "var(--purple-lighter)",
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell
-                    align="center"
-                    sx={{ color: "white", border: "none" }}
-                  >
-                    <Typography className="breadText">
-                      {leftScores[rowIndex] !== undefined
-                        ? leftScores[rowIndex]
-                        : "-"}
-                    </Typography>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "white", border: "none" }}
-                  >
-                    <Typography className="breadText">
-                      {rightScores[rowIndex] !== undefined
-                        ? rightScores[rowIndex]
-                        : "-"}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    </Box>
+
+      {/* Two Tables */}
+      <div className="flex flex-row items-center justify-center gap-4">
+        {/* Left Table */}
+        {renderTable(leftName, leftScores)}
+
+        {/* Sword Icon */}
+        <circle className="rounded-full  p-4 bg-accent">
+          <Sword style={{ width: 64, height: 64, color: "var(--purple-light)", }} />
+        </circle>
+
+        {/* Right Table */}
+        {renderTable(rightName, rightScores)}
+      </div>
+    </div>
   );
 };
 
