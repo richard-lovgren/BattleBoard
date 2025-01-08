@@ -58,7 +58,7 @@ public static class TournamentModeApi
             if (number_of_tournament_match_dtos != number_of_players - 1)
             {
                 return Results.BadRequest(
-                    "Number of tournament matches does not match the number of players"
+                    "Number of tournament matches does not match the number of players. Was: " + number_of_tournament_match_dtos + " Expected: " + (number_of_players - 1)
                 );
             }
 
@@ -73,7 +73,7 @@ public static class TournamentModeApi
             {
                 if (group.Count() != expectedMatchesPerRound[group.Key])
                 {
-                    return Results.BadRequest($"Round {group.Key} has an incorrect number of matches.");
+                    return Results.BadRequest($"Round {group.Key} has an incorrect number of matches. Was {group.Count()}, expected {expectedMatchesPerRound[group.Key]}");
                 }
             }
 
@@ -95,12 +95,13 @@ public static class TournamentModeApi
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return Results.InternalServerError(e.Message);
         }
 
         Console.WriteLine("Tournament created successfully!");
 
-        return Results.Ok();
+        return Results.Ok(tournamentMegaObjDto);
     }
 
     private static async Task<IResult> UpdateTournament(
@@ -134,6 +135,7 @@ public static class TournamentModeApi
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return Results.InternalServerError(e.Message);
         }
 

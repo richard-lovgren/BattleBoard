@@ -121,12 +121,12 @@ CREATE TABLE match_user (
 CREATE TABLE "tournament" (
     id UUID PRIMARY KEY,
     competition_id UUID REFERENCES competition(id) ON DELETE CASCADE,
-    number_of_players INT NOT NULL,
-)
+    number_of_players INT NOT NULL
+);
 
 CREATE TABLE "tournament_match" (
-    id SERIAL PRIMARY KEY AUTOINCREMENT,
-    FOREIGN KEY tournament_id UUID REFERENCES "tournament"(id) ON DELETE CASCADE NOT NULL,
+    id SERIAL PRIMARY KEY,
+    tournament_id UUID REFERENCES "tournament"(id) ON DELETE CASCADE NOT NULL,
     round_number INT NOT NULL,
     match_in_round INT NOT NULL,
     player_1 VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,

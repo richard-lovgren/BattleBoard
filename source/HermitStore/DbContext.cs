@@ -226,6 +226,7 @@ namespace HermitStore
 
     public class TournamentMatch
     {
+        public int? id { get; set; }
         public required Guid tournament_id { get; set; }
         public required int round_number { get; set; }
         public required int match_in_round { get; set; }
