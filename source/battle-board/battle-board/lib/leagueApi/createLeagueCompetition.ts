@@ -17,6 +17,7 @@ async function createLeagueCompetition(competition_id: string, targetMatches: nu
     }
     const firstUser = allUsers.shift()!;
     const matches = await getMatches(firstUser.puuid, targetMatches, ...allUsers.map(user => user.puuid));
+    allUsers.unshift(firstUser);
     for (const match of matches) {
         addMatchToCompetition(match, competition_id, allUsers);
     }
@@ -24,16 +25,14 @@ async function createLeagueCompetition(competition_id: string, targetMatches: nu
 }
 
 async function getAllUserNamePUUIDs(competition_id: string): Promise<usernamePUUID[]> {
-    console.log("Getting all users for competition", competition_id);
     const users: user[] = await (await fetch(`/api/competitions/users?competitionId=${competition_id}`)).json();
-    console.log(users);
-    const usersPUUID: usernamePUUID[] = users.map((user) => {
-        return {
+    const usersPUUID = [];
+    for (var user of users) {
+        usersPUUID.push({
             username: user.user_name,
             puuid: user.league_puuid
-        };
-    });
-    console.log(usersPUUID);
+        });
+    }
     return usersPUUID;
 }
 

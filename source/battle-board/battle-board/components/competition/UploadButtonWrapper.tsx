@@ -1,5 +1,4 @@
 import LolCompetitionBox from "@/components/lol/lolCompetitionBox";
-import fetchGameName from "@/lib/leaderboard/fetchGameName";
 import FileUploadAndParseComponent from "@/components/competition/FileUploadAndParseButton";
 import { Leaderboard } from "@/models/leaderboard";
 import CompetitionData from "@/models/interfaces/CompetitionData";
@@ -16,7 +15,7 @@ interface UploadButtonWrapperProps {
 
 const UploadButtonWrapper: React.FC<UploadButtonWrapperProps> =
     ({ initialLeaderboard, userNames, competitionId, competitionData, creatorName, triggerReload, gameName }) => {
-        if (gameName === "League of Legends") {
+        if (gameName === "League of legends") {
             return (
                 <LolCompetitionBox competitionId={competitionId} user={creatorName} competitionData={competitionData} />
             );
