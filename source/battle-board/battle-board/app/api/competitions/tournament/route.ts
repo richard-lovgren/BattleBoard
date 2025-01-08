@@ -49,43 +49,14 @@ export async function POST(req: NextRequest) {
 
         // Check if the response is OK
         if (!response.ok) {
-            const contentType = response.headers.get("Content-Type") || "";
-
-            if (contentType.includes("application/json")) {
-                // Attempt to parse the error response as JSON
-                const errorData = await response.json();
-                console.error("Error response from backend:", errorData);
-                return NextResponse.json(
-                    { message: errorData.message || "An error occurred" },
-                    { status: response.status }
-                );
-            } else {
-                // Handle non-JSON error response
-                const errorText = await response.text();
-                console.error("Non-JSON error response from backend:", errorText);
-                return NextResponse.json(
-                    { message: "Unexpected error from backend", details: errorText },
-                    { status: response.status }
-                );
-            }
+            // Handle error response
+            const errorText = await response.text();
+            console.error("Tournament POST error response:", errorText);
+            return NextResponse.json({ message: "Error creating tournament tree", details: errorText }, { status: 500 });
         }
 
         // Handle successful response
-        const contentType = response.headers.get("Content-Type") || "";
-        if (contentType.includes("application/json")) {
-            // Parse and return JSON response
-            const response_data = await response.json();
-            console.log("Tournament POST response data:", response_data);
-            return NextResponse.json({ response_data });
-        } else {
-            // Handle non-JSON success response
-            const responseText = await response.text();
-            console.warn("Tournament POST Unexpected non-JSON success response:", responseText);
-            return NextResponse.json(
-                { message: "Unexpected response format", details: responseText },
-                { status: 500 }
-            );
-        }
+        return NextResponse.json({ message: "Tournament tree created successfully" });
     } catch (error) {
         // Catch and handle unexpected errors
         console.error("Error creating tournament tree:", error);

@@ -101,7 +101,7 @@ public static class TournamentModeApi
 
         Console.WriteLine("Tournament created successfully!");
 
-        return Results.Ok(tournamentMegaObjDto);
+        return Results.Ok();
     }
 
     private static async Task<IResult> UpdateTournament(
