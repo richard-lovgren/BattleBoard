@@ -14,12 +14,14 @@ const LeaderboardComponent = ({
   creatorName,
   initialLeaderboard,
   userNames,
+  gameName,
 }: {
   competitionId: string;
   competitionData: CompetitionData;
   creatorName: string;
   initialLeaderboard: Leaderboard | null;
   userNames: string[] | null;
+  gameName: string | null;
 }) => {
   const [reload, setReload] = useState(0);
 
@@ -51,6 +53,7 @@ const LeaderboardComponent = ({
         competitionData={competitionData}
         creatorName={creatorName}
         triggerReload={triggerReload}
+        gameName={gameName}
       />
 
       <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />

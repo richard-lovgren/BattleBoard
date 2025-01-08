@@ -11,11 +11,12 @@ interface UploadButtonWrapperProps {
     competitionData: CompetitionData;
     creatorName: string;
     triggerReload: () => void;
+    gameName: string | null;
 }
 
 const UploadButtonWrapper: React.FC<UploadButtonWrapperProps> =
-    ({ initialLeaderboard, userNames, competitionId, competitionData, creatorName, triggerReload }) => {
-        if (competitionData.game_id === "121e3728-5a50-45a1-92cf-c8695af932e1") {
+    ({ initialLeaderboard, userNames, competitionId, competitionData, creatorName, triggerReload, gameName }) => {
+        if (gameName === "League of Legends") {
             return (
                 <LolCompetitionBox competitionId={competitionId} user={creatorName} competitionData={competitionData} />
             );
