@@ -160,7 +160,7 @@ INSERT INTO community(id, community_name, community_members) VALUES(131857110941
 
 -- Competitions
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926131);
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1238571109418926131);
 
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
