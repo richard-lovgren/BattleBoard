@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import createLeagueCompetition from "@/lib/leagueApi/createLeagueCompetition";
 
 export default function LolUsernameBox() {
   const { data: session } = useSession();
@@ -63,12 +62,9 @@ export default function LolUsernameBox() {
   };
   const handleRemove = async () => {
     try {
-      //setHelpText("");
-      //await updateUserLeaguePuuid(userId as string, null);
-      //setFullLolUsername(null);
-      const res = await createLeagueCompetition("6b14e51a-6688-4219-a1c1-075b04a32828", 30);
-      console.log(res);
-      setHelpText(res);
+      setHelpText("");
+      await updateUserLeaguePuuid(userId as string, null);
+      setFullLolUsername(null);
     } catch (error) {
       console.error("Error in handleRemove:", error);
     }

@@ -2,10 +2,11 @@
 
 import { Suspense, useState } from "react";
 import EditCompetitionButton from "@/components/competition/ManualEditCompetition";
-import FileUploadAndParseComponent from "@/components/competition/FileUploadAndParseButton";
 import { Leaderboard } from "@/models/leaderboard";
 import CompetitionData from "@/models/interfaces/CompetitionData";
 import CompetitonModeWrapper from "@/components/competition/CompetitionModeWrapper";
+import UploadButtonWrapper from "@/components/competition/UploadButtonWrapper";
+
 
 const LeaderboardComponent = ({
   competitionId,
@@ -27,7 +28,7 @@ const LeaderboardComponent = ({
     console.log("Triggered reload of leaderboard!");
     setTimeout(() => {
       window.location.reload();
-    }, 200);
+    }, 1000);
   };
 
   if (userNames === null) {
@@ -43,12 +44,13 @@ const LeaderboardComponent = ({
         competitionId={competitionId}
         userNames={userNames}
       />
-      <FileUploadAndParseComponent
-        prevLeaderboard={initialLeaderboard}
+      <UploadButtonWrapper
+        initialLeaderboard={initialLeaderboard}
         userNames={userNames}
-        handleCompetitionDataParsed={triggerReload}
-
         competitionId={competitionId}
+        competitionData={competitionData}
+        creatorName={creatorName}
+        triggerReload={triggerReload}
       />
 
       <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
