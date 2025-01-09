@@ -55,6 +55,7 @@ const LeaderboardComponent = ({
         mode={competitionData.competition_type}
         competitionId={competitionId}
         reloadTrigger={reload}
+        userNames={userNames}
       />
 
     </Suspense>

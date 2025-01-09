@@ -1,5 +1,6 @@
+"use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -10,78 +11,151 @@ import {
   TableBody,
   Typography,
 } from "@mui/material";
-import { Sword } from "lucide-react";
+import { DivideIcon, Sword, Swords } from "lucide-react";
+
+import { Leaderboard } from "@/models/leaderboard";
+
+import fetchCompetitionUsers from "@/lib/leaderboard/fetchCompetitionUsers";
 
 interface RivalModeProps {
   competitionId: string;
+  userNames: string[] | null;
 }
 
-const RivalMode: React.FC<RivalModeProps> = (competitionId) => {
-  // Placeholder data for testing
-  const leftName = "Anton";
-  const rightName = "Anton_2";
+const fetchRivalLeaderBoardDodge = async (
+  competitionId: string,
+): Promise<Leaderboard | null> => {
+  //Jag är för dålig på react, vet ej hur man fetchar denna server-side + trigga reload
+  const response = await fetch(
+    `/api/competitions/leaderboard?competitionId=${competitionId}`,
+  );
+  if (!response.ok) return null;
+  return response.json();
+};
 
-  const leftScores = [100, 90, 85]; // Scores for Team Alpha
-  const rightScores = [80, 75, 70]; // Scores for Team Beta
+const calculateTotal = (scores: number[]) => {
+  const total = scores.reduce((acc, score) => acc + score);
+  return total;
+};
+
+const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
+  const [leaderboardData, setLeaderboardData] = useState<Leaderboard | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+  // Type of competitionUsers is sring[] || null
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchRivalLeaderBoardDodge(competitionId);
+        setLeaderboardData(data);
+      } catch (error) {
+        console.error("Error fetching leaderboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, [competitionId]);
+
+  if (loading) {
+    return <Typography>Loading leaderboard...</Typography>;
+  }
+
+  /*if (!leaderboardData || !leaderboardData.leaderboard_entries.length) {
+    return <Typography>No leaderboard data available.</Typography>;
+  }*/
+
+  /*const rows = leaderboardData.leaderboard_entries;
+  const columns = leaderboardData.column_names;*/
+
+  console.log(leaderboardData);
+
+  console.log("Competition Users: ", userNames);
+
+  // Placeholder data for testing
+  const leftName = userNames ? userNames[0] : "Anton_1";
+  const rightName = userNames ? userNames[1] : "Anton_2";
+
+  const leftScores = [100, 90, 85, 40, 30]; // Scores for Team Alpha
+  const rightScores = [80, 75, 70, 45, 35]; // Scores for Team Beta
+
+  // How to comment out a block of jsx code?
+  //
 
   const renderTable = (name: string, scores: number[]) => (
-    <TableContainer className="">
+    <TableContainer>
       <Table sx={{ minWidth: 300 }} aria-label={`${name} scores table`}>
         <TableHead>
           <TableRow>
             <TableCell align="center">
-              <Typography className="text-4xl font-odibee" align="center">{name}</Typography>
+              <div className="flex flex-col items-center justify-center gap-2">
+                <Typography className="text-4xl font-odibee">{name}</Typography>
+              </div>
             </TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {scores.map((score, index) => (
             <TableRow
               key={index}
               sx={{
-                backgroundColor:
-                  index % 2 === 0
-                    ? "#765DEA"
-                    : "#856BF9",
                 "&:last-child td, &:last-child th": { border: 0 },
               }}
             >
               <TableCell align="center" sx={{ color: "white", border: "none" }}>
-                <Typography className="breadText">{score}</Typography>
+                <div className=" border-[3px] border-accent p-4 w-full rounded-xl">
+                  <Typography className="breadText font-bold">
+                    {score}
+                  </Typography>
+                </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </TableContainer >
+    </TableContainer>
+  );
+
+  // Render metrics using a table with the same amount of rows as the other tables consisting of a metric string in each row
+
+  const metrics = ["Total", "Average", "Best", "Worst", "Difference"];
+
+  const renderMetrics = (metrics: string[]) => (
+    <TableContainer className="flex-1">
+      <Table aria-label="metrics table">
+        <TableBody>
+          {metrics.map((metric, index) => (
+            <TableRow key={index}>
+              <TableCell align="center" sx={{ color: "white" }}>
+                <div className=" border-[3px]  p-4 w-full rounded-xl border-background underline">
+                  <Typography textAlign="center">{metric}</Typography>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 
   return (
-    <div className="flex flex-col items-center justify-start gap-4 border-2 border-accent p-4 rounded-xl">
-      {/* Names and Sword */}
-      <div className="flex flex-row items-center justify-center gap-2">
-        <Typography variant="h4" sx={{ marginRight: 2 }}>
-          {leftName}
-        </Typography>
-        ⚔️
-        <Typography variant="h4" sx={{ marginLeft: 2 }}>
-          {rightName}
-        </Typography>
+    <div className="flex flex-row items-end justify-center gap-4   ">
+      {renderTable(leftName, leftScores)}
+
+      <div className="  h-full items-center flex flex-col">
+        <div className="rounded-full p-2 bg-white self-center">
+          <Swords size={64} />
+        </div>
+
+        {renderMetrics(metrics)}
       </div>
 
-      {/* Two Tables */}
-      <div className="flex flex-row items-center justify-center gap-4">
-        {/* Left Table */}
-        {renderTable(leftName, leftScores)}
-
-        {/* Sword Icon */}
-        <circle className="rounded-full  p-4 bg-accent">
-          <Sword style={{ width: 64, height: 64, color: "var(--purple-light)", }} />
-        </circle>
-
-        {/* Right Table */}
-        {renderTable(rightName, rightScores)}
-      </div>
+      {renderTable(rightName, rightScores)}
     </div>
   );
 };

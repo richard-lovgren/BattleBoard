@@ -7,9 +7,10 @@ interface CompetitionModeWrapperProps {
     mode: number;
     competitionId: string;
     reloadTrigger: number;
+    userNames: string[] | null;
 }
 
-const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger }) => {
+const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger, userNames }) => {
     const renderContent = () => {
 
         console.log("Loading competition mode:", mode);
@@ -19,7 +20,7 @@ const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competit
                 return <ClassicMode competitionId={competitionId} />;
             case 2:
                 return (
-                    <RivalMode competitionId={competitionId} />
+                    <RivalMode competitionId={competitionId} userNames={userNames} />
                 );
             case 3:
                 return (
