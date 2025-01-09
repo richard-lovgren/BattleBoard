@@ -13,20 +13,14 @@ interface CompetitionModeWrapperProps {
 const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competitionId, reloadTrigger, userNames }) => {
     const renderContent = () => {
 
-        console.log("Loading competition mode:", mode);
-
         switch (mode) {
+            case 0:
+                return <TournamentMode competitionId={competitionId} />;
             case 1:
                 return <ClassicMode competitionId={competitionId} />;
             case 2:
                 return (
                     <RivalMode competitionId={competitionId} userNames={userNames} />
-                );
-            case 3:
-                return (
-                    <div className="w-full flex items-center justify-center">
-                        <Typography className="text-3xl font-odibee">Tournament Mode</Typography>
-                    </div>
                 );
             default:
                 return (
