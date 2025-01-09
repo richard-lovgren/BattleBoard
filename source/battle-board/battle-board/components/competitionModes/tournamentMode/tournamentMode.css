@@ -43,6 +43,11 @@
   .player-box-no-winner {
     background-color: transparent;
   }
+
+  .player-box-empty {
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.5);
+  }
   
   .player-box-border {
     border-bottom: 1px solid white;

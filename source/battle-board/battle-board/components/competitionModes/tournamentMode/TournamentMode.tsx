@@ -232,8 +232,10 @@ const TournamentMode: React.FC<TournamentModeProps> = ({ competitionId }) => {
               {round.map((match, matchIndex) => (
                 <Box key={match.localId} className="match-container">
                   <Box
-                    className={`player-box ${match.winner === match.player1 ? 'player-box-winner' : 'player-box-no-winner'} 
-                              ${!match.player1 ? 'player-box-disabled' : ''} player-box-border`}
+                    className={`player-box ${!match.player1 ? 'player-box-empty' : ''} 
+                    ${match.winner && match.winner === match.player1 ? 'player-box-winner' : ''} 
+                    ${match.player1 ? 'player-box-filled' : 'player-box-disabled'} 
+                    player-box-border`}
                     onClick={() => match.player1 && handlePlayerClick(match.player1, roundIndex, matchIndex)}
                   >
                     {match.player1 || 'N/A'}
