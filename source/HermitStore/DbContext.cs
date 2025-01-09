@@ -224,19 +224,6 @@ namespace HermitStore
         public required int number_of_players { get; set; }
     }
 
-    public class TournamentMatch
-    {
-        public int? id { get; set; }
-        public required Guid tournament_id { get; set; }
-        public required int round_number { get; set; }
-        public required int match_in_round { get; set; }
-
-        public string? player_1 { get; set; }
-        public string? player_2 { get; set; }
-        public string? winner { get; set; }
-
-    }
-
     public class TournamentMatchDto
     {
         public required int round_number { get; set; }
@@ -245,6 +232,12 @@ namespace HermitStore
         public string? player_1 { get; set; }
         public string? player_2 { get; set; }
         public string? winner { get; set; }
+    }
+
+    public class TournamentMatch : TournamentMatchDto
+    {
+        public int? id { get; set; }
+        public required Guid tournament_id { get; set; }
     }
 
     public class TournamentMegaObjDto
