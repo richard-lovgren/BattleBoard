@@ -30,12 +30,8 @@ const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
       competitions.map((competition) => (
         <Card key={competition.id} className="w-[350px]">
           <CardHeader>
-            <CardTitle className="font-thin text-3xl">
-            </CardTitle>
+            <CardTitle className="font-thin font-odibee text-4xl">{competition.competition_name}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <h1 className="text-lg font-semibold">{competition.competition_name}</h1>
-          </CardContent>
           <CardFooter className="flex justify-between">
             <Button
               variant="outline"
