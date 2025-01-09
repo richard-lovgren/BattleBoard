@@ -15,7 +15,7 @@ const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competit
 
         switch (mode) {
             case 0:
-                return <TournamentMode competitionId={competitionId} />;
+            //return <TournamentMode competitionId={competitionId} />;
             case 1:
                 return <ClassicMode competitionId={competitionId} />;
             case 2:
