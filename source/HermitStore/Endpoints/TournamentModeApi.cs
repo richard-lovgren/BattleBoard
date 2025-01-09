@@ -26,6 +26,24 @@ public static class TournamentModeApi
         Console.WriteLine("Tournament mode endpoints mapped!");
     }
 
+    private static int CalculateTotalMatches(int numberOfPlayers)
+    {
+        int totalRounds = (int)Math.Ceiling(Math.Log2(numberOfPlayers));
+        int totalMatches = 0;
+        int firstRoundMatches = (int)Math.Ceiling(numberOfPlayers / 2.0);
+
+        totalMatches += firstRoundMatches;
+
+        int currentRoundMatches = firstRoundMatches;
+        for (int round = 2; round <= totalRounds; round++)
+        {
+            currentRoundMatches = (int)Math.Ceiling(currentRoundMatches / 2.0);
+            totalMatches += currentRoundMatches;
+        }
+
+        return totalMatches;
+    }
+
     private static async Task<IResult> CreateTournament(
         HermitDbContext dbContext,
         TournamentMegaObjDto tournamentMegaObjDto
@@ -45,35 +63,36 @@ public static class TournamentModeApi
 
             var tournamentMatchDtos = tournamentMegaObjDto.tournament_matches;
 
-            var number_of_players = tournamentMegaObjDto.number_of_players;
-            var number_of_tournament_match_dtos = tournamentMatchDtos.Count;
+            int number_of_players = tournamentMegaObjDto.number_of_players;
+            int number_of_tournament_match_dtos = tournamentMatchDtos.Count;
 
             //Handle bye rounds and if that doesn't match, throw an error
-
-            if (number_of_players % 2 != 0)
-            {
-                number_of_players++;
-            }
-
-            if (number_of_tournament_match_dtos != number_of_players - 1)
+            int expectedTotalMatches = CalculateTotalMatches(number_of_players);
+            if (number_of_tournament_match_dtos != expectedTotalMatches)
             {
                 return Results.BadRequest(
-                    "Number of tournament matches does not match the number of players. Was: " + number_of_tournament_match_dtos + " Expected: " + (number_of_players - 1)
+                    "Number of tournament matches does not match the expected total. "
+                        + $"Was: {number_of_tournament_match_dtos} Expected: {expectedTotalMatches}"
                 );
             }
 
             var expectedMatchesPerRound = new Dictionary<int, int>();
-            var totalRounds = (int)Math.Ceiling(Math.Log2(number_of_players));
-            for (int i = 0; i < totalRounds; i++)
+            int totalRounds = (int)Math.Ceiling(Math.Log2(number_of_players));
+            int currentRoundMatches = (int)Math.Ceiling(number_of_players / 2.0);
+
+            for (int round = 1; round <= totalRounds; round++)
             {
-                expectedMatchesPerRound[i + 1] = (int)Math.Pow(2, totalRounds - i - 1);
+                expectedMatchesPerRound[round] = currentRoundMatches;
+                currentRoundMatches = (int)Math.Ceiling(currentRoundMatches / 2.0);
             }
 
             foreach (var group in tournamentMatchDtos.GroupBy(m => m.round_number))
             {
                 if (group.Count() != expectedMatchesPerRound[group.Key])
                 {
-                    return Results.BadRequest($"Round {group.Key} has an incorrect number of matches. Was {group.Count()}, expected {expectedMatchesPerRound[group.Key]}");
+                    return Results.BadRequest(
+                        $"Round {group.Key} has an incorrect number of matches. Was {group.Count()}, expected {expectedMatchesPerRound[group.Key]}"
+                    );
                 }
             }
 
