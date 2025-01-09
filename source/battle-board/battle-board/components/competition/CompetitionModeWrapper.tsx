@@ -2,6 +2,7 @@ import { Fragment, FC } from 'react';
 import { Typography } from '@mui/material';
 import ClassicMode from '@/components/competitionModes/classicMode/ClassicMode';
 import RivalMode from '@/components/competitionModes/rivalMode/RivalMode';
+import TournamentMode from '../competitionModes/tournamentMode/TournamentMode';
 
 interface CompetitionModeWrapperProps {
     mode: number;
@@ -15,7 +16,7 @@ const CompetitonModeWrapper: FC<CompetitionModeWrapperProps> = ({ mode, competit
 
         switch (mode) {
             case 0:
-            //return <TournamentMode competitionId={competitionId} />;
+                return <TournamentMode competitionId={competitionId} />;
             case 1:
                 return <ClassicMode competitionId={competitionId} />;
             case 2:
