@@ -1,10 +1,17 @@
 using HermitStore;
 using Microsoft.EntityFrameworkCore;
+using HeyRed.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"Connection String: {connectionString}");
+
+// Create Uploads folder for file uploads if it doesn't exist
+if (Directory.Exists("Uploads") == false)
+{
+    Directory.CreateDirectory("Uploads");
+}
 
 // Add services before building
 builder.Services.AddDbContext<HermitDbContext>(options =>
@@ -12,7 +19,6 @@ builder.Services.AddDbContext<HermitDbContext>(options =>
 );
 builder.Services.AddOpenApi("API Reference");
 builder.Services.AddControllers();
-
 var app = builder.Build();
 
 app.MapOpenApi();
@@ -242,6 +248,83 @@ app.MapGet(
     .WithDescription("Get all users in a competition")
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Competition not found");
+
+app.MapPost(
+    "/competitions/{id}/image",
+    async (HermitDbContext dbContext, Guid id, IFormFile file) =>
+    {
+        var competition = await dbContext.competition.FindAsync(id);
+
+        if (competition == null)
+        {
+            return Results.NotFound("Competition not found");
+        }
+
+        const long maxFileSize = 1024 * 1024; // 1 MB
+        var allowedContentTypes = new List<string> { "image/png", "image/jpeg" };
+
+        if (file.Length > maxFileSize)
+        {
+            return Results.BadRequest("File size exceeds the 1 MB limit.");
+        }
+
+        if (!allowedContentTypes.Contains(file.ContentType))
+        {
+            return Results.BadRequest("Invalid file type.");
+        }
+
+        foreach (var f in Directory.GetFiles("Uploads"))
+        {
+            if (f.Contains($"{id}"))
+            {
+                File.Delete(f);
+            }
+        }
+
+        var fileExtension = MimeTypesMap.GetExtension(file.ContentType);
+        var filePath = Path.Combine("Uploads", $"{id}.{fileExtension}");
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var newImageAsByteArray = await File.ReadAllBytesAsync(filePath);
+
+        competition.competition_image = newImageAsByteArray;
+        competition.competition_start_date = competition.competition_start_date.ToUniversalTime(); // Has to convert back to Universal time for some reason..
+
+        dbContext.competition.Update(competition);
+        await dbContext.SaveChangesAsync();
+
+        return Results.File(newImageAsByteArray, file.ContentType);
+
+    }
+    )
+    .Produces<byte[]>(StatusCodes.Status201Created)
+    .WithDescription("Upload image to competition.")
+    .DisableAntiforgery(); // we're cooked
+
+app.MapGet(
+    "/competitions/{id}/image",
+    async (HermitDbContext dbContext, Guid id) =>
+    {
+        var competition = await dbContext.competition.FindAsync(id);
+        if (competition == null)
+        {
+            return Results.NotFound("Competition not found");
+        }
+
+        if (competition.competition_image == null)
+        {
+            return Results.NotFound("No image found for competition");
+        }
+
+        var fileNameInUploadsFolder = Directory.GetFiles("Uploads").FirstOrDefault(x => x.Contains($"{id}"));
+        var mimeType = MimeTypesMap.GetMimeType(fileNameInUploadsFolder); //only works if the file was uploaded to the folder before.
+        return Results.File(competition.competition_image, contentType: mimeType);
+    })
+    .Produces<byte[]>(StatusCodes.Status200OK)
+    .WithDescription("Get image of competition");
 
 app.MapPost(
         "/competitions",

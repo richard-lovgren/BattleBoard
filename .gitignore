@@ -4,3 +4,4 @@ source/HermitStore/bin/*
 source/BattleBot/venv
 .DS_Store
 .vs
+source/HermitStore/Uploads/*
