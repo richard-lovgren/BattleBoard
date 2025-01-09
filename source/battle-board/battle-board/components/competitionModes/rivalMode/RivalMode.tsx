@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Box,
   Table,
   TableContainer,
   TableHead,
@@ -11,11 +10,9 @@ import {
   TableBody,
   Typography,
 } from "@mui/material";
-import { DivideIcon, Sword, Swords } from "lucide-react";
+import { Swords } from "lucide-react";
 
 import { Leaderboard } from "@/models/leaderboard";
-
-import fetchCompetitionUsers from "@/lib/leaderboard/fetchCompetitionUsers";
 
 interface RivalModeProps {
   competitionId: string;
@@ -33,9 +30,14 @@ const fetchRivalLeaderBoardDodge = async (
   return response.json();
 };
 
-const calculateTotal = (scores: number[]) => {
-  const total = scores.reduce((acc, score) => acc + score);
-  return total;
+const parseRows = (
+  rows: Record<string, string>[],
+  leftScores: string[],
+  rightScores: string[],
+) => {
+  leftScores.push(...Object.values(rows[0]).slice(1));
+  rightScores.push(...Object.values(rows[1]).slice(1));
+  return 1;
 };
 
 const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
@@ -43,7 +45,6 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
     null,
   );
   const [loading, setLoading] = useState(true);
-  // Type of competitionUsers is sring[] || null
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -65,28 +66,24 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
     return <Typography>Loading leaderboard...</Typography>;
   }
 
-  /*if (!leaderboardData || !leaderboardData.leaderboard_entries.length) {
+  if (!leaderboardData || !leaderboardData.leaderboard_entries.length) {
     return <Typography>No leaderboard data available.</Typography>;
-  }*/
+  }
 
-  /*const rows = leaderboardData.leaderboard_entries;
-  const columns = leaderboardData.column_names;*/
-
-  console.log(leaderboardData);
-
-  console.log("Competition Users: ", userNames);
+  const rows = leaderboardData.leaderboard_entries;
+  const columns = leaderboardData.column_names;
 
   // Placeholder data for testing
-  const leftName = userNames ? userNames[0] : "Anton_1";
-  const rightName = userNames ? userNames[1] : "Anton_2";
+  // TODO: Replace with leage usernames if games is leage of legends
+  const leftName = userNames ? userNames[0] : "";
+  const rightName = userNames ? userNames[1] : "";
 
-  const leftScores = [100, 90, 85, 40, 30]; // Scores for Team Alpha
-  const rightScores = [80, 75, 70, 45, 35]; // Scores for Team Beta
+  const leftScores: string[] = [];
+  const rightScores: string[] = [];
 
-  // How to comment out a block of jsx code?
-  //
+  parseRows(rows, leftScores, rightScores);
 
-  const renderTable = (name: string, scores: number[]) => (
+  const renderTable = (name: string, scores: string[]) => (
     <TableContainer>
       <Table sx={{ minWidth: 300 }} aria-label={`${name} scores table`}>
         <TableHead>
@@ -121,10 +118,6 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
     </TableContainer>
   );
 
-  // Render metrics using a table with the same amount of rows as the other tables consisting of a metric string in each row
-
-  const metrics = ["Total", "Average", "Best", "Worst", "Difference"];
-
   const renderMetrics = (metrics: string[]) => (
     <TableContainer className="flex-1">
       <Table aria-label="metrics table">
@@ -152,7 +145,7 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
           <Swords size={64} />
         </div>
 
-        {renderMetrics(metrics)}
+        {renderMetrics(columns.slice(1))}
       </div>
 
       {renderTable(rightName, rightScores)}
