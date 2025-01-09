@@ -26,6 +26,10 @@ namespace HermitStore
         public required DbSet<Leaderboard> leaderboard { get; set; }
         public required DbSet<LeaderboardMetric> leaderboard_metric { get; set; }
         public required DbSet<LeaderboardEntry> leaderboard_entry { get; set; }
+
+        public required DbSet<Tournament> tournament { get; set; }
+        public required DbSet<TournamentMatch> tournament_match { get; set; }
+
     }
 
     public class UserDto
@@ -210,5 +214,37 @@ namespace HermitStore
     public class LeaderboardMegaObj: LeaderboardMegaObjDto
     {
         public required Guid leaderboard_id {get; set; }
+    }
+
+    public class Tournament
+    {
+        public required Guid id { get; set; }
+        public required Guid competition_id { get; set; }
+
+        public required int number_of_players { get; set; }
+    }
+
+    public class TournamentMatchDto
+    {
+        public required int round_number { get; set; }
+        public required int match_in_round { get; set; }
+
+        public string? player_1 { get; set; }
+        public string? player_2 { get; set; }
+        public string? winner { get; set; }
+    }
+
+    public class TournamentMatch : TournamentMatchDto
+    {
+        public int? id { get; set; }
+        public required Guid tournament_id { get; set; }
+    }
+
+    public class TournamentMegaObjDto
+    {
+        public required Guid competition_id { get; set; }
+
+        public required int number_of_players { get; set; }
+        public required List<TournamentMatchDto> tournament_matches { get; set; }
     }
 }
