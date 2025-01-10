@@ -32,16 +32,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const url = `${db_conn_str}/competitions`
-        const body = await req.json();
-        console.log("body", JSON.stringify(body));
+        const formData = await req.formData();
+
         const response = await fetch(
             url,
             {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
+                body: formData,
             }
         );
 
