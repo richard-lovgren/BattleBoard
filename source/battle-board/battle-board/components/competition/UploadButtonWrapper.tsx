@@ -15,7 +15,7 @@ interface UploadButtonWrapperProps {
 
 const UploadButtonWrapper: React.FC<UploadButtonWrapperProps> =
     ({ initialLeaderboard, userNames, competitionId, competitionData, creatorName, triggerReload, gameName }) => {
-        if (gameName === "League of legends") {
+        if (gameName === "League of Legends") {
             return (
                 <LolCompetitionBox competitionId={competitionId} user={creatorName} competitionData={competitionData} />
             );

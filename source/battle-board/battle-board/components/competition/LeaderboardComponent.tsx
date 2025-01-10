@@ -41,23 +41,26 @@ const LeaderboardComponent = ({
 
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
-      
+
       {mode !== 0 &&  //dont want these components in tournament mode
-      <>
-      <EditCompetitionButton
-        competitionCreator={creatorName}
-        leaderboard={initialLeaderboard}
-        triggerReload={triggerReload}
-        competitionId={competitionId}
-        userNames={userNames}
-      />
-      <UploadButtonWrapper
-        initialLeaderboard={initialLeaderboard}
-        userNames={userNames}
-        handleCompetitionDataParsed={triggerReload}
-        competitionId={competitionId}
-      />
-      </>
+        <>
+          <EditCompetitionButton
+            competitionCreator={creatorName}
+            leaderboard={initialLeaderboard}
+            triggerReload={triggerReload}
+            competitionId={competitionId}
+            userNames={userNames}
+          />
+          <UploadButtonWrapper
+            initialLeaderboard={initialLeaderboard}
+            userNames={userNames}
+            competitionId={competitionId}
+            competitionData={competitionData}
+            creatorName={creatorName}
+            triggerReload={triggerReload}
+            gameName={gameName}
+          />
+        </>
       }
       <CompetitonModeWrapper
         mode={competitionData.competition_type}
