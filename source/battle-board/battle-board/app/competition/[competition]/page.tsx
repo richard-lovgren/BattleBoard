@@ -32,7 +32,7 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
       <div className="w-full flex text-slate-50 text-3xl flex-row items-center gap-4 px-10 py-0">
         <div className="relative inline-block flex-shrink-0 w-96 h-96">
           <Image
-            src="/competition-placeholder.jpg"
+            src= {`http://localhost:8080/competitions/${competitionData.id}/image`}
             alt="example"
             className="rounded-full"
             layout="fill"
