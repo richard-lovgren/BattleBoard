@@ -51,6 +51,8 @@ CREATE TABLE competition (
     competition_type INT NOT NULL,
     format INT NOT NULL DEFAULT 0,
     competition_image BYTEA,
+    competition_image_path VARCHAR(80),
+    competition_image_content_type VARCHAR(80),
     is_open BOOLEAN NOT NULL DEFAULT TRUE,
     is_running BOOLEAN NOT NULL DEFAULT FALSE,
     game_id UUID REFERENCES game(id) ON DELETE SET NULL,

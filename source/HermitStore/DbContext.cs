@@ -88,6 +88,12 @@ namespace HermitStore
         public required Guid id { get; set; }
     }
 
+    public class CompetitionFormDto
+    {
+        public required string competition_data { get; set; }
+        public IFormFile? competition_image { get; set; }
+    }
+
     public class CompetitionDto
     {
         public required string competition_name { get; set; }
@@ -96,7 +102,6 @@ namespace HermitStore
         public string? competition_description { get; set; }
         public required int competition_type { get; set; }
         public required int format { get; set; }
-        public byte[]? competition_image { get; set; }
         public bool is_open { get; set; } = true;
         public bool is_running { get; set; } = false;
         public Guid? game_id { get; set; }
@@ -108,6 +113,9 @@ namespace HermitStore
 
     public class Competition : CompetitionDto
     {
+        public byte[]? competition_image { get; set; }
+        public string? competition_image_path { get; set; }
+        public string? competition_image_content_type {get; set;}
         public required int participants { get; set; }
         public required Guid id { get; set; }
     }
