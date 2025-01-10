@@ -43,8 +43,26 @@
   .player-box-no-winner {
     background-color: transparent;
   }
+
+  .player-box-empty {
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.5);
+  }
   
   .player-box-border {
     border-bottom: 1px solid white;
   }
+
+  .winner-box {
+    cursor: default;
+    text-align: center;
+    font-weight: bold;
+    background-color: green;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  .winner-box-border{
+    border-bottom: 1px solid gold;
+  }
+
   

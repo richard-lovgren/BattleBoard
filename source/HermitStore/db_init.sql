@@ -117,6 +117,26 @@ CREATE TABLE match_user (
     match_id UUID REFERENCES "match"(id) ON DELETE CASCADE
 );
 
+-- Tournament and tournament match table
+CREATE TABLE "tournament" (
+    id UUID PRIMARY KEY,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE,
+    number_of_players INT NOT NULL
+);
+
+CREATE TABLE "tournament_match" (
+    id SERIAL PRIMARY KEY,
+    tournament_id UUID REFERENCES "tournament"(id) ON DELETE CASCADE NOT NULL,
+    round_number INT NOT NULL,
+    match_in_round INT NOT NULL,
+    player_1 VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,
+    player_2 VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,
+    winner VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,
+    UNIQUE(tournament_id, round_number, match_in_round)
+);
+
+
+
 -- Constraints
 ALTER TABLE competition ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE SET NULL;
 ALTER TABLE "match" ADD CONSTRAINT fk_competition FOREIGN KEY (competition_id) REFERENCES competition(id) ON DELETE CASCADE;
