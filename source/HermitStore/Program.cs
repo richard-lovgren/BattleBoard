@@ -29,7 +29,6 @@ app.MapGet("/", () => "Hello World!").Produces<string>(StatusCodes.Status200OK);
 
 app.MapUserEndpoints();
 app.MapClassicModeEndpoints();
-app.MapTournamentModeEndpoints();
 
 app.MapGet(
         "/communities",
