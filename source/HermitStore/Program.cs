@@ -332,7 +332,7 @@ using (var scope = app.Services.CreateScope())
 
     app.MapPut(
         "/competitions/{id}/image",
-        async (HermitDbContext dbContext, Guid id, IFormFile file) =>
+        async (HermitDbContext dbContext, Guid id, IFormFile competition_image) =>
         {
             var competition = await dbContext.competition.FindAsync(id);
 
@@ -341,7 +341,7 @@ using (var scope = app.Services.CreateScope())
                 return Results.NotFound("Competition not found");
             }
 
-            var newImageAsByteArray = await fileUploadService.UploadImageAsync(file, id);
+            var newImageAsByteArray = await fileUploadService.UploadImageAsync(competition_image, id);
 
             competition.competition_image = newImageAsByteArray;
             competition.competition_image_content_type = fileUploadService.GetContentTypeFromExistingFile(competition.id);
@@ -351,7 +351,7 @@ using (var scope = app.Services.CreateScope())
             dbContext.competition.Update(competition);
             await dbContext.SaveChangesAsync();
 
-            return Results.File(newImageAsByteArray, file.ContentType);
+            return Results.File(newImageAsByteArray, competition_image.ContentType);
         }
     )
     .Produces<byte[]>(StatusCodes.Status201Created)
