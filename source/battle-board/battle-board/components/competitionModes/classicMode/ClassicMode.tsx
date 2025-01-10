@@ -8,6 +8,7 @@ import {
   TableBody,
   Table,
   Typography,
+  TableSortLabel,
 } from "@mui/material";
 
 import { Leaderboard } from "@/models/leaderboard";
@@ -49,6 +50,24 @@ const ClassicMode: React.FC<ClassicModeProps> = ({ competitionId }) => {
     fetchLeaderboard();
   }, [competitionId]);
 
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = useState<string>('Name');
+
+  const handleSortRequest = (column: string) => {
+    const isAsc = orderBy === column && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(column);
+  };
+
+  const sortedRows = React.useMemo(() => {
+    if (!leaderboardData) return [];
+    return [...leaderboardData.leaderboard_entries].sort((a, b) => {
+      if (a[orderBy] < b[orderBy]) return order === 'asc' ? -1 : 1;
+      if (a[orderBy] > b[orderBy]) return order === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [leaderboardData, order, orderBy]);
+
   if (loading) {
     return <Typography>Loading leaderboard...</Typography>;
   }
@@ -57,7 +76,6 @@ const ClassicMode: React.FC<ClassicModeProps> = ({ competitionId }) => {
     return <Typography>No leaderboard data available.</Typography>;
   }
 
-  const rows = leaderboardData.leaderboard_entries;
   const columns = leaderboardData.column_names;
 
   return (
@@ -68,13 +86,19 @@ const ClassicMode: React.FC<ClassicModeProps> = ({ competitionId }) => {
             <TableRow>
               {columns.map((column) => (
                 <TableCell key={column}>
-                  <Typography className="h3">{column}</Typography>
+                  <TableSortLabel
+                    active={orderBy === column}
+                    direction={orderBy === column ? order : 'asc'}
+                    onClick={() => handleSortRequest(column)}
+                  >
+                    <Typography className="h3">{column}</Typography>
+                  </TableSortLabel>
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, rowIndex) => (
+            {sortedRows.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 sx={{

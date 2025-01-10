@@ -37,8 +37,13 @@ const LeaderboardComponent = ({
     return <p> Failed to load usernames for competition! </p>;
   }
 
+  const mode = competitionData.competition_type
+
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
+      
+      {mode !== 0 &&  //dont want these components in tournament mode
+      <>
       <EditCompetitionButton
         competitionCreator={creatorName}
         leaderboard={initialLeaderboard}
@@ -49,15 +54,17 @@ const LeaderboardComponent = ({
       <UploadButtonWrapper
         initialLeaderboard={initialLeaderboard}
         userNames={userNames}
+        handleCompetitionDataParsed={triggerReload}
         competitionId={competitionId}
-        competitionData={competitionData}
-        creatorName={creatorName}
-        triggerReload={triggerReload}
-        gameName={gameName}
       />
-
-      <CompetitonModeWrapper mode={competitionData.competition_type} competitionId={competitionId} reloadTrigger={reload} />
-
+      </>
+      }
+      <CompetitonModeWrapper
+        mode={competitionData.competition_type}
+        competitionId={competitionId}
+        reloadTrigger={reload}
+        userNames={userNames}
+      />
     </Suspense>
   );
 };

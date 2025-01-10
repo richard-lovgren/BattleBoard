@@ -1,4 +1,4 @@
-let baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+import baseUrl from "@/lib/baseUrl";
 
 export async function fetchUserCompetitionIds(
   competition_id: string
