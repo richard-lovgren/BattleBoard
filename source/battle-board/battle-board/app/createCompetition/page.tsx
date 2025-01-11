@@ -249,26 +249,26 @@ export default function CreateCompetitionPage() {
                 <div className=" font-nunito textshadow">Loading games...</div>
               ) : (
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select game</InputLabel>
-                <Select
-                  labelId="simple-select-label"
-                  id="simple-select"
-                  value={game}
-                  label="Select game"
-                  onChange={handleGameChange}
-                >
-                  {games.map((game) => (
-                    <MenuItem key={game.id} value={game.id}>{game.game_name}</MenuItem>
-                ))}
-                </Select>
-              </FormControl>
+                  <InputLabel id="demo-simple-select-label">Select game</InputLabel>
+                  <Select
+                    labelId="simple-select-label"
+                    id="simple-select"
+                    value={game}
+                    label="Select game"
+                    onChange={handleGameChange}
+                  >
+                    {games.map((game) => (
+                      <MenuItem key={game.id} value={game.id}>{game.game_name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
 
             </div>
           </div>
           {/* Modes */}
           <RadioButton {...createCompetition.getModeRadioButtonProps()} />
-          
+
           {/* Players */}
           <div className="createGroup">
             <label className="text-5xl">Invite players</label>

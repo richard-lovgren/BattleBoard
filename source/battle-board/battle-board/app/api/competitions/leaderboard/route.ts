@@ -45,7 +45,6 @@ export async function POST(req: NextRequest) {
 
         // Parse and log the request body
         const body = await req.json();
-        console.log("Request body:", body);
 
         // Make the POST request to the backend
         const response = await fetch(url, {

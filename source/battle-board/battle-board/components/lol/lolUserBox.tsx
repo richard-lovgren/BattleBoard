@@ -159,7 +159,7 @@ async function updateUserLeaguePuuid(
       body: JSON.stringify({
         league_puuid: puuid,
         discord_id: userId,
-        username: "",
+        user_name: "",
       }),
     });
 

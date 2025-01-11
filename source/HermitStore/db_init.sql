@@ -86,7 +86,7 @@ CREATE TABLE "leaderboard_entry" (
     leaderboard_id UUID REFERENCES leaderboard(id) ON DELETE CASCADE,
     user_name VARCHAR(30) NOT NULL REFERENCES users(user_name) ON DELETE CASCADE,
     metric_name VARCHAR(30),
-    metric_value INT NOT NULL,
+    metric_value VARCHAR(30) NOT NULL,
     FOREIGN KEY (leaderboard_id, metric_name) REFERENCES leaderboard_metric(leaderboard_id, metric_name) ON DELETE CASCADE
 );
 
@@ -119,6 +119,26 @@ CREATE TABLE match_user (
     match_id UUID REFERENCES "match"(id) ON DELETE CASCADE
 );
 
+-- Tournament and tournament match table
+CREATE TABLE "tournament" (
+    id UUID PRIMARY KEY,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE,
+    number_of_players INT NOT NULL
+);
+
+CREATE TABLE "tournament_match" (
+    id SERIAL PRIMARY KEY,
+    tournament_id UUID REFERENCES "tournament"(id) ON DELETE CASCADE NOT NULL,
+    round_number INT NOT NULL,
+    match_in_round INT NOT NULL,
+    player_1 VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,
+    player_2 VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,
+    winner VARCHAR(255) REFERENCES users(user_name) ON DELETE CASCADE,
+    UNIQUE(tournament_id, round_number, match_in_round)
+);
+
+
+
 -- Constraints
 ALTER TABLE competition ADD CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE SET NULL;
 ALTER TABLE "match" ADD CONSTRAINT fk_competition FOREIGN KEY (competition_id) REFERENCES competition(id) ON DELETE CASCADE;
@@ -133,15 +153,15 @@ ALTER TABLE user_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id
 -- Dummy data
 
 -- Users
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e1', 125874175400911360, 'dummy1', 'Dummy 1', 'en_US');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e2', 125854175400911360, 'dummy2', 'Dummy 2', 'es_ES');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e3', 125834175400911360, 'dummy3', 'Dummy 3', 'fr_FR');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e4', 125814175400911360, 'dummy4', 'Dummy 4', 'de_DE');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e5', 125894275400911360, 'dummy5', 'Dummy 5', 'it_IT');
+INSERT INTO users(id, discord_id, user_name, display_name, locale, league_puuid) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e1', 125874175400911360, 'dummy1', 'Dummy 1', 'en-US', 'Y7JjjA-kWCyEQ19BQPLfXiJ-iQRXu9Bi-YJMg2adeuOPk04q2H7KGKHw4pL3WTX7GTeInTayyNd1OQ');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e2', 125854175400911360, 'dummy2', 'Dummy 2', 'es-ES');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e3', 125834175400911360, 'dummy3', 'Dummy 3', 'fr-FR');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e4', 125814175400911360, 'dummy4', 'Dummy 4', 'de-DE');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e5', 125894275400911360, 'dummy5', 'Dummy 5', 'it-IT');
 
 -- Games
 INSERT INTO game(id, game_name) VALUES('141e3728-5a50-45a1-92cf-c8695af932e1', 'Dota 2');
-INSERT INTO game(id, game_name) VALUES('121e3728-5a50-45a1-92cf-c8695af932e1', 'League of legends');
+INSERT INTO game(id, game_name) VALUES('121e3728-5a50-45a1-92cf-c8695af932e1', 'League of Legends');
 INSERT INTO game(id, game_name) VALUES('131e3728-5a50-45a1-92cf-c8695af932e1', 'Street fighter 6');
 INSERT INTO game(id, game_name) VALUES('141f3728-5a50-45a1-92cf-c8695af932e1', 'Counter strike 2');
 INSERT INTO game(id, game_name) VALUES('151e3728-5a50-45a1-92cf-c8695af932e1', 'Valorant');
