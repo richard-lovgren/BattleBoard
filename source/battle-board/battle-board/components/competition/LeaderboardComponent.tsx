@@ -30,7 +30,7 @@ const LeaderboardComponent = ({
     console.log("Triggered reload of leaderboard!");
     setTimeout(() => {
       window.location.reload();
-    }, 1000);
+    }, 200);
   };
 
   if (userNames === null) {

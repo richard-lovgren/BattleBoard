@@ -369,10 +369,10 @@ public static class ClassicModeApi
 
                 if (leaderboardEntry == null)
                 {
-                    Console.WriteLine("\nLeaderboard entry not found. Aborting.\n");
-                    Console.WriteLine("Metric: " + metric);
-                    Console.WriteLine("User: " + user_name);
-                    Console.WriteLine("Leaderboard id: " + leaderboard.id);
+                    Console.WriteLine("\nLeaderboard entry not found. Aborting.\n" +
+                    "Metric: " + metric + "\n" +
+                    "User: " + user_name + "\n" +
+                    "Leaderboard id: " + leaderboard.id);
                     return null;
                 }
 
