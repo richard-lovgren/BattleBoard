@@ -3,7 +3,7 @@
 import CountryFlag from "@/components/CountryFlag";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import LolUsernameBox from "./add-lol-box";
+import LolUsernameBox from "./lol/lolUserBox";
 
 interface UserProps {
   id: string;

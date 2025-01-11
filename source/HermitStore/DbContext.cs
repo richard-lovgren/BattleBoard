@@ -196,7 +196,7 @@ namespace HermitStore
         public required Guid leaderboard_id { get; set; }
         public required string user_name { get; set; }
         public required string metric_name { get; set; }
-        public required int metric_value { get; set; }
+        public required string metric_value { get; set; }
     }
 
     public class LeaderboardEntry : LeaderboardEntryDto

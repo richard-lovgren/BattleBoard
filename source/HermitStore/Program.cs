@@ -228,10 +228,10 @@ app.MapGet(
         {
             var users = await dbContext
                 .user_competition.Where(x => x.competition_id == id)
-                .Select(x => x.user_name)
+                .Join(dbContext.users, uc => uc.user_name, u => u.user_name, (uc, u) => u)
                 .ToListAsync();
 
-            if (users == null)
+            if (users == null || users.Count == 0)
             {
                 return Results.NotFound();
             }
@@ -239,7 +239,7 @@ app.MapGet(
             return Results.Ok(users);
         }
     )
-    .Produces<List<string>>(StatusCodes.Status200OK)
+    .Produces<List<User>>(StatusCodes.Status200OK)
     .WithDescription("Get all users in a competition")
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Competition not found");
@@ -264,7 +264,7 @@ app.MapPost(
                 participants = 0,
                 community_id = competitionDto.community_id,
             };
-            
+
             if (competition.creator_name != null)
             {
                 var user = await dbContext
@@ -310,12 +310,14 @@ app.MapPost(
             {
                 return Results.BadRequest("Competition not found");
             }
-            if(joinCompetitionDto.user_names.Length == 0) {
+            if (joinCompetitionDto.user_names.Length == 0)
+            {
                 return Results.BadRequest("No users to join");
             }
 
             User? user;
-            foreach(var user_name in joinCompetitionDto.user_names) {
+            foreach (var user_name in joinCompetitionDto.user_names)
+            {
                 user = await dbContext
                     .users.Where(x => x.user_name == user_name)
                     .FirstOrDefaultAsync();
@@ -326,7 +328,7 @@ app.MapPost(
                 }
 
                 // Check if user is already a participant in the competition
-                bool userIsAlreadyParticipant = await dbContext.user_competition.Where(x=> x.user_name == user_name && x.competition_id == competition_id).FirstOrDefaultAsync() != null;
+                bool userIsAlreadyParticipant = await dbContext.user_competition.Where(x => x.user_name == user_name && x.competition_id == competition_id).FirstOrDefaultAsync() != null;
                 if (userIsAlreadyParticipant)
                 {
                     return Results.BadRequest($"User {user_name} is already a participant");

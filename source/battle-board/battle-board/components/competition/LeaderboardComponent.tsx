@@ -2,10 +2,11 @@
 
 import { Suspense, useState } from "react";
 import EditCompetitionButton from "@/components/competition/ManualEditCompetition";
-import FileUploadAndParseComponent from "@/components/competition/FileUploadAndParseButton";
 import { Leaderboard } from "@/models/leaderboard";
 import CompetitionData from "@/models/interfaces/CompetitionData";
 import CompetitonModeWrapper from "@/components/competition/CompetitionModeWrapper";
+import UploadButtonWrapper from "@/components/competition/UploadButtonWrapper";
+
 
 const LeaderboardComponent = ({
   competitionId,
@@ -13,12 +14,14 @@ const LeaderboardComponent = ({
   creatorName,
   initialLeaderboard,
   userNames,
+  gameName,
 }: {
   competitionId: string;
   competitionData: CompetitionData;
   creatorName: string;
   initialLeaderboard: Leaderboard | null;
   userNames: string[] | null;
+  gameName: string | null;
 }) => {
   const [reload, setReload] = useState(0);
 
@@ -38,23 +41,26 @@ const LeaderboardComponent = ({
 
   return (
     <Suspense fallback={<p>Loading competition data...</p>}>
-      
+
       {mode !== 0 &&  //dont want these components in tournament mode
-      <>
-      <EditCompetitionButton
-        competitionCreator={creatorName}
-        leaderboard={initialLeaderboard}
-        triggerReload={triggerReload}
-        competitionId={competitionId}
-        userNames={userNames}
-      />
-      <FileUploadAndParseComponent
-        prevLeaderboard={initialLeaderboard}
-        userNames={userNames}
-        handleCompetitionDataParsed={triggerReload}
-        competitionId={competitionId}
-      />
-      </>
+        <>
+          <EditCompetitionButton
+            competitionCreator={creatorName}
+            leaderboard={initialLeaderboard}
+            triggerReload={triggerReload}
+            competitionId={competitionId}
+            userNames={userNames}
+          />
+          <UploadButtonWrapper
+            initialLeaderboard={initialLeaderboard}
+            userNames={userNames}
+            competitionId={competitionId}
+            competitionData={competitionData}
+            creatorName={creatorName}
+            triggerReload={triggerReload}
+            gameName={gameName}
+          />
+        </>
       }
       <CompetitonModeWrapper
         mode={competitionData.competition_type}
