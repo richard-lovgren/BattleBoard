@@ -405,60 +405,113 @@ app.MapPost(
     .WithDescription("Create a new game");
 
 app.MapPost(
-        "/competitions/requestjoin",
-        async (HermitDbContext dbContext, RequestCompetitionJoinDto joinCompetitionDto) =>
+    "/competitions/join-requests",
+    async (HermitDbContext dbContext, UserCompetitionDto joinCompetitionDto) =>
+    {
+        // Validate DTO
+        if (joinCompetitionDto == null || joinCompetitionDto.competition_id == Guid.Empty)
         {
-            var competition_id = joinCompetitionDto.competition_id;
-            var competition = await dbContext.competition.FindAsync(competition_id);
+            return Results.BadRequest("Invalid join request");
+        }
 
-            if (competition == null)
-            {
-                return Results.BadRequest("Competition not found");
-            }
-            if (joinCompetitionDto == null)
-            {
-                return Results.BadRequest("No user to join");
-            }
+        var competitionId = joinCompetitionDto.competition_id;
+        var competition = await dbContext.competition.FindAsync(competitionId);
+        if (competition == null)
+        {
+            return Results.NotFound($"Competition {competitionId} not found");
+        }
 
-            User? user;
-            string user_name = joinCompetitionDto.user_name;
-            user = await dbContext
-                .users.Where(x => x.user_name == user_name)
-                .FirstOrDefaultAsync();
+        var user = await dbContext.users.FirstOrDefaultAsync(x => x.user_name == joinCompetitionDto.user_name);
+        if (user == null)
+        {
+            return Results.NotFound($"User {joinCompetitionDto.user_name} not found");
+        }
 
-            if (user == null)
-            {
-                return Results.BadRequest($"User {user_name} not found");
-            }
+        // Check if user is already in queue or competition
+        bool isParticipant = await dbContext.user_competition.AnyAsync(x => x.user_name == user.user_name && x.competition_id == competitionId);
+        if (isParticipant)
+        {
+            return Results.Conflict($"User {user.user_name} is already a participant");
+        }
 
-            // Check if user is already a participant in the competition
-            bool userIsAlreadyParticipant = await dbContext.user_competition.Where(x => x.user_name == user_name && x.competition_id == competition_id).FirstOrDefaultAsync() != null;
-            if (userIsAlreadyParticipant)
-            {
-                return Results.BadRequest($"User {user_name} is already a participant");
-            }
+        bool isInQueue = await dbContext.user_join_competition.AnyAsync(x => x.user_name == user.user_name && x.competition_id == competitionId);
+        if (isInQueue)
+        {
+            return Results.Conflict($"User {user.user_name} is already in the join queue");
+        }
 
-            var userCompetition = new UserCompetition
+        // Add to queue
+        var joinRequest = new UserCompetition
+        {
+            id = Guid.NewGuid(),
+            user_name = user.user_name,
+            competition_id = competitionId,
+        };
+        dbContext.user_join_competition.Add(joinRequest);
+
+        await dbContext.SaveChangesAsync();
+        return Results.Created($"/competitions/join-requests", joinRequest.id);
+    })
+    .Produces<Guid>(StatusCodes.Status201Created)
+    .WithDescription("Add a user to the competition join queue");
+
+app.MapPut(
+    "/competitions/join-requests",
+    async (HermitDbContext dbContext, UserCompetitionDto joinCompetitionDto, bool accept) =>
+    {
+        // Validate DTO
+        if (joinCompetitionDto == null || joinCompetitionDto.competition_id == Guid.Empty)
+        {
+            return Results.BadRequest("Invalid join request");
+        }
+
+        var competitionId = joinCompetitionDto.competition_id;
+        var competition = await dbContext.competition.FindAsync(competitionId);
+        if (competition == null)
+        {
+            return Results.NotFound($"Competition {competitionId} not found");
+        }
+
+        var user = await dbContext.users.FirstOrDefaultAsync(x => x.user_name == joinCompetitionDto.user_name);
+        if (user == null)
+        {
+            return Results.NotFound($"User {joinCompetitionDto.user_name} not found");
+        }
+
+        var joinRequest = await dbContext.user_join_competition
+            .FirstOrDefaultAsync(x => x.user_name == user.user_name && x.competition_id == competitionId);
+        if (joinRequest == null)
+        {
+            return Results.NotFound($"Join request for user {user.user_name} not found");
+        }
+
+        if (accept)
+        {
+            // Add user to competition
+            dbContext.user_competition.Add(new UserCompetition
             {
                 id = Guid.NewGuid(),
-                user_name = user_name,
-                competition_id = competition_id,
-            };
+                user_name = user.user_name,
+                competition_id = competitionId,
+            });
 
-            dbContext.user_competition.Add(userCompetition);
             competition.participants++;
-
-            logger.LogInformation(
-                "User {userName} requested to join competition {competitionId}",
-                user_name,
-                competition_id
-            );
+            dbContext.user_join_competition.Remove(joinRequest);
             await dbContext.SaveChangesAsync();
-            return Results.Created("/competitions/requestjoin", userCompetition.id);
+
+            return Results.Ok($"User {user.user_name} accepted into competition {competitionId}");
         }
-    )
-    .Produces<Guid>(StatusCodes.Status201Created)
-    .WithDescription("Add user to a competition join queue");
-;
+        else
+        {
+            // Reject the request
+            dbContext.user_join_competition.Remove(joinRequest);
+            await dbContext.SaveChangesAsync();
+            return Results.Ok($"User {user.user_name} rejected from competition {competitionId}");
+        }
+    })
+    .Produces(StatusCodes.Status200OK)
+    .WithDescription("Accept or reject a user's competition join request");
+
+
 
 app.Run();

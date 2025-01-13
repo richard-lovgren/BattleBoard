@@ -30,7 +30,7 @@ namespace HermitStore
         public required DbSet<Tournament> tournament { get; set; }
         public required DbSet<TournamentMatch> tournament_match { get; set; }
 
-        public required DbSet<RequestCompetitionJoin> user_join_competition { get; set; }
+        public required DbSet<UserCompetition> user_join_competition { get; set; }
     }
 
     public class UserDto
@@ -247,15 +247,5 @@ namespace HermitStore
 
         public required int number_of_players { get; set; }
         public required List<TournamentMatchDto> tournament_matches { get; set; }
-    }
-
-    public class RequestCompetitionJoinDto
-    {
-        public required string user_name { get; set; }
-        public required Guid competition_id { get; set; }
-    }
-    public class RequestCompetitionJoin : RequestCompetitionJoinDto
-    {
-        public required Guid id { get; set; }
     }
 }
