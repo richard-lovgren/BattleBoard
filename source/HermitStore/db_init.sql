@@ -135,6 +135,12 @@ CREATE TABLE "tournament_match" (
     UNIQUE(tournament_id, round_number, match_in_round)
 );
 
+CREATE TABLE user_join_competition(
+    id UUID PRIMARY KEY,
+    user_name VARCHAR(30) REFERENCES users(user_name) ON DELETE CASCADE,
+    competition_id UUID REFERENCES competition(id) ON DELETE CASCADE
+);
+
 
 
 -- Constraints

@@ -30,6 +30,7 @@ namespace HermitStore
         public required DbSet<Tournament> tournament { get; set; }
         public required DbSet<TournamentMatch> tournament_match { get; set; }
 
+        public required DbSet<RequestCompetitionJoin> user_join_competition { get; set; }
     }
 
     public class UserDto
@@ -121,7 +122,7 @@ namespace HermitStore
         public required Guid competition_id { get; set; }
         public required string[] user_names { get; set; }
     }
-    
+
     public class UserCompetitionDto
     {
         public required Guid competition_id { get; set; }
@@ -207,13 +208,13 @@ namespace HermitStore
     public class LeaderboardMegaObjDto
     {
         public required Guid competition_id { get; set; }
-        public required List<Dictionary<string,string>> leaderboard_entries { get; set; }
+        public required List<Dictionary<string, string>> leaderboard_entries { get; set; }
         public required List<string> column_names { get; set; }
     }
 
-    public class LeaderboardMegaObj: LeaderboardMegaObjDto
+    public class LeaderboardMegaObj : LeaderboardMegaObjDto
     {
-        public required Guid leaderboard_id {get; set; }
+        public required Guid leaderboard_id { get; set; }
     }
 
     public class Tournament
@@ -246,5 +247,15 @@ namespace HermitStore
 
         public required int number_of_players { get; set; }
         public required List<TournamentMatchDto> tournament_matches { get; set; }
+    }
+
+    public class RequestCompetitionJoinDto
+    {
+        public required string user_name { get; set; }
+        public required Guid competition_id { get; set; }
+    }
+    public class RequestCompetitionJoin : RequestCompetitionJoinDto
+    {
+        public required Guid id { get; set; }
     }
 }

@@ -404,4 +404,61 @@ app.MapPost(
     .Produces<Game>(StatusCodes.Status201Created)
     .WithDescription("Create a new game");
 
+app.MapPost(
+        "/competitions/requestjoin",
+        async (HermitDbContext dbContext, RequestCompetitionJoinDto joinCompetitionDto) =>
+        {
+            var competition_id = joinCompetitionDto.competition_id;
+            var competition = await dbContext.competition.FindAsync(competition_id);
+
+            if (competition == null)
+            {
+                return Results.BadRequest("Competition not found");
+            }
+            if (joinCompetitionDto == null)
+            {
+                return Results.BadRequest("No user to join");
+            }
+
+            User? user;
+            string user_name = joinCompetitionDto.user_name;
+            user = await dbContext
+                .users.Where(x => x.user_name == user_name)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return Results.BadRequest($"User {user_name} not found");
+            }
+
+            // Check if user is already a participant in the competition
+            bool userIsAlreadyParticipant = await dbContext.user_competition.Where(x => x.user_name == user_name && x.competition_id == competition_id).FirstOrDefaultAsync() != null;
+            if (userIsAlreadyParticipant)
+            {
+                return Results.BadRequest($"User {user_name} is already a participant");
+            }
+
+            var userCompetition = new UserCompetition
+            {
+                id = Guid.NewGuid(),
+                user_name = user_name,
+                competition_id = competition_id,
+            };
+
+            dbContext.user_competition.Add(userCompetition);
+            competition.participants++;
+
+            logger.LogInformation(
+                "User {userName} requested to join competition {competitionId}",
+                user_name,
+                competition_id
+            );
+            await dbContext.SaveChangesAsync();
+            return Results.Created("/competitions/requestjoin", userCompetition.id);
+        }
+    )
+    .Produces<Guid>(StatusCodes.Status201Created)
+    .WithDescription("Add user to a competition join queue");
+;
+
 app.Run();
