@@ -18,6 +18,7 @@ const LolCompetitionBox: React.FC<LolCompetitionBoxProps> = ({ competitionId, us
     const handleButtonClick = async () => {
         setLoading(true);
         await createLeagueCompetition(competitionId, matchesToLoad);
+        await new Promise(resolve => setTimeout(resolve, 200));
         triggerReload();
     };
 
