@@ -17,7 +17,7 @@ const UploadButtonWrapper: React.FC<UploadButtonWrapperProps> =
     ({ initialLeaderboard, userNames, competitionId, competitionData, creatorName, triggerReload, gameName }) => {
         if (gameName === "League of Legends") {
             return (
-                <LolCompetitionBox competitionId={competitionId} user={creatorName} competitionData={competitionData} />
+                <LolCompetitionBox competitionId={competitionId} user={creatorName} competitionData={competitionData} triggerReload={triggerReload} />
             );
         }
         return (<FileUploadAndParseComponent
