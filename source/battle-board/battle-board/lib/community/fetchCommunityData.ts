@@ -10,13 +10,8 @@ interface CommunityData {
 async function fetchCommunityData(
   communityId: string,
 ): Promise<CommunityData | null> {
-  console.log("fetchCommunityData: communityId", communityId);
   const response = await fetch(
     `${baseUrl}/api/community?communityId=${communityId}`,
-  );
-
-  console.log(
-    `Me look at de url dem: ${baseUrl}/api/community?communityId=${communityId}`,
   );
 
   if (!response.ok) {

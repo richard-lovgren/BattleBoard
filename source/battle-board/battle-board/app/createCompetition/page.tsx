@@ -83,7 +83,6 @@ export default function CreateCompetitionPage() {
   };
 
   const handleParticipantChange = (event: SelectChangeEvent) => {
-    console.log("The log of the handle funciton in the parent component: ", event.target.value)
     setParticipants([event.target.value]);
   }
 

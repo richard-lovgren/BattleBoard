@@ -13,7 +13,6 @@ interface SelectRivalProps {
 const SelectRival: FC<SelectRivalProps> = ({ users, participants, setUsers }) => {
 
     const handleUsersChange = (event: SelectChangeEvent) => {
-        console.log(event.target.value)
         setUsers(event)
 
     };
