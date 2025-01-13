@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import "./createCompetition.css";
@@ -30,6 +30,8 @@ import NotLoggedIn from "@/components/not-logged-in";
 
 
 import SelectCommunity from "@/components/competition/selectCommunity"; // This is the component we want to extract
+import SelectRival from "@/components/competition/selectRival";
+import InvitePlayers from "@/components/competition/invitePlayers";
 
 
 export default function CreateCompetitionPage() {
@@ -43,7 +45,8 @@ export default function CreateCompetitionPage() {
   const router = useRouter();
   const username = session.data?.user.name || "undefined";
   const [communityData, setCommunityData] = useState<Record<string, string>>({});
-  const [community, setCommunity] = useState<string>("")
+  const [community, setCommunity] = useState<string>("");
+  const [competitionType, setType] = useState<number>(0);
 
   // load API data
   useEffect(() => {
@@ -79,6 +82,15 @@ export default function CreateCompetitionPage() {
     );
   };
 
+  const handleParticipantChange = (event: SelectChangeEvent) => {
+    console.log("The log of the handle funciton in the parent component: ", event.target.value)
+    setParticipants([event.target.value]);
+  }
+
+  const handleRadioCompetitionTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setType(parseInt(event.target.value));
+  }
+
   const handleGameChange = (event: SelectChangeEvent) => {
     setGame(event.target.value as string);
   };
@@ -95,7 +107,7 @@ export default function CreateCompetitionPage() {
       creator_name: username,
       competition_start_date: selectedDate?.add(1, 'day').toISOString() || new Date().toISOString(),
       competition_description: formJson.competitionDesc.toString(),
-      competition_type: parseInt(formJson.competitionType.toString()),
+      competition_type: competitionType,
       format: 1,
       is_open: true,
       is_running: true,
@@ -130,6 +142,28 @@ export default function CreateCompetitionPage() {
 
     router.push(`/competition/${competition_id}`);
   }
+
+  /* Render Functions */
+  const renderPlayers = () => {
+    if (competitionType === 2) {
+      return (
+        <SelectRival
+          users={users}
+          participants={participants}
+          setUsers={handleParticipantChange}
+        />
+      );
+    } else {
+      return (
+        <InvitePlayers
+          users={users}
+          username={username}
+          participants={participants}
+          handleParticipantsChange={handleParticipantsChange}
+        />
+      );
+    }
+  };
 
   if (!session.data) {
     return (
@@ -219,37 +253,12 @@ export default function CreateCompetitionPage() {
             </div>
           </div>
           {/* Modes */}
-          <RadioButton {...createCompetition.getModeRadioButtonProps()} />
+          <RadioButton {...createCompetition.getModeRadioButtonProps()} onChange={handleRadioCompetitionTypeChange} />
 
           {/* Players */}
-          <div className="createGroup">
-            <label className="text-5xl">Invite players</label>
-            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
 
-              <FormControl
-                sx={{ m: 1, width: '28vw' }}
-              >
-                <InputLabel id="multiple-checkbox-label">Select players</InputLabel>
-                <Select
-                  labelId="multiple-checkbox-label"
-                  id="multiple-checkbox"
-                  multiple={true}
-                  value={participants}
-                  onChange={handleParticipantsChange}
-                  input={<OutlinedInput label="Select layers" />}
-                  renderValue={(selected) => (selected as string[]).join(', ')}
-                  MenuProps={createCompetition.getMUIMenuProps()}
-                >
-                  {users.filter((user) => user.user_name != username).map((user) => (
-                    <MenuItem key={user.id} value={user.user_name}>
-                      <Checkbox checked={participants.includes(user.user_name)} />
-                      <ListItemText primary={user.user_name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-          </div>
+          {renderPlayers()}
+
           <div>
             <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
           </div>

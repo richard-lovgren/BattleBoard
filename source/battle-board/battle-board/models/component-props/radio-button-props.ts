@@ -8,4 +8,5 @@ export default interface RadioButtonProps {
     main_label: string;
     name: string;
     radioButtons: RadioButtonInput[];
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }

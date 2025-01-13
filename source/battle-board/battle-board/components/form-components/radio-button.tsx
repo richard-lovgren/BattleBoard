@@ -20,6 +20,7 @@ export default function RadioButton(radioButtonProps: RadioButtonProps) {
                         name={radioButtonProps.name}
                         value={radioButton.value}
                         defaultChecked={radioButton.defaultChecked}
+                        onChange={radioButtonProps.onChange}
                     />
                     <span className={radioButtonSpanClasses}></span>
                     <span className="ml-2">{radioButton.label}</span>
