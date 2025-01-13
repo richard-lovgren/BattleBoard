@@ -28,9 +28,24 @@ import RadioButton from "@/components/form-components/radio-button";
 import * as createCompetition from "@/lib/create-compitition";
 import NotLoggedIn from "@/components/not-logged-in";
 
-
 import SelectCommunity from "@/components/competition/selectCommunity"; // This is the component we want to extract
+import { Button } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/material/styles";
+import CompetitionFormDto from "@/models/dtos/competiton-form-dto";
 
+// Styled components
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export default function CreateCompetitionPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -44,6 +59,8 @@ export default function CreateCompetitionPage() {
   const username = session.data?.user.name || "undefined";
   const [communityData, setCommunityData] = useState<Record<string, string>>({});
   const [community, setCommunity] = useState<string>("")
+  const [uploadedImage, setUploadedImage] = useState<Blob | undefined>(undefined);
+  const [fileHelperText, setFileHelperText] = useState<string | undefined>(undefined);
 
   // load API data
   useEffect(() => {
@@ -102,11 +119,15 @@ export default function CreateCompetitionPage() {
       game_id: game,
       rank_alg: 1,
       is_public: (parseInt(formJson.isPublic.toString())) > 0 ? true : false,
-      community_id: community ? community : null,
+      community_id: !community ? undefined : community,
     };
 
-    console.log(body);
-    const competition_id = await createCompetition.postCompetitionData(body);
+    const competitionForm: CompetitionFormDto = {
+      competition_data: body,
+      competition_image: uploadedImage,
+    };
+
+    const competition_id = await createCompetition.postCompetitionData(competitionForm);
 
     if (!competition_id) {
       console.error("Error creating competition");
@@ -130,6 +151,19 @@ export default function CreateCompetitionPage() {
 
     router.push(`/competition/${competition_id}`);
   }
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if(!files || files.length === 0) {
+      setFileHelperText("No files selected.");
+      return;
+    }
+
+    const file = files[0];
+    setUploadedImage(file);
+    
+    event.target.value = ""; // Reset file input to allow same file to be uploaded again (might have been changed -> new data)
+  };
 
   if (!session.data) {
     return (
@@ -185,10 +219,24 @@ export default function CreateCompetitionPage() {
           </div>
 
           {/* Cover Image */}
-          {/* <div className="createGroup">
+          <div className="createGroup">
             <label className="text-5xl">Add a cover image</label>
-            <GeneralButton text="Upload image" type="button" />
-          </div> */}
+            <div>
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+                >
+                Upload Image
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={handleFileUpload}
+                  accept=".png, .jpg, .jpeg"
+                />
+              </Button>
+              {fileHelperText && <p className="text-xl font-nunito textshadow">{fileHelperText}</p>}
+            </div>
+          </div>
 
           {/* Settings */}
           <RadioButton {...createCompetition.getSettingsRadioButtonProps()} />
@@ -250,10 +298,12 @@ export default function CreateCompetitionPage() {
               </FormControl>
             </div>
           </div>
-          <div>
-            <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
-          </div>
-
+          {/* Select Community */}
+          {Object.keys(communityData).length > 0 &&
+            <div>
+              <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
+            </div>
+          }
           <GeneralButton text="Create competition" type="submit" />
         </form>
       </main>

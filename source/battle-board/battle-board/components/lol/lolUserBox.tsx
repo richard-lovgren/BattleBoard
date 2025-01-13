@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import GeneralButton from "@/components/general-btn";
 
 export default function LolUsernameBox() {
   const { data: session } = useSession();
@@ -96,13 +97,7 @@ export default function LolUsernameBox() {
               className="px-4 py-2 border border-gray-300 rounded-md"
               onChange={handleInputChange}
             />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-purple-500 text-white rounded-md"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
+            <GeneralButton type="submit" onClick={handleSubmit} text="Submit" />
             <div className="text-sm text-red-500">{helpText}</div>
           </div>
         )

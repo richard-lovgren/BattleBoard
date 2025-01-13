@@ -2,6 +2,7 @@
 
 import CompetitionData from "@/models/interfaces/CompetitionData";
 import GeneralButton from "../general-btn";
+import { competitionTypeEnum } from "@/models/interfaces/competitionTypeEnum";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formatDate } from "@/lib/utils";
@@ -13,13 +14,6 @@ async function fetchGameName(gameId: string): Promise<string | null> {
   if (!response.ok) return null;
   return response.json().then((data) => data.game_name);
 }
-
-const competitionTypeEnum: { [key: number]: string } = 
-{
-  0: "Tournament",
-  1: "Classic",
-  2: "Rival",
-};
 
 export default function CompetitionSearchItem(competition: CompetitionData) {
 

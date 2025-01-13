@@ -1,15 +1,15 @@
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
 
+//Idk if this works?
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const competitionId = searchParams.get("competitionId");
-        const url = `${db_conn_str}/competitions/${competitionId}`;
-        const response = await fetch(
-            url,
+        const url = `${db_conn_str}/competitions/${competitionId}/image`;
+        const response = await fetch(url,
             {
-                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -21,23 +21,28 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: errorData }, { status: response.status});
         }
 
-        const data = await response.json();
+        const data = await response.blob();
+        console.log(data);
         return NextResponse.json(data);
     } catch (error) {
-        console.error("Error fetching competition:", error);
+        console.error("Error fetching competition image:", error);
         return NextResponse.json({ message: "Internal server error"}, { status: 500 });
     }
 }
 
-export async function POST(req: NextRequest) {
+//For POST use the normal create competition endpoint
+export async function PUT(req: NextRequest) {
     try {
-        const url = `${db_conn_str}/competitions`
+        const { searchParams } = new URL(req.url);
         const formData = await req.formData();
+
+        const competitionId = searchParams.get("competitionId");
+        const url = `${db_conn_str}/competitions${competitionId}/image`;
 
         const response = await fetch(
             url,
             {
-                method: "POST",
+                method: "PUT",
                 body: formData,
             }
         );

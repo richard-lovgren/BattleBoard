@@ -51,6 +51,8 @@ CREATE TABLE competition (
     competition_type INT NOT NULL,
     format INT NOT NULL DEFAULT 0,
     competition_image BYTEA,
+    competition_image_path VARCHAR(80),
+    competition_image_content_type VARCHAR(80),
     is_open BOOLEAN NOT NULL DEFAULT TRUE,
     is_running BOOLEAN NOT NULL DEFAULT FALSE,
     game_id UUID REFERENCES game(id) ON DELETE SET NULL,
@@ -170,7 +172,7 @@ INSERT INTO game(id, game_name) VALUES('241e3728-5b50-45a1-92cf-c8695af932e2', '
 
 
 --Communities
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926131, 'BattleBoard Team', 5);
+INSERT INTO community(id, community_name, community_members) VALUES(1238571109418926131, 'BattleBoard Team', 5);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926132, 'Pathetic Failure Squad', 10);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926133, 'Uppsala FGC', 50);
 INSERT INTO community(id, community_name, community_members) VALUES(1318571109418966134, 'Gnarp FGC', 8);
@@ -180,7 +182,7 @@ INSERT INTO community(id, community_name, community_members) VALUES(131857110941
 
 -- Competitions
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1318571109418926131);
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, 1238571109418926131);
 
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
