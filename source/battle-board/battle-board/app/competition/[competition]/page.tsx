@@ -1,30 +1,79 @@
-import { Suspense } from 'react';
-import Image from 'next/image';
-import PlayerGrid from '@/components/playerGrid/PlayerGrid';
-import fetchCompetitionData from '@/lib/leaderboard/fetchCompetitionData';
-import fetchGameName from '@/lib/leaderboard/fetchGameName';
-import fetchClassicLeaderBoard from '@/lib/leaderboard/fetchClassicLeaderBoard';
-import fetchCompetitionUsers from '@/lib/leaderboard/fetchCompetitionUsers';
-import LeaderboardComponent from '@/components/competition/LeaderboardComponent';
+import { Suspense } from "react";
+import Image from "next/image";
+import PlayerGrid from "@/components/playerGrid/PlayerGrid";
+import fetchCompetitionData from "@/lib/leaderboard/fetchCompetitionData";
+import fetchGameName from "@/lib/leaderboard/fetchGameName";
+import fetchClassicLeaderBoard from "@/lib/leaderboard/fetchClassicLeaderBoard";
+import fetchCompetitionUsers from "@/lib/leaderboard/fetchCompetitionUsers";
+import LeaderboardComponent from "@/components/competition/LeaderboardComponent";
+import fetchCommunityData from "@/lib/community/fetchCommunityData";
 
 // Server-side data fetching
 async function getCompetitionData(competitionId: string) {
   const competitionData = await fetchCompetitionData(competitionId);
   if (!competitionData) {
-    throw new Error('Competition not found');
+    throw new Error("Competition not found");
   }
   const gameName = await fetchGameName(competitionData.game_id);
   const leaderboard = await fetchClassicLeaderBoard(competitionId);
   const competitionUsers = await fetchCompetitionUsers(competitionId);
-  return { competitionData, gameName, leaderboard, competitionUsers };
+  return {
+    competitionData,
+    gameName,
+    leaderboard,
+    competitionUsers,
+    community_id: competitionData.community_id,
+  };
 }
+
+const getCommunity = async (community_id: string) => {
+  const communityData = await fetchCommunityData(community_id);
+
+  if (!communityData) {
+    throw new Error("Competition not found");
+  }
+
+  return communityData;
+};
 
 type CompetitionPageProps = Promise<{ competition: string }>;
 
 // Main Page Component
 const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
-  const { competitionData, gameName, leaderboard, competitionUsers } = await getCompetitionData((await props.params).competition);
-  
+  const {
+    competitionData,
+    gameName,
+    leaderboard,
+    competitionUsers,
+    community_id,
+  } = await getCompetitionData((await props.params).competition);
+
+  const community_name = await getCommunity("1317111159274471444"); // TODO: Fetch community name
+
+  if (!competitionData) {
+    return <p>Competition not found</p>;
+  }
+
+  const renderCommunity = () => {
+    if (!community_name) {
+      return <h1 className="opacity-100 font-odibee">Community not found</h1>;
+    }
+    return (
+      <div className="flex flex-row items-center justify-center gap-4">
+        {community_name.community_image && (
+          <Image
+            src={community_name.community_image}
+            alt="Community Image"
+            width={50}
+            height={50}
+            className="rounded-full"
+          />
+        )}
+        <h1 className="font-odibee text-sm">{community_name.community_name}</h1>
+      </div>
+    );
+  };
+
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
       <div className="w-full flex text-slate-50 text-3xl flex-row items-center gap-4 px-10 py-0">
@@ -70,6 +119,8 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
               2024
             </h1>
           </div>
+
+          <div>{renderCommunity()}</div>
         </div>
       </div>
 
@@ -80,8 +131,15 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
         </div>
       </Suspense>
       {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
-      <LeaderboardComponent competitionId={competitionData.id} competitionData={competitionData} creatorName={competitionData.creator_name} initialLeaderboard={leaderboard} userNames={competitionUsers} gameName={gameName} />
+      <LeaderboardComponent
+        competitionId={competitionData.id}
+        competitionData={competitionData}
+        creatorName={competitionData.creator_name}
+        initialLeaderboard={leaderboard}
+        userNames={competitionUsers}
+        gameName={gameName}
+      />
     </div>
   );
-}
+};
 export default CompetitionPage;
