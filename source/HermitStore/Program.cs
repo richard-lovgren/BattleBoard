@@ -48,7 +48,7 @@ app.MapGet(
 
 app.MapGet(
         "/communities/{id}",
-        async (HermitDbContext dbContext, ulong id) =>
+        async (HermitDbContext dbContext, string id) =>
         {
             var community = await dbContext.community.FindAsync(id);
             if (community == null)
@@ -92,9 +92,9 @@ app.MapPost(
 
 app.MapDelete(
         "/communities/{id}",
-        async (HermitDbContext dbContext, ulong id) =>
+        async (HermitDbContext dbContext, string id) =>
         {
-            var community = await dbContext.community.Where(x => x.id == id).FirstOrDefaultAsync();
+            var community = await dbContext.community.Where(x => x.id.Equals(id)).FirstOrDefaultAsync();
             if (community == null)
             {
                 return Results.NotFound();
@@ -114,7 +114,7 @@ app.MapDelete(
 
 app.MapPost(
         "/communities/{id}/users",
-        async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
+        async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, string id) =>
         {
             //Check that community exists
             var community = await dbContext.community.FindAsync(id);
@@ -151,7 +151,7 @@ app.MapPost(
 
 app.MapGet(
         "/communities/{id}/competitions",
-        async (HermitDbContext dbContext, ulong id) =>
+        async (HermitDbContext dbContext, string id) =>
         {
             var community = await dbContext.community.FindAsync(id);
             if (community == null)
@@ -160,9 +160,11 @@ app.MapGet(
             }
 
             var competitionIds = await dbContext
-                .competition.Where(x => x.community_id == id)
+                .competition.Where(x => !string.IsNullOrEmpty(x.community_id) && x.community_id.Equals(id))
                 .Select(x => x.id)
                 .ToListAsync();
+            
+            
             return Results.Ok(competitionIds);
         }
     )
@@ -170,10 +172,10 @@ app.MapGet(
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Get all competitions for a community");
 
-app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, ulong id) =>
+app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, string id) =>
 {
     var users = await dbContext
-        .user_community.Where(x => x.community_id == id)
+        .user_community.Where(x => !string.IsNullOrEmpty(x.community_id) && x.community_id.Equals(id))
         .Select(x => x.user_name)
         .ToListAsync();
 
