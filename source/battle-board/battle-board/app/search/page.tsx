@@ -35,7 +35,6 @@ export default function Search() {
   const [error, setError] = useState<string | null>(null);
 
   const handleToggle = () => {
-    console.log("toggled competitions/community");
     setToggleCompetitions(!toggleCompetitions);
   };
 
@@ -71,7 +70,6 @@ export default function Search() {
         
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
-          console.log("competitionData", competitionData);
           setCompetitions(competitionData);
           setFilteredCompetitions(competitionData);
 
@@ -80,7 +78,6 @@ export default function Search() {
           }
         } else {
           const communityData = await getCommunities();
-          console.log("communityData", communityData);
           setCommunities(communityData);
           setFilteredCommunities(communityData);
           if(searchString) {
