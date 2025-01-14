@@ -22,6 +22,12 @@ async function getCommunities(): Promise<Community[]> {
   return data
 }
 
+async function fetchGameName(gameId: string): Promise<string | null> {
+  const response = await fetch(`/api/game?gameId=${gameId}`)
+  if (!response.ok) return null
+  return response.json().then((data) => data.game_name)
+}
+
 
 export default function Search() {
   /* State */
@@ -34,15 +40,24 @@ export default function Search() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
+  const filterCompetitions = (searchTerm: string): void => {
+    setFilteredCompetitions(competitions.filter((comp) =>
+      comp.competition_name.toLowerCase().includes(searchTerm) ||
+      (comp.competition_description && comp.competition_description.toLowerCase().includes(searchTerm)) ||
+      (comp.game_name && comp.game_name.toLowerCase().includes(searchTerm))
+    ));
+  }
+
   const handleToggle = () => {
     setToggleCompetitions(!toggleCompetitions);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchString(searchTerm);
     setFilteredCommunities(communities.filter((comm) => comm.community_name.toLowerCase().includes(searchTerm)));
-    setFilteredCompetitions(competitions.filter((comp) => comp.competition_name.toLowerCase().includes(searchTerm)));
+    filterCompetitions(searchString);
   }
 
   const searchBarData: SearchBarData = {
@@ -56,10 +71,10 @@ export default function Search() {
   };
   useEffect(() => {
     const savedValue = window.localStorage.getItem("toggleCompetitions");
-    if(savedValue === "true") {
+    if (savedValue === "true") {
       setToggleCompetitions(Boolean(savedValue));
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,20 +82,23 @@ export default function Search() {
         setLoading(true);
         setError(null);
         window.localStorage.setItem("toggleCompetitions", toggleCompetitions.toString());
-        
+
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
+          competitionData.forEach(async (comp) => {
+            comp.game_name = await fetchGameName(comp.game_id) || 'Unknown Game';
+          });
           setCompetitions(competitionData);
           setFilteredCompetitions(competitionData);
 
-          if(searchString) {
-            setFilteredCompetitions(competitionData.filter((comp) => comp.competition_name.toLowerCase().includes(searchString)));
+          if (searchString) {
+            filterCompetitions(searchString);
           }
         } else {
           const communityData = await getCommunities();
           setCommunities(communityData);
           setFilteredCommunities(communityData);
-          if(searchString) {
+          if (searchString) {
             setFilteredCommunities(communityData.filter((comm) => comm.community_name.toLowerCase().includes(searchString)));
           }
         }
@@ -93,7 +111,7 @@ export default function Search() {
 
     fetchData();
   }, [toggleCompetitions]);
-  
+
   /* End of Static placeholder data */
 
   return (
