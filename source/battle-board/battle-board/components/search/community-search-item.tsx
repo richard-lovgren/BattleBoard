@@ -1,11 +1,7 @@
 import Community from "@/models/interfaces/community";
-import GeneralButton from "../general-btn";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
-
-//import { useRouter } from "next/router";
-
 
 export default function CommunitySearchItem(community: Community) {
 
@@ -18,10 +14,14 @@ export default function CommunitySearchItem(community: Community) {
      <div style={{ position: 'relative', overflow: 'hidden' }} className="flex flex-none items-center justify-center rounded-t-[1.2rem] bg-[#D9D9D9] h-[173px] ">
         <Image
           src={community.community_image ? community.community_image : '/community.jpg'}
-          alt="image-placeholder"
+          alt="community image"
           className='fit'
-          layout='fill'
-          objectFit='cover'
+          fill={true}
+          sizes='50vw'
+          style={{
+            objectFit: 'cover'
+            }
+          }
         />
       </div>
       <div className="item-container flex flex-col text-[16px] font-outfit p-4">
@@ -32,7 +32,7 @@ export default function CommunitySearchItem(community: Community) {
           <span className="flex items-center">
             <Image
               src="/customer.svg"
-              alt="search"
+              alt="customer"
               className="h-12 w-12 my-[-5px]"
               width={50}
               height={50}
@@ -42,7 +42,7 @@ export default function CommunitySearchItem(community: Community) {
           <span className="flex items-center">
             <Image
               src="/calendar.svg"
-              alt="search"
+              alt="calendar"
               className="h-12 w-12 my-[-5px]"
               width={50}
               height={50}

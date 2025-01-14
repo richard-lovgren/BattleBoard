@@ -13,6 +13,10 @@ export default function Header() {
           className="justify-self-start"
           width={150}
           height={200}
+          priority={true}
+          style={{
+            width: 'auto'
+          }}
         />
       </Link>
       <div className="flex flex-row gap-4 items-center">

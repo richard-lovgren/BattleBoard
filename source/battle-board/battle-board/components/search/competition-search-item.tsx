@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react'
 import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
 
-import { useRouter } from 'next/navigation'
 async function fetchGameName(gameId: string): Promise<string | null> {
   const response = await fetch(`/api/game?gameId=${gameId}`)
   if (!response.ok) return null
@@ -36,13 +35,6 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
     loadGameName()
   }, [competition.game_id])
 
-  const router = useRouter()
-
-  const handleNavigation = (id: string) => {
-    router.replace(`/competition/${id}`)
-  }
- 
-
   return (
     <Link href={`/competition/${competition.id}`} passHref>
       <div style={{cursor:'pointer'}} className="flex flex-none flex-col h-[400px] w-[329px] rounded-[1.2rem] bg-gradient-to-br from-[#4E35BE] to-[#241958] transform transition-transform duration-300 hover:scale-105">
@@ -56,10 +48,14 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
               ? `http://localhost:8080/competitions/${competition.id}/image`
               : '/comp.jpg'
           }
-          alt='image-placeholder'
+          alt='Competition image'
           className='fit'
-          layout='fill'
-          objectFit='cover'
+          fill={true}
+          sizes='50vw'
+          style={{
+            objectFit: 'cover'
+            }
+          }
         />
       </div>
       <div className='item-container flex flex-col text-[16px] font-outfit p-4' style={{ height:'100%'}}>
@@ -76,7 +72,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
           <span className='flex items-center' style={{color:'white'}}>
             <Image
               src='/controller.svg'
-              alt='search'
+              alt='controller'
               className='h-10 w-10'
               width={50}
               height={50}
@@ -87,7 +83,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
           <span className='flex items-center' style={{color:'white'}}>
             <Image
               src='/customer.svg'
-              alt='search'
+              alt='customer'
               className='h-10 w-10'
               width={50}
               height={50}
@@ -97,7 +93,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
           <span className='flex items-center' style={{color:'white'}}>
             <Image
               src='/calendar.svg'
-              alt='search'
+              alt='calendar'
               className='h-10 w-10'
               width={50}
               height={50}
