@@ -18,8 +18,10 @@ async function createLeagueCompetition(competition_id: string, targetMatches: nu
     const firstUser = allUsers.shift()!;
     const matches = await getMatches(firstUser.puuid, targetMatches, ...allUsers.map(user => user.puuid));
     allUsers.unshift(firstUser);
+    var first = true;
     for (const match of matches) {
-        addMatchToCompetition(match, competition_id, allUsers);
+        addMatchToCompetition(match, competition_id, allUsers, first);
+        first = false;
     }
     return "Competition created";
 }
@@ -36,7 +38,7 @@ async function getAllUserNamePUUIDs(competition_id: string): Promise<usernamePUU
     return usersPUUID;
 }
 
-async function addMatchToCompetition(match: FilteredMatchData, competition_id: string, users: usernamePUUID[]) {
+async function addMatchToCompetition(match: FilteredMatchData, competition_id: string, users: usernamePUUID[], first: boolean): Promise<Leaderboard | string> {
     try {
         const leaderboard_dto: LeaderboardDTO = {
             competition_id: competition_id,
@@ -58,7 +60,7 @@ async function addMatchToCompetition(match: FilteredMatchData, competition_id: s
                 }
             })
         };
-        const leaderboard = await postLeaderboard(leaderboard_dto);
+        const leaderboard = await sendLeaderboard(leaderboard_dto, first);
         if (leaderboard) {
             console.log("Success - returned leaderboard");
             return leaderboard;
@@ -70,13 +72,13 @@ async function addMatchToCompetition(match: FilteredMatchData, competition_id: s
     }
 }
 
-async function postLeaderboard(
-    leaderboard: LeaderboardDTO
+async function sendLeaderboard(
+    leaderboard: LeaderboardDTO, first: boolean
 ): Promise<Leaderboard> {
     const response = await fetch(
         `/api/competitions/leaderboard?competitionId=${leaderboard.competition_id}`,
         {
-            method: "POST",
+            method: first ? "POST" : "PUT",
             headers: {
                 "Content-Type": "application/json",
             },

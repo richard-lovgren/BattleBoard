@@ -13,6 +13,7 @@ interface EditCompetitionButtonProps {
   userNames: string[] | null;
   leaderboard: Leaderboard | null;
   triggerReload: () => void;
+  gameName: string | null;
 }
 
 const postLeaderboard = async (
@@ -59,7 +60,11 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
   leaderboard,
   userNames,
   triggerReload,
+  gameName,
 }) => {
+  if (gameName === "League of Legends") {
+    return null;
+  }
   const { data: session } = useSession();
   const username = session?.user?.name;
 
