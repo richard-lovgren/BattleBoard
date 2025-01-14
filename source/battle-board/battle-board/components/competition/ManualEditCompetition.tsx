@@ -62,13 +62,16 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
   triggerReload,
   gameName,
 }) => {
-  if (gameName === "League of Legends") {
-    return null;
-  }
+
   const { data: session } = useSession();
   const username = session?.user?.name;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Build error on conditional statement before useSession etc
+  if (gameName === "League of Legends") {
+    return null;
+  } 
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -109,6 +112,7 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
           onClose={handleCloseModal}
           onSave={handleModalSave}
           leaderboard={leaderboard}
+          userNames={userNames}
         />
       </div>
     );
@@ -123,6 +127,7 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
           onClose={handleCloseModal}
           onSave={handleModalSave}
           leaderboard={leaderboard}
+          userNames={userNames}
         />
       </div>
     );
