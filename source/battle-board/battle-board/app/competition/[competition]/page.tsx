@@ -49,11 +49,16 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
               src={
                 competitionData.competition_image_path ? imageUrl : '/comp.jpg'
               }
-              alt='example'
+              alt='Competition image'
               className='rounded-full'
-              layout='fill'
-              objectFit='cover'
-            />
+              fill={true}
+              sizes='50vw'
+              style={{
+                objectFit: 'cover'
+                }
+              }
+            />      
+
             <div className='absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black'></div>
           </div>
 

@@ -9,6 +9,9 @@ export default function Hero() {
         className=" m-0 p-0 "
         height={800}
         width={800}
+        style={{
+          width: 'auto'
+        }}
       />
     </div>
   );

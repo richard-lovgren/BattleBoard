@@ -182,18 +182,18 @@ INSERT INTO community(id, community_name, community_members) VALUES('13185711094
 
 -- Competitions
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 3, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1238571109418926131');
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 2, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1238571109418926131');
 
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'dummy2', 'Kapp clash 10', '10th kappa clash in sf6', 1, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926133');
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'dummy2', 'Kapp clash 10', '10th kappa clash in sf6', 0, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926133');
 
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'dummy3', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 1, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  2, '1318571109418926136');
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'dummy3', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 0, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  2, '1318571109418926136');
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152c3928-5b50-45a1-92cf-c9695af931e7', 'dummy1', 'Valorant IT Leaderboard', 'Classic mode leaderboard', 2, 1, '151e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926135');
+VALUES('152c3928-5b50-45a1-92cf-c9695af931e7', 'dummy1', 'Valorant IT Leaderboard', 'Classic mode leaderboard', 1, 1, '151e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926135');
 
 --Leaderboard
 INSERT INTO leaderboard(id, competition_id)
