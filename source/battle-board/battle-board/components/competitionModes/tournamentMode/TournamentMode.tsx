@@ -41,8 +41,9 @@ const TournamentMode: React.FC<TournamentModeProps> = ({ competitionId }) => {
     try {
       const response = await fetch(`/api/competitions/users?competitionId=${competitionId}`);
       if (!response.ok) throw new Error(`Error fetching players: ${response.statusText}`);
-      const data: string[] = await response.json();
-      setPlayers(data);
+      const data = await response.json();
+      const players = data.map((player: { user_name: string }) => player.user_name);
+      setPlayers(players);
     } catch (err) {
       console.error('Error fetching players:', err);
     }

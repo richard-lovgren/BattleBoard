@@ -1,6 +1,6 @@
 export default interface CompetitionData {
     id: string,
-    community_id: number
+    community_id: string
     participants: number,
     competition_name: string,
     creator_name: string,
