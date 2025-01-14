@@ -181,25 +181,23 @@ export default function CreateCompetitionPage() {
           </div>
 
           {/* Title and Date */}
-          <div className="createGroupTwoCols">
-            <div className="createGroup">
+          <div className="createGroupTwoCols" >
+            <div className="createGroup" style={{width:'70%'}}>
               <label className="text-5xl">Title</label>
-              <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[30vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+              <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
                 <input
                   name="competitionName"
-                  className=" font-nunito textshadow appearance-none text-3xl text-left w-full"
+                  className=" font-nunito textshadow appearance-none text-2xl text-left w-full"
                 />
               </div>
             </div>
-            <div className="ml-32 createGroup">
+            <div className="createGroup">
               <label className="text-5xl">Start date</label>
-              <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[20vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+              <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="sv">
                   <DatePicker
-                    label="Select date"
                     onChange={(newValue) => setSelectedDate(newValue)}
 
-                    sx={{ width: '20vw' }}
 
                   />
                 </LocalizationProvider>
@@ -213,7 +211,7 @@ export default function CreateCompetitionPage() {
               Description
               <textarea
                 name="competitionDesc"
-                className="appearance-none font-nunito textshadow focus:outline-none mt-5 p-4 flex items-center text-3xl rounded-3xl bg-[#0E0030] border-solid border-white border-[5px] h-[150px] w-[62vw] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50"
+                className="appearance-none font-nunito textshadow focus:outline-none mt-5 p-4 flex items-center text-2xl rounded-3xl bg-[#0E0030] border-solid border-white border-[5px] h-[150px] w-[100%] py-3 pl-4 pr-8 shadow-lg shadow-indigo-500/50"
               ></textarea>
             </label>
           </div>
@@ -221,11 +219,11 @@ export default function CreateCompetitionPage() {
           {/* Cover Image */}
           <div className="createGroup">
             <label className="text-5xl">Add a cover image</label>
-            <div>
               <Button
                 component="label"
                 variant="contained"
                 startIcon={<CloudUploadIcon />}
+                style={{width:'180px'}}
                 >
                 Upload Image
                 <VisuallyHiddenInput
@@ -234,8 +232,8 @@ export default function CreateCompetitionPage() {
                   accept=".png, .jpg, .jpeg"
                 />
               </Button>
+              {uploadedImage && <p className="text-xl font-nunito textshadow">Image uploaded</p>}
               {fileHelperText && <p className="text-xl font-nunito textshadow">{fileHelperText}</p>}
-            </div>
           </div>
 
           {/* Settings */}
@@ -244,17 +242,16 @@ export default function CreateCompetitionPage() {
           {/* Games */}
           <div className="createGroup">
             <label className="text-5xl">Choose game</label>
-            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+              <div className=" flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
               {loading ? (
                 <div className=" font-nunito textshadow">Loading games...</div>
               ) : (
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Select game</InputLabel>
+                  {game === '' && <InputLabel shrink={false} id="demo-simple-select-label">Select game</InputLabel> }
                   <Select
                     labelId="simple-select-label"
                     id="simple-select"
                     value={game}
-                    label="Select game"
                     onChange={handleGameChange}
                   >
                     {games.map((game) => (
@@ -272,12 +269,12 @@ export default function CreateCompetitionPage() {
           {/* Players */}
           <div className="createGroup">
             <label className="text-5xl">Invite players</label>
-            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+            <div className=" flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[100%] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
 
               <FormControl
-                sx={{ m: 1, width: '28vw' }}
+                sx={{ m: 1, width: '100%' }}
               >
-                <InputLabel id="multiple-checkbox-label">Select players</InputLabel>
+                {participants.length === 0 && <InputLabel shrink={false} id="multiple-checkbox-label">Select players</InputLabel> }
                 <Select
                   labelId="multiple-checkbox-label"
                   id="multiple-checkbox"
@@ -304,7 +301,9 @@ export default function CreateCompetitionPage() {
               <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
             </div>
           }
+          <div style={{width:'220px'}}>
           <GeneralButton text="Create competition" type="submit" />
+          </div>
         </form>
       </main>
     </div>

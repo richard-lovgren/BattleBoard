@@ -22,7 +22,7 @@ export default function CreateCommunity() {
       <main className='flex-auto item font-odibee text-9xl'>
         <div className='createWrapper'>
 
-          <div className='createGroup'>
+          <div className='createGroup' style={{alignItems: 'center'}}>
           <div className='text-3xl'>Create a community</div>
             <button 
               className='uploadButton font-nunito' 
