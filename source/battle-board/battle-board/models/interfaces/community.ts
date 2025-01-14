@@ -3,5 +3,5 @@ export default interface Community {
     community_members: number;
     community_name: string;
     community_image?: string;
-    id: bigint;
+    id: string;
 };

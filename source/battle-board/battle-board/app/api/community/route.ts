@@ -1,3 +1,4 @@
+import Community from "@/models/interfaces/community";
 import { NextRequest, NextResponse } from "next/server";
 const db_conn_str = process.env.DB_CONN_STR;
 
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const data = await response.json();
+    const data: Community[] = await response.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching competition:", error);

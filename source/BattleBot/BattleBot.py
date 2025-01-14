@@ -51,13 +51,13 @@ async def on_guild_join(guild: discord.Guild):
             community_data = {
                 "community_name": guild.name,
                 "community_image": None,
-                "id": guild.id,
+                "id": str(guild.id),
             }
         else:
             community_data = {
                 "community_name": guild.name,
                 "community_image": guild.icon.url,
-                "id": guild.id,
+                "id": str(guild.id),
             }
 
         res = requests.post(getenv("API_URL") + "/communities", json=community_data)
