@@ -187,6 +187,23 @@ app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, string i
     return Results.Ok(users);
 });
 
+app.MapDelete("/communities/{id}/{user_name}", async (HermitDbContext dbContext, string id, string user_name) =>
+{
+    var userCommunity = await dbContext
+        .user_community.Where(x => x.community_id.Equals(id) && x.user_name.Equals(user_name))
+        .FirstOrDefaultAsync();
+
+    if (userCommunity == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.user_community.Remove(userCommunity);
+    await dbContext.SaveChangesAsync();
+
+    return Results.Ok();
+});
+
 app.MapGet(
         "/competitions/public",
         async (HermitDbContext dbContext) =>
