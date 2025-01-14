@@ -37,11 +37,13 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClo
     setRows((prevRows) => prevRows.map((row) => [...row, '']));
   };
 
+  /* Limit the ability to add new rows
   const handleAddRow = () => {
     const newRow = Array(columns.length).fill('');
     newRow[0] = ''; // Prevent new rows from modifying the "name" column
     setRows((prev) => [...prev, newRow]);
   };
+  */
 
   const handleCellChange = (rowIdx: number, colIdx: number, event: ChangeEvent<HTMLInputElement>) => {
     if (colIdx === 0) return; // Prevent editing the "name" column
@@ -87,7 +89,6 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClo
     <div style={modalStyles}>
       <div style={contentStyles}>
         <h2>{leaderboard ? 'Edit Leaderboard' : 'Create Leaderboard'}</h2>
-        <p>The column &quot;name&quot; is locked and initialized with user names!</p>
 
         <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: '1rem', color: 'black' }}>
           <thead>
@@ -125,12 +126,12 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClo
         </table>
 
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {!leaderboard && (
+            {!leaderboard && (
             <>
               <button onClick={handleAddColumn}>Add Column</button>
-              <button onClick={handleAddRow}>Add Row</button>
+              {/* <button onClick={handleAddRow}>Add Row</button> */}
             </>
-          )}
+            )}
           <button onClick={handleSave}>Save</button>
           <button onClick={onClose}>Close</button>
         </div>
