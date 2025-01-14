@@ -77,6 +77,15 @@ public static class ClassicModeApi
             .WithDescription("Update a leaderboard.")
             .Produces(StatusCodes.Status404NotFound);
 
+        app.MapPut(
+                "/competition/{competition_id}/leaderboard",
+                async (HermitDbContext dbContext, LeaderboardMegaObjDto leaderboardMegaObjDto) =>
+                    await incrementLeaderboard(dbContext, leaderboardMegaObjDto)
+            )
+            .Produces<Leaderboard>(StatusCodes.Status200OK)
+            .WithDescription("Update a leaderboard.")
+            .Produces(StatusCodes.Status404NotFound);
+
         Console.WriteLine("Classic mode endpoints mapped.");
     }
 
@@ -386,15 +395,7 @@ public static class ClassicModeApi
                     Console.WriteLine("Metric value not found. Aborting.");
                     return null;
                 }
-
-                if (double.TryParse(metric_value, out double parsed_metric_value) && double.TryParse(leaderboardEntry.metric_value, out double parsed_leaderboard_metric_value))
-                {
-                    leaderboardEntry.metric_value = (parsed_metric_value + parsed_leaderboard_metric_value).ToString();
-                }
-                else
-                {
-                    leaderboardEntry.metric_value = metric_value;
-                }
+                leaderboardEntry.metric_value = metric_value;
                 await dbContext.SaveChangesAsync();
             }
         }
@@ -428,5 +429,65 @@ public static class ClassicModeApi
         );
 
         return Results.Ok(updatedLeaderboard);
+    }
+
+    private static async Task<IResult> incrementLeaderboard(HermitDbContext dbContext, LeaderboardMegaObjDto leaderboardMegaObjDto)
+    {
+        var leaderboard = await dbContext.leaderboard.FirstOrDefaultAsync(l =>
+            l.competition_id == leaderboardMegaObjDto.competition_id
+        );
+
+        if (leaderboard == null)
+        {
+            Console.WriteLine("\nLeaderboard not found. Aborting.\n");
+            return Results.NotFound();
+        }
+
+        var metrics = leaderboardMegaObjDto.column_names.Where(c => c != "name").ToList();
+        var leaderboad_entries = leaderboardMegaObjDto.leaderboard_entries;
+        var user_names = leaderboad_entries.Select(l => l["name"]).ToList();
+
+        foreach (var user_name in user_names)
+        {
+            foreach (var metric in metrics)
+            {
+                var leaderboardEntry = await dbContext.leaderboard_entry.FirstOrDefaultAsync(l =>
+                    l.metric_name == metric
+                    && l.user_name == user_name
+                    && l.leaderboard_id == leaderboard.id
+                );
+
+                if (leaderboardEntry == null)
+                {
+                    Console.WriteLine("\nLeaderboard entry not found. Aborting.\n" +
+                    "Metric: " + metric + "\n" +
+                    "User: " + user_name + "\n" +
+                    "Leaderboard id: " + leaderboard.id);
+                    return Results.NotFound();
+                }
+
+                var metric_value = leaderboardMegaObjDto
+                    .leaderboard_entries.Where(l => l["name"] == user_name)
+                    .Select(l => l[metric])
+                    .FirstOrDefault();
+
+                if (metric_value == null)
+                {
+                    Console.WriteLine("Metric value not found. Aborting.");
+                    return Results.NotFound();
+                }
+                if (double.TryParse(metric_value, out double parsed_metric_value) && double.TryParse(leaderboardEntry.metric_value, out double parsed_leaderboard_metric_value))
+                {
+                    leaderboardEntry.metric_value = (parsed_metric_value + parsed_leaderboard_metric_value).ToString();
+                }
+                else
+                {
+                    leaderboardEntry.metric_value = metric_value;
+                }
+                await dbContext.SaveChangesAsync();
+            }
+        }
+        Console.WriteLine("\nLeaderboard updated.\n");
+        return Results.Ok(leaderboard);
     }
 }

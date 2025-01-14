@@ -50,6 +50,7 @@ const LeaderboardComponent = ({
             triggerReload={triggerReload}
             competitionId={competitionId}
             userNames={userNames}
+            gameName={gameName}
           />
           <UploadButtonWrapper
             initialLeaderboard={initialLeaderboard}
