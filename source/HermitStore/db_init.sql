@@ -153,11 +153,96 @@ ALTER TABLE user_community ADD CONSTRAINT fk_community FOREIGN KEY (community_id
 -- Dummy data
 
 -- Users
-INSERT INTO users(id, discord_id, user_name, display_name, locale, league_puuid) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e1', 125874175400911360, 'dummy1', 'Dummy 1', 'en-US', 'Y7JjjA-kWCyEQ19BQPLfXiJ-iQRXu9Bi-YJMg2adeuOPk04q2H7KGKHw4pL3WTX7GTeInTayyNd1OQ');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e2', 125854175400911360, 'dummy2', 'Dummy 2', 'es-ES');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e3', 125834175400911360, 'dummy3', 'Dummy 3', 'fr-FR');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e4', 125814175400911360, 'dummy4', 'Dummy 4', 'de-DE');
-INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e5', 125894275400911360, 'dummy5', 'Dummy 5', 'it-IT');
+INSERT INTO users(id, discord_id, user_name, display_name, locale, league_puuid) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e1', 125874175400911360, 'ShadowSlayer', 'Shadow Slayer', 'en-US', 'Y7JjjA-kWCyEQ19BQPLfXiJ-iQRXu9Bi-YJMg2adeuOPk04q2H7KGKHw4pL3WTX7GTeInTayyNd1OQ');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e2', 125854175400911360, 'DragonFury', 'Dragon Fury', 'es-ES');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e3', 125834175400911360, 'PhoenixRider', 'Phoenix Rider', 'fr-FR');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e4', 125814175400911360, 'ViperStrike', 'Viper Strike', 'de-DE');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e5', 125894275400911360, 'BlazeHunter', 'Blaze Hunter', 'it-IT');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e6', 125894275400911361, 'StormBringer', 'Storm Bringer', 'it-IT');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e7', 125894275400911362, 'NightHawk', 'Night Hawk', 'it-IT');
+INSERT INTO users(id, discord_id, user_name, display_name, locale) VALUES('c41e3728-5a50-45a1-92cf-c8695af932e8', 125894275400911363, 'RogueAssassin', 'Rogue Assassin', 'it-IT');
+
+--Communities
+INSERT INTO community(id, community_name, community_members) VALUES('1238571109418926131', 'BattleBoard Team', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926132', 'Pathetic Failure Squad', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926133', 'Uppsala FGC', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418966134', 'Gnarp FGC', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926135', 'IT Sektionen', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926136', 'Ångström Warriors', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926137', 'Moba Pro Club', 8);
+-- Join users to communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('123e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('133e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('143e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('153e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('163e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('173e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('183e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e1', 'ShadowSlayer', '1318571109418926137');
+
+-- Join DragonFury to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('223e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('233e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('243e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('253e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('263e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('273e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('283e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e2', 'DragonFury', '1318571109418926137');
+
+-- Join PhoenixRider to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('323e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('333e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('343e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('353e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('363e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('373e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('383e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e3', 'PhoenixRider', '1318571109418926137');
+
+-- Join ViperStrike to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('423e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('433e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('443e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('453e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('463e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('473e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('483e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e4', 'ViperStrike', '1318571109418926137');
+
+-- Join BlazeHunter to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('523e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('533e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('543e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('553e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('563e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('573e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('583e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e5', 'BlazeHunter', '1318571109418926137');
+
+-- Join StormBringer to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('623e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('633e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('643e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('653e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('663e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('673e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('683e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e6', 'StormBringer', '1318571109418926137');
+
+-- Join NightHawk to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('723e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('733e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('743e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('753e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('763e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('773e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('783e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e7', 'NightHawk', '1318571109418926137');
+
+-- Join RogueAssassin to all communities
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('823e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1238571109418926131');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('833e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1318571109418926132');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('843e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1318571109418926133');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('853e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1318571109418966134');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('863e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1318571109418926135');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('873e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1318571109418926136');
+INSERT INTO user_community(id, user_id, user_name, community_id) VALUES('883e3928-5b50-45a1-92cf-c8695af932e0', 'c41e3728-5a50-45a1-92cf-c8695af932e8', 'RogueAssassin', '1318571109418926137');
+
+
 
 -- Games
 INSERT INTO game(id, game_name) VALUES('141e3728-5a50-45a1-92cf-c8695af932e1', 'Dota 2');
@@ -171,29 +256,61 @@ INSERT INTO game(id, game_name) VALUES('241e3728-5b50-45a1-92cf-c8695af932e1', '
 INSERT INTO game(id, game_name) VALUES('241e3728-5b50-45a1-92cf-c8695af932e2', 'Among us');
 
 
---Communities
-INSERT INTO community(id, community_name, community_members) VALUES('1238571109418926131', 'BattleBoard Team', 5);
-INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926132', 'Pathetic Failure Squad', 10);
-INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926133', 'Uppsala FGC', 50);
-INSERT INTO community(id, community_name, community_members) VALUES('1318571109418966134', 'Gnarp FGC', 8);
-INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926135', 'IT Sektionen', 500);
-INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926136', 'Ångström Warriors', 75);
-INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926137', 'Moba Pro Club', 24);
 
 -- Competitions
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'dummy1', 'LOL rival league', 'Rival league in LOL', 2, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1238571109418926131');
-
-
-INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'dummy2', 'Kapp clash 10', '10th kappa clash in sf6', 0, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926133');
-
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e5', 'ShadowSlayer', 'LOL rival league', 'Rival league in LOL', 2, 1, '121e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1238571109418926131');
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'dummy3', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 0, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  2, '1318571109418926136');
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e6', 'DragonFury', 'Kappa clash 10', '10th kappa clash in sf6', 0, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1,  8, '1318571109418926133');
 
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
-VALUES('152c3928-5b50-45a1-92cf-c9695af931e7', 'dummy1', 'Valorant IT Leaderboard', 'Classic mode leaderboard', 1, 1, '151e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926135');
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e8', 'DragonFury', 'Kappa Clash 11', '11th kappa clash in sf6', 0, 1, '131e3728-5a50-45a1-92cf-c8695af932e1', 1, 8, '1318571109418926133');
+
+INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
+VALUES('152e3928-5b50-45a1-92cf-c8695af932e7', 'PhoenixRider', 'Lab Wars: Ångström Edt', 'sussy @ ångström', 0, 1, '241e3728-5b50-45a1-92cf-c8695af932e2', 1,  8, '1318571109418926136');
+
+INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
+VALUES('152c3928-5b50-45a1-92cf-c9695af931e7', 'ShadowSlayer', 'Valorant IT Leaderboard', 'Classic mode leaderboard', 1, 1, '151e3728-5a50-45a1-92cf-c8695af932e1', 1,  2, '1318571109418926135');
+
+-- join users to LOL Rival League
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('123d4923-5b50-45a1-92cf-c1695af931e1', 'ShadowSlayer', '152e3928-5b50-45a1-92cf-c8695af932e5');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('123d4923-5b50-45a1-92cf-c1695af931e2', 'RogueAssassin', '152e3928-5b50-45a1-92cf-c8695af932e5');
+
+-- Join all users to Kappa clash 10
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e2', 'ShadowSlayer', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e3', 'DragonFury', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e4', 'PhoenixRider', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e5', 'ViperStrike', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e6', 'BlazeHunter', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e7', 'StormBringer', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e8', 'NightHawk', '152e3928-5b50-45a1-92cf-c8695af932e6');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931e9', 'RogueAssassin', '152e3928-5b50-45a1-92cf-c8695af932e6');
+
+-- Join all users to Kappa Clash 11
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ea', 'ShadowSlayer', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931eb', 'DragonFury', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ec', 'PhoenixRider', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ed', 'ViperStrike', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ee', 'BlazeHunter', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ef', 'StormBringer', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931eg', 'NightHawk', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931eh', 'RogueAssassin', '152e3928-5b50-45a1-92cf-c8695af932e8');
+
+-- Join all users to Lab Wars: Ångström Edt
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d1', 'ShadowSlayer', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d2', 'DragonFury', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d3', 'PhoenixRider', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d4', 'ViperStrike', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d5', 'BlazeHunter', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d6', 'StormBringer', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d7', 'NightHawk', '152e3928-5b50-45a1-92cf-c8695af932e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d8', 'RogueAssassin', '152e3928-5b50-45a1-92cf-c8695af932e7');
+
+
+-- join users to Valorant IT Leaderboard
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('123d4928-5b50-45a1-92cf-c9695af931e1', 'ShadowSlayer', '152c3928-5b50-45a1-92cf-c9695af931e7');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('123d5928-5b50-45a1-92cf-c9695af931e2', 'DragonFury', '152c3928-5b50-45a1-92cf-c9695af931e7');
 
 --Leaderboard
 INSERT INTO leaderboard(id, competition_id)
@@ -206,15 +323,50 @@ VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'kills');
 INSERT INTO leaderboard_metric(leaderboard_id, metric_name)
 VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'deaths');
 
+-- Additional metrics
+INSERT INTO leaderboard_metric(leaderboard_id, metric_name)
+VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'assists');
+
+INSERT INTO leaderboard_metric(leaderboard_id, metric_name)
+VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'headshots');
+
+INSERT INTO leaderboard_metric(leaderboard_id, metric_name)
+VALUES('d242ad95-555e-4dc5-8756-19c60d13264e', 'damage');
+
 --Leaderboard metric values
 INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
-VALUES('c242ad95-555e-4c25-8756-19c60d13264e', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy1', 'kills', 50);
+VALUES('c242ad95-555e-4c25-8756-19c60d13264e', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'ShadowSlayer', 'kills', 50);
 
 INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
-VALUES('c242ad95-557e-4c25-8756-19c60d13464e', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy1', 'deaths', 10);
+VALUES('c242ad95-557e-4c25-8756-19c60d13464e', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'ShadowSlayer', 'deaths', 10);
 
 INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
-VALUES('c242ad95-555e-4c25-8756-19c60d13264f', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy2', 'kills', 20);
+VALUES('c242ad95-555e-4c25-8756-19c60d13264f', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'DragonFury', 'kills', 20);
 
 INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
-VALUES('c242ad95-555e-4c24-8756-19c60d13264f', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'dummy2', 'deaths', 16);
+VALUES('c242ad95-555e-4c24-8756-19c60d13264f', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'DragonFury', 'deaths', 16);
+
+-- Additional game metrics for ShadowSlayer
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d132650', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'ShadowSlayer', 'assists', 30);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d132651', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'ShadowSlayer', 'headshots', 15);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d132652', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'ShadowSlayer', 'damage', 5000);
+
+-- Additional game metrics for DragonFury
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d132653', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'DragonFury', 'assists', 25);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d132654', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'DragonFury', 'headshots', 10);
+
+INSERT INTO leaderboard_entry(id, leaderboard_id, user_name, metric_name, metric_value)
+VALUES('c242ad95-555e-4c25-8756-19c60d132655', 'd242ad95-555e-4dc5-8756-19c60d13264e', 'DragonFury', 'damage', 4500);
+
+
+
+
+
