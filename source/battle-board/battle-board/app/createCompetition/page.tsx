@@ -116,7 +116,7 @@ export default function CreateCompetitionPage() {
       community_id: community ? community : null,
     };
 
-    console.log(body);
+    console.log("The body: ", body);
     const competition_id = await createCompetition.postCompetitionData(body);
 
     if (!competition_id) {

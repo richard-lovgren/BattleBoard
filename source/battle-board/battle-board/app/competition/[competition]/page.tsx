@@ -51,7 +51,7 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
 
   console.log("New community id?: ", community_id)
 
-  const community_name = await getCommunity("1317111159274471444"); // TODO: Fetch community data with actual community_id but javascript cant handle large numbers
+  const community_name = await getCommunity(community_id); // TODO: Fetch community data with actual community_id but javascript cant handle large numbers
 
   if (!competitionData) {
     return <p>Competition not found</p>;

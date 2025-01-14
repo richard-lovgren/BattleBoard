@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const communityId = searchParams.get("communityId");
     const url = `${db_conn_str}/communities/${communityId}`;
+    console.log("Fetching community data from: ", url);
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -22,6 +23,7 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
+    console.log("Community data: ", data);
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching competition:", error);

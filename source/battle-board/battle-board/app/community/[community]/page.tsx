@@ -42,10 +42,12 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
   // Extract community ID from the URL
   const params = await props.params;
   const community = params.community;
+  console.log("Community id: ", community);
 
 
   // Fetch community data from the API
   const communityDataHeader = await fetchCommunityData(community);
+  console.log("Community data: ", communityDataHeader);
 
   const communityCompetitionData = await fetchCommunityCompetitionData(
     community

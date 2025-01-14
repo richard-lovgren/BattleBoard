@@ -44,9 +44,9 @@ app.MapGet(
 
 app.MapGet(
         "/communities/{id}",
-        async (HermitDbContext dbContext, ulong id) =>
+        async (HermitDbContext dbContext, string id) =>
         {
-            var community = await dbContext.community.FindAsync(id);
+            var community = await dbContext.community.Where(x => x.id == id).FirstOrDefaultAsync();
             if (community == null)
             {
                 return Results.NotFound();
