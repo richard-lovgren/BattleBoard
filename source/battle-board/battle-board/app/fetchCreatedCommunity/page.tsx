@@ -11,13 +11,21 @@ const FetchCreatedCommunity = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const guild_id = searchParams.get('guild_id');
+  const error = searchParams.get('error');
 
   useEffect(() => {
+    if (error) {
+      router.replace(`/`);
+    }
     if (guild_id) {
       // Redirect to the /community page with the guild_id as a query parameter
       router.replace(`/community/${guild_id}`);
     }
-  }, [guild_id, router]);
+  }, [guild_id, error, router]);
+
+  if (error) {
+    return null;
+  }
 
   return (
     <Box
@@ -40,6 +48,5 @@ const FetchCreatedCommunityPage = () => {
     </Suspense>
   );
 };
-
 
 export default FetchCreatedCommunityPage;
