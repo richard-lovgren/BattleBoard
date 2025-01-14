@@ -51,7 +51,7 @@ namespace HermitStore
     {
         public required string community_name { get; set; }
         public string? community_image { get; set; }
-        public required ulong id { get; set; }
+        public required string id { get; set; }
     }
 
     public class Community : CommunityDto
@@ -69,7 +69,7 @@ namespace HermitStore
     public class UserCommunity : UserCommunityDto
     {
         public required Guid id { get; set; }
-        public required ulong community_id { get; set; }
+        public required string community_id { get; set; }
     }
 
     public class GameDto
@@ -108,7 +108,7 @@ namespace HermitStore
         public required int rank_alg { get; set; }
         public required bool is_public { get; set; }
 
-        public ulong? community_id { get; set; }
+        public string? community_id { get; set; }
     }
 
     public class Competition : CompetitionDto

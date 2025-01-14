@@ -88,7 +88,7 @@ app.MapPost(
 
 app.MapDelete(
         "/communities/{id}",
-        async (HermitDbContext dbContext, ulong id) =>
+        async (HermitDbContext dbContext, string id) =>
         {
             var community = await dbContext.community.Where(x => x.id == id).FirstOrDefaultAsync();
             if (community == null)
@@ -110,7 +110,7 @@ app.MapDelete(
 
 app.MapPost(
         "/communities/{id}/users",
-        async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, ulong id) =>
+        async (HermitDbContext dbContext, UserCommunityDto userCommunityDto, string id) =>
         {
             //Check that community exists
             var community = await dbContext.community.FindAsync(id);
@@ -147,7 +147,7 @@ app.MapPost(
 
 app.MapGet(
         "/communities/{id}/competitions",
-        async (HermitDbContext dbContext, ulong id) =>
+        async (HermitDbContext dbContext, string id) =>
         {
             var community = await dbContext.community.FindAsync(id);
             if (community == null)
@@ -166,7 +166,7 @@ app.MapGet(
     .Produces(StatusCodes.Status404NotFound)
     .WithDescription("Get all competitions for a community");
 
-app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, ulong id) =>
+app.MapGet("/communities/{id}/users", async (HermitDbContext dbContext, string id) =>
 {
     var users = await dbContext
         .user_community.Where(x => x.community_id == id)
