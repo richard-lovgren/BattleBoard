@@ -1,106 +1,122 @@
-"use client";
+'use client'
 
-import CompetitionData from "@/models/interfaces/CompetitionData";
-import GeneralButton from "../general-btn";
-import { competitionTypeEnum } from "@/models/interfaces/competitionTypeEnum";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { formatDate } from "@/lib/utils";
-import Link from "next/link";
+import CompetitionData from '@/models/interfaces/CompetitionData'
+import { competitionTypeEnum } from '@/models/interfaces/competitionTypeEnum'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { formatDate } from '@/lib/utils'
+import Link from 'next/link'
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'
 async function fetchGameName(gameId: string): Promise<string | null> {
-  const response = await fetch(`/api/game?gameId=${gameId}`);
-  if (!response.ok) return null;
-  return response.json().then((data) => data.game_name);
+  const response = await fetch(`/api/game?gameId=${gameId}`)
+  if (!response.ok) return null
+  return response.json().then((data) => data.game_name)
 }
 
 export default function CompetitionSearchItem(competition: CompetitionData) {
-
-  const [gameName, setGameName] = useState<string | null>(null);
+  const [gameName, setGameName] = useState<string | null>(null)
 
   useEffect(() => {
     const loadGameName = async () => {
       try {
-        const fetchedGameName = await fetchGameName(competition.game_id);
-        console.log("fetchedGameName", fetchedGameName);
+        const fetchedGameName = await fetchGameName(competition.game_id)
         if (!fetchedGameName) {
           console.error(
             `Failed to fetch game name for competition: ${competition.competition_name} with game id: ${competition.game_id}`
-          );
+          )
         }
-        setGameName(fetchedGameName || "Unknown Game");
+        setGameName(fetchedGameName || 'Unknown Game')
       } catch (error) {
-        console.error("Error fetching game name:", error);
-        setGameName("Unknown Game");
+        console.error('Error fetching game name:', error)
+        setGameName('Unknown Game')
       }
-    };
+    }
 
-    loadGameName();
-  }, [competition.game_id]);
+    loadGameName()
+  }, [competition.game_id])
 
-   const router = useRouter();
-  
-    const handleNavigation = (id: string) => {
-      router.replace(`/competition/${id}`);
-    };
+  const router = useRouter()
+
+  const handleNavigation = (id: string) => {
+    router.replace(`/competition/${id}`)
+  }
+ 
 
   return (
-    <div className="flex flex-none flex-col h-[450px] w-[329px] rounded-[2.5rem] bg-gradient-to-br from-[#4E35BE] to-[#241958]">
-      <div className="flex flex-none items-center justify-center rounded-t-[2.5rem] bg-[#D9D9D9] h-[173px] ">
+    <Link href={`/competition/${competition.id}`} passHref>
+      <div style={{cursor:'pointer'}} className="flex flex-none flex-col h-[400px] w-[329px] rounded-[1.2rem] bg-gradient-to-br from-[#4E35BE] to-[#241958] transform transition-transform duration-300 hover:scale-105">
+      <div
+        className='flex flex-none items-center justify-center rounded-t-[1.2rem] bg-[#D9D9D9] h-[173px]'
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
         <Image
-          src="/image.svg"
-          alt="image-placeholder"
-          className="fit"
-          width={50}
-          height={100}
+          src={
+            competition.competition_image_path
+              ? `http://localhost:8080/competitions/${competition.id}/image`
+              : '/comp.jpg'
+          }
+          alt='image-placeholder'
+          className='fit'
+          layout='fill'
+          objectFit='cover'
         />
       </div>
-      <div className="item-container flex flex-col text-[16px] font-outfit p-4">
-        <div className="flex flex-col ml-3 mb-3">
-          <span className="flex items-center text-[24px] mb-4">
-            {competition.competition_name}
-          </span>
-          <span className="flex items-center">
+      <div className='item-container flex flex-col text-[16px] font-outfit p-4' style={{ height:'100%'}}>
+      <span className="flex items-center text-[24px] truncate font-odibee" 
+       style={{
+        lineHeight: '1.2',
+        textAlign: 'start',
+        display: 'inline-block', 
+        maxWidth: '100%',
+        color: 'white',
+      }}>
+  {competition.competition_name}
+</span>
+          <span className='flex items-center' style={{color:'white'}}>
             <Image
-              src="/controller.svg"
-              alt="search"
-              className="h-12 w-12 my-[-5px]"
+              src='/controller.svg'
+              alt='search'
+              className='h-10 w-10'
               width={50}
               height={50}
+
             />
-            {gameName || "Loading..."}
+            {gameName || 'Loading...'}
           </span>
-          <span className="flex items-center">
+          <span className='flex items-center' style={{color:'white'}}>
             <Image
-              src="/customer.svg"
-              alt="search"
-              className="h-12 w-12 my-[-5px]"
+              src='/customer.svg'
+              alt='search'
+              className='h-10 w-10'
               width={50}
               height={50}
             />
             {competition.participants} participants
           </span>
-          <span className="flex items-center">
+          <span className='flex items-center' style={{color:'white'}}>
             <Image
-              src="/calendar.svg"
-              alt="search"
-              className="h-12 w-12 my-[-5px]"
+              src='/calendar.svg'
+              alt='search'
+              className='h-10 w-10'
               width={50}
               height={50}
             />
             Begins {formatDate(competition.competition_start_date)}
           </span>
-          <span className="flex items-center ml-12 my-2">
+          <span className='flex items-center' style={{color:'white'}}>
+          <Image
+              src={competition.competition_type === 0 ? '/classic_mode_icon.svg' : (competition.competition_type === 1 ? '/tournament.svg' : '/rival_mode_icon.svg')}
+              alt='mode'
+              className='h-10 w-10 p-1.5'
+              width={20}
+              height={20}
+
+            />
             {competitionTypeEnum[competition.competition_type]}
           </span>
-        </div>
-        <div className="flex items-center justify-center">
-          <Link href={`/competition/${competition.id}`} passHref>
-            <GeneralButton text="View" />
-          </Link>
-        </div>
       </div>
     </div>
-  );
+     </Link>
+  )
 }

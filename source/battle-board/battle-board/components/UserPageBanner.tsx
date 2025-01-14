@@ -26,13 +26,12 @@ const UserPageBanner: React.FC<UserProps> = ({
 
   if (session?.user) {
     return (
-      <main className="  text-white flex flex-col items-center px-2 py-2 font-nunito ">
-        <div className="bg-slate-500 flex flex-row w-full px-10 py-10 gap-4 bg-transparent  ">
-          <div className="relative inline-block">
+      <main className="  text-white flex flex-col items-center py-2 font-nunito ">
+        <div className="bg-slate-500 flex flex-row w-full py-10 gap-4 bg-transparent  ">
+          <div className="relative inline-block" style={{ borderRadius:'100%', overflow:'hidden'}}>
             <Image
               src={`${session.user.image}`}
               alt="example"
-              className="h-auto rounded-[70px]"
               height={200}
               width={200}
             ></Image>

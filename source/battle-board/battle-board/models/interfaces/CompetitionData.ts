@@ -14,5 +14,6 @@ export default interface CompetitionData {
     game_id: string,
     rank_alg: number,
     is_public: boolean,
+    competition_image_path:string,
 
 }

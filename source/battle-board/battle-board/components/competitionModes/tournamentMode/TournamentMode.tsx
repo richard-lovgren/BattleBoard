@@ -258,7 +258,9 @@ const TournamentMode: React.FC<TournamentModeProps> = ({ competitionId }) => {
             <Typography className="h3">Winner</Typography>
             <Box className="round-container">
               <Box className="match-container winner-container">
-                <Box className="player-box player-box-winner winner-box">
+                <Box  className={`player-box ${
+        getFinalWinner ? 'player-box-winner' : 'player-box-no-winner'
+      } winner-box`}>
                   {getFinalWinner || 'Pending...'}
                 </Box>
               </Box>

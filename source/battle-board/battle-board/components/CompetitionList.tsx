@@ -1,6 +1,7 @@
-"use client";
+'use client'
 
-import "react";
+import 'react'
+import CompetitonSearchItem from "@/components/search/competition-search-item";
 
 import {
   Card,
@@ -8,40 +9,33 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
+import styles from './communityMembers.module.css'
 
-import CompetitionData from "@/models/interfaces/CompetitionData"
-import GeneralButton from "./general-btn";
-import Link from "next/link";
+import CompetitionData from '@/models/interfaces/CompetitionData'
+import GeneralButton from './general-btn'
+import Link from 'next/link'
 
 interface CompetitionListProps {
-  competitions: CompetitionData[];
+  competitions: CompetitionData[]
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ competitions }) => {
   return (
-    <div className="flex  flex-row flex-wrap gap-4 w-full  py-10 " >
-      {competitions.length > 0 ? 
-      competitions.map((competition) => (
-        <Card key={competition.id} className="w-[350px]">
-          <CardHeader>
-            <CardTitle className="font-thin font-odibee text-4xl">{competition.competition_name}</CardTitle>
-          </CardHeader>
-          <CardFooter className="flex justify-between">
-            <Link href={`/competition/${competition.id}`}>
-              <GeneralButton type="button" text="View"/>
-            </Link>
-            
-          </CardFooter>
-        </Card>
-      )) :
-      <div>
-        <h3 className="h3">
-          No competitions found
-          </h3>
-        </div>}
+    <div className="flex flex-row flex-wrap gap-4 flex-shrink w-auto" style={{  justifyContent: 'flex-start'}}>
+      {competitions.length > 0 ? (
+        competitions.map((competition) => (
+          <CompetitonSearchItem key={competition.id} {...competition} />
+        ))
+      ) : (
+        <div className={styles.wrapper} >
+          <h1 className='text-3xl flex font-bold font-odibee'>
+            No ongoing competitions
+          </h1>
+        </div>
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default CompetitionList;
+export default CompetitionList

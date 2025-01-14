@@ -19,9 +19,9 @@ const SelectCommunity: FC<SelectCommunityProps> = ({ communityData, community, s
     return (
         <div className="createGroup">
             <label className="text-5xl">Select Community</label>
-            <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[28vw] py-10 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
-                <FormControl sx={{ m: 1, width: '28vw' }}>
-                    <InputLabel id="community-select-label">Select community</InputLabel>
+            <div className=" flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[100%] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+            <FormControl sx={{ m: 1, width: '100%' }}>
+                    {community === '' && <InputLabel shrink={false} id="community-select-labe">Select community</InputLabel> }
                     <Select
                         labelId="community-select-label"
                         id="community-select"

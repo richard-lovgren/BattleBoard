@@ -1,5 +1,5 @@
 .wrapper{
-    width: 400px;
+    min-width: 400px;
     background-color: var(--text-shadow);
     color: white;
     padding: 30px;
@@ -7,7 +7,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-
+    height: fit-content;
 }
 
 .membersListWrapper{

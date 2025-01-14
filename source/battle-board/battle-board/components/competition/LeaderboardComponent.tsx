@@ -43,7 +43,7 @@ const LeaderboardComponent = ({
     <Suspense fallback={<p>Loading competition data...</p>}>
 
       {mode !== 0 &&  //dont want these components in tournament mode
-        <>
+        <div style={{display:'flex', flexDirection:'row', gap:'10px'}}>
           <EditCompetitionButton
             competitionCreator={creatorName}
             leaderboard={initialLeaderboard}
@@ -60,7 +60,7 @@ const LeaderboardComponent = ({
             triggerReload={triggerReload}
             gameName={gameName}
           />
-        </>
+        </div>
       }
       <CompetitonModeWrapper
         mode={competitionData.competition_type}
