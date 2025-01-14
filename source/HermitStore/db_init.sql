@@ -172,13 +172,13 @@ INSERT INTO game(id, game_name) VALUES('241e3728-5b50-45a1-92cf-c8695af932e2', '
 
 
 --Communities
-INSERT INTO community(id, community_name, community_members) VALUES(1238571109418926131, 'BattleBoard Team', 5);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926132, 'Pathetic Failure Squad', 10);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926133, 'Uppsala FGC', 50);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418966134, 'Gnarp FGC', 8);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926135, 'IT Sektionen', 500);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926136, 'Ångström Warriors', 75);
-INSERT INTO community(id, community_name, community_members) VALUES(1318571109418926137, 'Moba Pro Club', 24);
+INSERT INTO community(id, community_name, community_members) VALUES('1238571109418926131', 'BattleBoard Team', 5);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926132', 'Pathetic Failure Squad', 10);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926133', 'Uppsala FGC', 50);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418966134', 'Gnarp FGC', 8);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926135', 'IT Sektionen', 500);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926136', 'Ångström Warriors', 75);
+INSERT INTO community(id, community_name, community_members) VALUES('1318571109418926137', 'Moba Pro Club', 24);
 
 -- Competitions
 INSERT INTO competition(id, creator_name, competition_name, competition_description, competition_type, format, game_id, rank_alg, participants, community_id)
