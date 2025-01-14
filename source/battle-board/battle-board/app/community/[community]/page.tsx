@@ -82,8 +82,8 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
           </h1>
         </div>
       </div>
-      <div className=" text-accent flex text-6xl flex-row justify-end px-10 py-10" style={{gap:'40px', marginBottom:'50px', border:'1px solid red'}}>
-       <div style={{  border:'1px solid green'}}>
+      <div className=" text-accent flex text-6xl flex-row justify-end px-10 py-10" style={{gap:'40px', marginBottom:'50px'}}>
+       <div >
         <CompetitionList competitions={userCompetitionsData}></CompetitionList>
        </div>
           
