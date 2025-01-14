@@ -36,38 +36,28 @@ async function getAllUserNamePUUIDs(competition_id: string): Promise<usernamePUU
     return usersPUUID;
 }
 
-async function getUserNamePUUID(username: string): Promise<usernamePUUID> {
-    const puuid = (await (await fetch(`/api/users?userId=${username}`)).json()).league_puuid
-    console.log("Got puuid", puuid);
-    return {
-        username: username,
-        puuid: puuid
-    }
-}
-
 async function addMatchToCompetition(match: FilteredMatchData, competition_id: string, users: usernamePUUID[]) {
-    const leaderboard_dto: LeaderboardDTO = {
-        competition_id: competition_id,
-        column_names: ["name", "Summoner Name", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Wins"],
-        leaderboard_entries: users.map((user) => {
-            const participant = match.participants.find((participant) => participant.puuid === user.puuid);
-            if (!participant) {
-                throw new Error("Participant not found in match data");
-            }
-            return {
-                "name": user.username,
-                "Summoner Name": participant.summonerName,
-                "Kills": participant.kills.toString(),
-                "Deaths": participant.deaths.toString(),
-                "Assists": participant.assists.toString(),
-                "Damage Dealt": participant.totalDamageDealtToChampions.toString(),
-                "Gold Earned": participant.goldEarned.toString(),
-                "Wins": participant.win ? "1" : "0"
-            }
-        })
-    };
-
     try {
+        const leaderboard_dto: LeaderboardDTO = {
+            competition_id: competition_id,
+            column_names: ["name", "Summoner Name", "Kills", "Deaths", "Assists", "Damage Dealt", "Gold Earned", "Wins"],
+            leaderboard_entries: users.map((user) => {
+                const participant = match.participants.find((participant) => participant.puuid === user.puuid);
+                if (!participant) {
+                    throw new Error("Participant not found in match data");
+                }
+                return {
+                    "name": user.username,
+                    "Summoner Name": participant.summonerName,
+                    "Kills": participant.kills.toString(),
+                    "Deaths": participant.deaths.toString(),
+                    "Assists": participant.assists.toString(),
+                    "Damage Dealt": participant.totalDamageDealtToChampions.toString(),
+                    "Gold Earned": participant.goldEarned.toString(),
+                    "Wins": participant.win ? "1" : "0"
+                }
+            })
+        };
         const leaderboard = await postLeaderboard(leaderboard_dto);
         if (leaderboard) {
             console.log("Success - returned leaderboard");
@@ -76,7 +66,6 @@ async function addMatchToCompetition(match: FilteredMatchData, competition_id: s
             return "Failed to save leaderboard";
         }
     } catch (error) {
-        console.error("Error saving leaderboard:", error);
         return "Big oof";
     }
 }
