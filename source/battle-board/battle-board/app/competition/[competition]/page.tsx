@@ -7,6 +7,7 @@ import fetchClassicLeaderBoard from "@/lib/leaderboard/fetchClassicLeaderBoard";
 import fetchCompetitionUsers from "@/lib/leaderboard/fetchCompetitionUsers";
 import LeaderboardComponent from "@/components/competition/LeaderboardComponent";
 import fetchCommunityData from "@/lib/community/fetchCommunityData";
+import GeneralButton from "@/components/general-btn";
 
 // Server-side data fetching
 async function getCompetitionData(competitionId: string) {
@@ -45,14 +46,20 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
     gameName,
     leaderboard,
     competitionUsers,
-    community_id,
+    community_id, //TODO: Use this to fetch community data
   } = await getCompetitionData((await props.params).competition);
+
+  console.log("New community id?: ", community_id)
 
   const community_name = await getCommunity("1317111159274471444"); // TODO: Fetch community data with actual community_id but javascript cant handle large numbers
 
   if (!competitionData) {
     return <p>Competition not found</p>;
   }
+
+  const joined = true;
+
+  const requestPending = false;
 
   const renderCommunity = () => {
     if (!community_name) {
@@ -73,6 +80,55 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
       </div>
     );
   };
+
+  const renderButtons = () => {
+    // Use the GeneralButton component to render the buttons.
+
+    if (joined) {
+      return (
+        <div className="flex flex-row gap-4">
+          <GeneralButton
+            text="Leave"
+            onClick={() => {
+              console.log("Leave competition");
+            }}
+          />
+          <GeneralButton
+            text="Edit"
+            onClick={() => {
+              console.log("Edit competition");
+            }}
+          />
+        </div>
+      );
+    }
+    else if (requestPending) {
+      return (
+        <div className="flex flex-row gap-4">
+          <GeneralButton
+            text="Cancel Request"
+            onClick={() => {
+              console.log("Cancel request");
+            }}
+          />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="flex flex-row gap-4">
+          <GeneralButton
+            text="Join"
+            onClick={() => {
+              console.log("Join competition");
+            }}
+          />
+        </div>
+      );
+    }
+  }
+
+
 
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -96,6 +152,9 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
             {competitionData.competition_description}
           </h2>
           <h3 className="flex text-xl font-odibee text-white">{gameName}</h3>
+
+
+
         </div>
 
         <div className="flex flex-col gap-5 h-full items-center">
