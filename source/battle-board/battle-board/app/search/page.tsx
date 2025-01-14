@@ -18,36 +18,25 @@ async function getCompetitions(): Promise<CompetitionData[]> {
 
 async function getCommunities(): Promise<Community[]> {
   const response = await fetch("/api/community/public");
-  const data = await response.json();
-  return data
+  return await response.json();
 }
 
 async function fetchGameName(gameId: string): Promise<string | null> {
-  const response = await fetch(`/api/game?gameId=${gameId}`)
-  if (!response.ok) return null
-  return response.json().then((data) => data.game_name)
+  const response = await fetch(`/api/game?gameId=${gameId}`);
+  if (!response.ok) return null;
+  return response.json().then((data) => data.game_name);
 }
-
 
 export default function Search() {
   /* State */
   const [toggleCompetitions, setToggleCompetitions] = useState(false);
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState("");
   const [competitions, setCompetitions] = useState<CompetitionData[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
-  const [filteredCompetitions, setFilteredCompetitions] = useState(competitions);
-  const [filteredCommunities, setFilteredCommunities] = useState(communities);
+  const [filteredCompetitions, setFilteredCompetitions] = useState<CompetitionData[]>([]);
+  const [filteredCommunities, setFilteredCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-
-  const filterCompetitions = (searchTerm: string): void => {
-    setFilteredCompetitions(competitions.filter((comp) =>
-      comp.competition_name.toLowerCase().includes(searchTerm) ||
-      (comp.competition_description && comp.competition_description.toLowerCase().includes(searchTerm)) ||
-      (comp.game_name && comp.game_name.toLowerCase().includes(searchTerm))
-    ));
-  }
 
   const handleToggle = () => {
     setToggleCompetitions(!toggleCompetitions);
@@ -56,19 +45,34 @@ export default function Search() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchString(searchTerm);
-    setFilteredCommunities(communities.filter((comm) => comm.community_name.toLowerCase().includes(searchTerm)));
-    filterCompetitions(searchString);
-  }
+
+    if (toggleCompetitions) {
+      setFilteredCompetitions(
+        competitions.filter((comp) =>
+          comp.competition_name.toLowerCase().includes(searchTerm) ||
+          (comp.competition_description && comp.competition_description.toLowerCase().includes(searchTerm)) ||
+          (comp.game_name && comp.game_name.toLowerCase().includes(searchTerm))
+        )
+      );
+    } else {
+      setFilteredCommunities(
+        communities.filter((comm) =>
+          comm.community_name.toLowerCase().includes(searchTerm)
+        )
+      );
+    }
+  };
 
   const searchBarData: SearchBarData = {
     searchString: searchString,
     handleChange: handleInputChange,
-  }
+  };
 
   const buttonData: ButtonData = {
     isOn: toggleCompetitions,
     handleOnClick: handleToggle,
   };
+
   useEffect(() => {
     const savedValue = window.localStorage.getItem("toggleCompetitions");
     if (savedValue === "true") {
@@ -85,22 +89,18 @@ export default function Search() {
 
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
-          competitionData.forEach(async (comp) => {
-            comp.game_name = await fetchGameName(comp.game_id) || 'Unknown Game';
-          });
-          setCompetitions(competitionData);
-          setFilteredCompetitions(competitionData);
-
-          if (searchString) {
-            filterCompetitions(searchString);
-          }
+          const updatedCompetitions = await Promise.all(
+            competitionData.map(async (comp) => ({
+              ...comp,
+              game_name: (await fetchGameName(comp.game_id)) || "Unknown Game",
+            }))
+          );
+          setCompetitions(updatedCompetitions);
+          setFilteredCompetitions(updatedCompetitions);
         } else {
           const communityData = await getCommunities();
           setCommunities(communityData);
           setFilteredCommunities(communityData);
-          if (searchString) {
-            setFilteredCommunities(communityData.filter((comm) => comm.community_name.toLowerCase().includes(searchString)));
-          }
         }
       } catch (err) {
         setError((err as Error).message);
