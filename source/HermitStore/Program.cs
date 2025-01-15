@@ -163,8 +163,8 @@ app.MapGet(
                 .competition.Where(x => !string.IsNullOrEmpty(x.community_id) && x.community_id.Equals(id))
                 .Select(x => x.id)
                 .ToListAsync();
-            
-            
+
+
             return Results.Ok(competitionIds);
         }
     )
@@ -378,32 +378,32 @@ using (var scope = app.Services.CreateScope())
     .WithDescription("Upload image to competition.")
     .DisableAntiforgery(); // we're cooked
 
-        app.MapGet(
-            "/competitions/{id}/image",
-            async (HermitDbContext dbContext, Guid id) =>
+    app.MapGet(
+        "/competitions/{id}/image",
+        async (HermitDbContext dbContext, Guid id) =>
+        {
+            var competition = await dbContext.competition.FindAsync(id);
+            if (competition == null)
             {
-                var competition = await dbContext.competition.FindAsync(id);
-                if (competition == null)
-                {
-                    return Results.NotFound("Competition not found");
-                }
-
-                if (competition.competition_image == null)
-                {
-                    return Results.NotFound("No image found for competition");
-                }
-
-                if (!File.Exists(competition.competition_image_path))
-                {
-                    await fileUploadService.UploadImageAsync(competition.competition_image, competition.competition_image_path!, id);
-                }
-
-                var mimeType = fileUploadService.GetContentTypeFromExistingFile(id);
-                return Results.File(competition.competition_image, contentType: mimeType);
+                return Results.NotFound("Competition not found");
             }
-        )
-        .Produces<byte[]>(StatusCodes.Status200OK)
-        .WithDescription("Get image of competition");
+
+            if (competition.competition_image == null)
+            {
+                return Results.NotFound("No image found for competition");
+            }
+
+            if (!File.Exists(competition.competition_image_path))
+            {
+                await fileUploadService.UploadImageAsync(competition.competition_image, competition.competition_image_path!, id);
+            }
+
+            var mimeType = fileUploadService.GetContentTypeFromExistingFile(id);
+            return Results.File(competition.competition_image, contentType: mimeType);
+        }
+    )
+    .Produces<byte[]>(StatusCodes.Status200OK)
+    .WithDescription("Get image of competition");
 }
 
 app.MapPost(
@@ -458,7 +458,8 @@ app.MapPost(
                     user_name,
                     competition_id
                 );
-            };
+            }
+            ;
 
             await dbContext.SaveChangesAsync();
             return Results.Created<List<Guid>>("/competitions/join", createdUserCompetitionsIds);
@@ -620,6 +621,19 @@ app.MapPut(
     .Produces(StatusCodes.Status200OK)
     .WithDescription("Accept or reject a user's competition join request");
 
+app.MapGet(
+    "/competitions/{competition_id}/join-requests",
+    async (HermitDbContext dbContext, Guid competition_id) =>
+    {
+        var joinRequests = await dbContext.user_join_competition
+        .Where(x => x.competition_id == competition_id)
+        .ToListAsync();
 
+        if (joinRequests == null || joinRequests.Count == 0)
+        {
+            return Results.NotFound();
+        }
+        return Results.Ok(joinRequests);
+    });
 
 app.Run();
