@@ -30,7 +30,7 @@ namespace HermitStore
         public required DbSet<Tournament> tournament { get; set; }
         public required DbSet<TournamentMatch> tournament_match { get; set; }
 
-        public required DbSet<UserCompetition> user_join_competition { get; set; }
+        public required DbSet<UserJoinCompetition> user_join_competition { get; set; }
     }
 
     public class UserDto
@@ -130,6 +130,11 @@ namespace HermitStore
     }
 
     public class UserCompetition : UserCompetitionDto
+    {
+        public required Guid id { get; set; }
+    }
+
+    public class UserJoinCompetition : UserCompetitionDto
     {
         public required Guid id { get; set; }
     }

@@ -441,7 +441,7 @@ app.MapPost(
         }
 
         // Add to queue
-        var joinRequest = new UserCompetition
+        var joinRequest = new UserJoinCompetition
         {
             id = Guid.NewGuid(),
             user_name = user.user_name,
