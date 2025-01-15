@@ -163,8 +163,8 @@ app.MapGet(
                 .competition.Where(x => !string.IsNullOrEmpty(x.community_id) && x.community_id.Equals(id))
                 .Select(x => x.id)
                 .ToListAsync();
-            
-            
+
+
             return Results.Ok(competitionIds);
         }
     )
@@ -378,32 +378,32 @@ using (var scope = app.Services.CreateScope())
     .WithDescription("Upload image to competition.")
     .DisableAntiforgery(); // we're cooked
 
-        app.MapGet(
-            "/competitions/{id}/image",
-            async (HermitDbContext dbContext, Guid id) =>
+    app.MapGet(
+        "/competitions/{id}/image",
+        async (HermitDbContext dbContext, Guid id) =>
+        {
+            var competition = await dbContext.competition.FindAsync(id);
+            if (competition == null)
             {
-                var competition = await dbContext.competition.FindAsync(id);
-                if (competition == null)
-                {
-                    return Results.NotFound("Competition not found");
-                }
-
-                if (competition.competition_image == null)
-                {
-                    return Results.NotFound("No image found for competition");
-                }
-
-                if (!File.Exists(competition.competition_image_path))
-                {
-                    await fileUploadService.UploadImageAsync(competition.competition_image, competition.competition_image_path!, id);
-                }
-
-                var mimeType = fileUploadService.GetContentTypeFromExistingFile(id);
-                return Results.File(competition.competition_image, contentType: mimeType);
+                return Results.NotFound("Competition not found");
             }
-        )
-        .Produces<byte[]>(StatusCodes.Status200OK)
-        .WithDescription("Get image of competition");
+
+            if (competition.competition_image == null)
+            {
+                return Results.NotFound("No image found for competition");
+            }
+
+            if (!File.Exists(competition.competition_image_path))
+            {
+                await fileUploadService.UploadImageAsync(competition.competition_image, competition.competition_image_path!, id);
+            }
+
+            var mimeType = fileUploadService.GetContentTypeFromExistingFile(id);
+            return Results.File(competition.competition_image, contentType: mimeType);
+        }
+    )
+    .Produces<byte[]>(StatusCodes.Status200OK)
+    .WithDescription("Get image of competition");
 }
 
 app.MapPost(
@@ -458,7 +458,8 @@ app.MapPost(
                     user_name,
                     competition_id
                 );
-            };
+            }
+            ;
 
             await dbContext.SaveChangesAsync();
             return Results.Created<List<Guid>>("/competitions/join", createdUserCompetitionsIds);
@@ -511,5 +512,128 @@ app.MapPost(
     )
     .Produces<Game>(StatusCodes.Status201Created)
     .WithDescription("Create a new game");
+
+app.MapPost(
+    "/competitions/join-requests",
+    async (HermitDbContext dbContext, UserCompetitionDto joinCompetitionDto) =>
+    {
+        // Validate DTO
+        if (joinCompetitionDto == null || joinCompetitionDto.competition_id == Guid.Empty)
+        {
+            return Results.BadRequest("Invalid join request");
+        }
+
+        var competitionId = joinCompetitionDto.competition_id;
+        var competition = await dbContext.competition.FindAsync(competitionId);
+        if (competition == null)
+        {
+            return Results.NotFound($"Competition {competitionId} not found");
+        }
+
+        var user = await dbContext.users.FirstOrDefaultAsync(x => x.user_name == joinCompetitionDto.user_name);
+        if (user == null)
+        {
+            return Results.NotFound($"User {joinCompetitionDto.user_name} not found");
+        }
+
+        // Check if user is already in queue or competition
+        bool isParticipant = await dbContext.user_competition.AnyAsync(x => x.user_name == user.user_name && x.competition_id == competitionId);
+        if (isParticipant)
+        {
+            return Results.Conflict($"User {user.user_name} is already a participant");
+        }
+
+        bool isInQueue = await dbContext.user_join_competition.AnyAsync(x => x.user_name == user.user_name && x.competition_id == competitionId);
+        if (isInQueue)
+        {
+            return Results.Conflict($"User {user.user_name} is already in the join queue");
+        }
+
+        // Add to queue
+        var joinRequest = new UserJoinCompetition
+        {
+            id = Guid.NewGuid(),
+            user_name = user.user_name,
+            competition_id = competitionId,
+        };
+        dbContext.user_join_competition.Add(joinRequest);
+
+        await dbContext.SaveChangesAsync();
+        return Results.Created($"/competitions/join-requests", joinRequest.id);
+    })
+    .Produces<Guid>(StatusCodes.Status201Created)
+    .WithDescription("Add a user to the competition join queue");
+
+app.MapPut(
+    "/competitions/join-requests",
+    async (HermitDbContext dbContext, UserCompetitionDto joinCompetitionDto, bool accept) =>
+    {
+        // Validate DTO
+        if (joinCompetitionDto == null || joinCompetitionDto.competition_id == Guid.Empty)
+        {
+            return Results.BadRequest("Invalid join request");
+        }
+
+        var competitionId = joinCompetitionDto.competition_id;
+        var competition = await dbContext.competition.FindAsync(competitionId);
+        if (competition == null)
+        {
+            return Results.NotFound($"Competition {competitionId} not found");
+        }
+
+        var user = await dbContext.users.FirstOrDefaultAsync(x => x.user_name == joinCompetitionDto.user_name);
+        if (user == null)
+        {
+            return Results.NotFound($"User {joinCompetitionDto.user_name} not found");
+        }
+
+        var joinRequest = await dbContext.user_join_competition
+            .FirstOrDefaultAsync(x => x.user_name == user.user_name && x.competition_id == competitionId);
+        if (joinRequest == null)
+        {
+            return Results.NotFound($"Join request for user {user.user_name} not found");
+        }
+
+        if (accept)
+        {
+            // Add user to competition
+            dbContext.user_competition.Add(new UserCompetition
+            {
+                id = Guid.NewGuid(),
+                user_name = user.user_name,
+                competition_id = competitionId,
+            });
+
+            competition.participants++;
+            dbContext.user_join_competition.Remove(joinRequest);
+            await dbContext.SaveChangesAsync();
+
+            return Results.Ok($"User {user.user_name} accepted into competition {competitionId}");
+        }
+        else
+        {
+            // Reject the request
+            dbContext.user_join_competition.Remove(joinRequest);
+            await dbContext.SaveChangesAsync();
+            return Results.Ok($"User {user.user_name} rejected from competition {competitionId}");
+        }
+    })
+    .Produces(StatusCodes.Status200OK)
+    .WithDescription("Accept or reject a user's competition join request");
+
+app.MapGet(
+    "/competitions/{competition_id}/join-requests",
+    async (HermitDbContext dbContext, Guid competition_id) =>
+    {
+        var joinRequests = await dbContext.user_join_competition
+        .Where(x => x.competition_id == competition_id)
+        .ToListAsync();
+
+        if (joinRequests == null || joinRequests.Count == 0)
+        {
+            return Results.NotFound();
+        }
+        return Results.Ok(joinRequests);
+    });
 
 app.Run();
