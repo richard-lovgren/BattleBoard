@@ -1,0 +1,64 @@
+.createWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-bottom: 100px;
+}
+
+.createGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.createGroupTwoCols {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.uploadButton {
+  border: 2px solid var(--text-shadow);
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 140px;
+  height: 40px;
+}
+
+.createButton {
+  background: var(--text-shadow);
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 140px;
+  height: 40px;
+}
+
+.textshadow {
+  text-shadow: var(--text-shadow) 1px 0 10px;
+}
+
+textarea::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+  
+}
+
+textarea::-webkit-scrollbar-track {
+  display: none;
+}
+
+textarea::-webkit-scrollbar-thumb {
+background-color: #4E35BE;
+
+border-radius: 10px;
+}
+
+::-webkit-resizer {
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0,0,0,0);
+}
