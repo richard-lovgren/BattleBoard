@@ -36,7 +36,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
   }, [competition.game_id])
 
   const dbUrl = process.env.NEXT_PUBLIC_DB_CONN_STR
-  
+
   return (
     <Link href={`/competition/${competition.id}`} passHref>
       <div style={{ cursor: 'pointer' }} className="flex flex-none flex-col h-[400px] w-[300px] rounded-[1.2rem] bg-gradient-to-br from-[#4E35BE] to-[#241958] transform transition-transform duration-300 hover:scale-105">
@@ -45,6 +45,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
           style={{ position: 'relative', overflow: 'hidden' }}
         >
           <Image
+          unoptimized
             src={
               competition.competition_image_path
                 ? `${dbUrl}/competitions/${competition.id}/image`
