@@ -19,7 +19,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # state_url_obj =
 # https://discord.com/oauth2/authorize?client_id=1308029231342555136&permissions=18136036801537&integration_type=0&scope=bot
 
-POLL_COMPETITIONS = False
+POLL_COMPETITIONS = True
 competitions_printed: list[str] = []
 
 
@@ -180,7 +180,9 @@ async def on_member_remove(member: discord.Member):
 
 
 async def poll_community_competitions():
-    await bot.wait_until_ready()
+    #await bot.wait_until_ready()
+
+    print("Polling servers")
 
     while not bot.is_closed(): #loop while bot online
         print("Polling competitions for all communities...")
@@ -209,11 +211,14 @@ async def poll_community_competitions():
                     continue
 
                 is_running = competition["is_running"]
+                print(f"Is running: {is_running}")
 
-                if is_running:
+                if is_running or not is_running:
+                    print("Sending to channel")
+                    print(competition)
                     channel = guild.text_channels[0]
                     competitions_printed.append(competition["id"])
-                    await channel.send(f"Competition: {competition['name']} has started!")
+                    await channel.send(f"Competition: {competition['competition_name']} has started!")
 
         print("Finished polling competitions for all communities.")
 
