@@ -4,9 +4,9 @@ const radioButtonLabelClasses = `font-nunito textshadow text-xl hover:cursor-poi
 const radioButtonClasses = `appearance-none peer`;
 const radioButtonSpanClasses = `w-4 h-4 mr-2 rounded-full border-solid border-[2px] border-white shadow-lg shadow-indigo-500/50 peer-checked:bg-buttonprimary hover:bg-buttonprimaryhover`;
 
-  /**
-   * Needs to wrapped in a form HTML element.
-   */
+/**
+ * Needs to wrapped in a form HTML element.
+ */
 export default function RadioButton(radioButtonProps: RadioButtonProps) {
 
     return (
@@ -20,6 +20,7 @@ export default function RadioButton(radioButtonProps: RadioButtonProps) {
                         name={radioButtonProps.name}
                         value={radioButton.value}
                         defaultChecked={radioButton.defaultChecked}
+                        onChange={radioButtonProps.onChange}
                     />
                     <span className={radioButtonSpanClasses}></span>
                     <span className="ml-2">{radioButton.label}</span>

@@ -33,6 +33,8 @@ import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import CompetitionFormDto from "@/models/dtos/competiton-form-dto";
+import SelectRival from "@/components/selectRival";
+import InvitePlayers from "@/components/invitePlayers";
 
 // Styled components
 const VisuallyHiddenInput = styled("input")({
@@ -61,6 +63,7 @@ export default function CreateCompetitionPage() {
   const [community, setCommunity] = useState<string>("")
   const [uploadedImage, setUploadedImage] = useState<Blob | undefined>(undefined);
   const [fileHelperText, setFileHelperText] = useState<string | undefined>(undefined);
+  const [competitionType, setType] = useState<number>(0);
 
   // load API data
   useEffect(() => {
@@ -95,6 +98,14 @@ export default function CreateCompetitionPage() {
       typeof value === 'string' ? value.split(',') : value,
     );
   };
+
+  const handleParticipantChange = (event: SelectChangeEvent) => {
+    setParticipants([event.target.value]);
+  }
+
+  const handleRadioCompetitionTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setType(parseInt(event.target.value));
+  }
 
   const handleGameChange = (event: SelectChangeEvent) => {
     setGame(event.target.value as string);
@@ -154,16 +165,40 @@ export default function CreateCompetitionPage() {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if(!files || files.length === 0) {
+    if (!files || files.length === 0) {
       setFileHelperText("No files selected.");
       return;
     }
 
     const file = files[0];
     setUploadedImage(file);
-    
+
     event.target.value = ""; // Reset file input to allow same file to be uploaded again (might have been changed -> new data)
   };
+
+  /* Render Functions */
+  const renderPlayers = () => {
+    if (competitionType === 2) {
+      return (
+        <SelectRival
+          users={users}
+          username={username}
+          participants={participants}
+          setUsers={handleParticipantChange}
+        />
+      );
+    } else {
+      return (
+        <InvitePlayers
+          users={users}
+          username={username}
+          participants={participants}
+          handleParticipantsChange={handleParticipantsChange}
+        />
+      );
+    }
+  };
+
 
   if (!session.data) {
     return (
@@ -173,7 +208,7 @@ export default function CreateCompetitionPage() {
 
   return (
     <div className="bg-background flex flex-col items-center" >
-      <main className="flex-auto item font-odibee text-9xl" style={{ maxWidth:'65vw', width:'100%'}}>
+      <main className="flex-auto item font-odibee text-9xl" style={{ maxWidth: '65vw', width: '100%' }}>
         <form method="post" onSubmit={handleSubmit} className="createWrapper">
           <div className="text-6xl">
             Create a competition
@@ -182,7 +217,7 @@ export default function CreateCompetitionPage() {
 
           {/* Title and Date */}
           <div className="createGroupTwoCols" >
-            <div className="createGroup" style={{width:'70%'}}>
+            <div className="createGroup" style={{ width: '70%' }}>
               <label className="text-5xl">Title</label>
               <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
                 <input
@@ -191,7 +226,7 @@ export default function CreateCompetitionPage() {
                 />
               </div>
             </div>
-            <div className="createGroup" style={{width:'30%'}}>
+            <div className="createGroup" style={{ width: '30%' }}>
               <label className="text-5xl">Start date</label>
               <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="sv">
@@ -217,21 +252,21 @@ export default function CreateCompetitionPage() {
           {/* Cover Image */}
           <div className="createGroup">
             <label className="text-5xl">Add a cover image</label>
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-                style={{width:'180px'}}
-                >
-                Upload Image
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={handleFileUpload}
-                  accept=".png, .jpg, .jpeg"
-                />
-              </Button>
-              {uploadedImage && <p className="text-xl font-nunito textshadow">Image uploaded</p>}
-              {fileHelperText && <p className="text-xl font-nunito textshadow">{fileHelperText}</p>}
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+              style={{ width: '180px' }}
+            >
+              Upload Image
+              <VisuallyHiddenInput
+                type="file"
+                onChange={handleFileUpload}
+                accept=".png, .jpg, .jpeg"
+              />
+            </Button>
+            {uploadedImage && <p className="text-xl font-nunito textshadow">Image uploaded</p>}
+            {fileHelperText && <p className="text-xl font-nunito textshadow">{fileHelperText}</p>}
           </div>
 
           {/* Settings */}
@@ -240,12 +275,12 @@ export default function CreateCompetitionPage() {
           {/* Games */}
           <div className="createGroup">
             <label className="text-5xl">Choose game</label>
-              <div className=" flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+            <div className=" flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
               {loading ? (
                 <div className=" font-nunito textshadow">Loading games...</div>
               ) : (
                 <FormControl fullWidth>
-                  {game === '' && <InputLabel shrink={false} id="demo-simple-select-label">Select game</InputLabel> }
+                  {game === '' && <InputLabel shrink={false} id="demo-simple-select-label">Select game</InputLabel>}
                   <Select
                     labelId="simple-select-label"
                     id="simple-select"
@@ -262,45 +297,20 @@ export default function CreateCompetitionPage() {
             </div>
           </div>
           {/* Modes */}
-          <RadioButton {...createCompetition.getModeRadioButtonProps()} />
+          <RadioButton {...createCompetition.getModeRadioButtonProps()} onChange={handleRadioCompetitionTypeChange} />
+
 
           {/* Players */}
-          <div className="createGroup">
-            <label className="text-5xl">Invite players</label>
-            <div className=" flex items-center rounded-full border-solid border-white border-[5px] h-[50px] w-[100%] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
+          {renderPlayers()}
 
-              <FormControl
-                sx={{ m: 1, width: '100%' }}
-              >
-                {participants.length === 0 && <InputLabel shrink={false} id="multiple-checkbox-label">Select players</InputLabel> }
-                <Select
-                  labelId="multiple-checkbox-label"
-                  id="multiple-checkbox"
-                  multiple={true}
-                  value={participants}
-                  onChange={handleParticipantsChange}
-                  input={<OutlinedInput label="Select layers" />}
-                  renderValue={(selected) => (selected as string[]).join(', ')}
-                  MenuProps={createCompetition.getMUIMenuProps()}
-                >
-                  {users.filter((user) => user.user_name != username).map((user) => (
-                    <MenuItem key={user.id} value={user.user_name}>
-                      <Checkbox checked={participants.includes(user.user_name)} />
-                      <ListItemText primary={user.user_name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-          </div>
           {/* Select Community */}
           {Object.keys(communityData).length > 0 &&
             <div>
               <SelectCommunity communityData={communityData} community={community} setCommunity={setCommunity} />
             </div>
           }
-          <div style={{width:'220px'}}>
-          <GeneralButton text="Create competition" type="submit" />
+          <div style={{ width: '220px' }}>
+            <GeneralButton text="Create competition" type="submit" />
           </div>
         </form>
       </main>
