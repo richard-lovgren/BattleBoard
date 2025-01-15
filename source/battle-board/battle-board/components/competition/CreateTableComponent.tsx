@@ -5,14 +5,14 @@ import { Leaderboard } from '@/models/leaderboard';
 interface TableModalProps {
   isOpen: boolean;
   leaderboard: Leaderboard | null;
+  userNames: string[] | null;
   onClose: () => void;
   onSave: (columns: string[], rows: string[][]) => void;
 }
 
-const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, onClose, onSave }) => {
+const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClose, onSave }) => {
   const [columns, setColumns] = useState<string[]>(['name']);
-  const [rows, setRows] = useState<string[][]>([['']]);
-  const isEditing = !!leaderboard;
+  const [rows, setRows] = useState<string[][]>([]);
 
   useEffect(() => {
     if (leaderboard) {
@@ -22,23 +22,31 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, onClose, onSave 
           leaderboard.column_names.map((col) => entry[col] || '')
         )
       );
+    } else if (userNames) {
+      //init rows with user names
+      setRows(userNames.map((userName) => [userName]));
     }
-  }, [leaderboard]);
+  }, [leaderboard, userNames]);
 
   if (!isOpen) return null;
 
   const handleAddColumn = () => {
     const newColumnName = prompt('Enter the new column name', `Column ${columns.length + 1}`);
-    setColumns((prev) => [...prev, newColumnName || `Column ${columns.length + 1}`]);
+    const updatedColumnName = newColumnName || `Column ${columns.length + 1}`;
+    setColumns((prev) => [...prev, updatedColumnName]);
     setRows((prevRows) => prevRows.map((row) => [...row, '']));
   };
 
+  /* Limit the ability to add new rows
   const handleAddRow = () => {
     const newRow = Array(columns.length).fill('');
+    newRow[0] = ''; // Prevent new rows from modifying the "name" column
     setRows((prev) => [...prev, newRow]);
   };
+  */
 
   const handleCellChange = (rowIdx: number, colIdx: number, event: ChangeEvent<HTMLInputElement>) => {
+    if (colIdx === 0) return; // Prevent editing the "name" column
     const value = event.target.value;
     setRows((prev) => {
       const newRows = [...prev];
@@ -80,8 +88,7 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, onClose, onSave 
   return ReactDOM.createPortal(
     <div style={modalStyles}>
       <div style={contentStyles}>
-        <h2>{isEditing ? 'Edit Leaderboard' : 'Create Leaderboard'}</h2>
-        <p>The column &quot;name&quot; must be present and contain the users in the competition!</p>
+        <h2>{leaderboard ? 'Edit Leaderboard' : 'Create Leaderboard'}</h2>
 
         <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: '1rem', color: 'black' }}>
           <thead>
@@ -101,12 +108,16 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, onClose, onSave 
               <tr key={rowIdx}>
                 {rowData.map((cellValue, colIdx) => (
                   <td key={`${rowIdx}-${colIdx}`} style={{ border: '1px solid #ccc', padding: '0.5rem' }}>
-                    <input
-                      type="text"
-                      value={cellValue}
-                      onChange={(e) => handleCellChange(rowIdx, colIdx, e)}
-                      style={{ width: '100%' }}
-                    />
+                    {colIdx === 0 ? (
+                      <span>{cellValue}</span> // Render name column as non-editable text
+                    ) : (
+                      <input
+                        type="text"
+                        value={cellValue}
+                        onChange={(e) => handleCellChange(rowIdx, colIdx, e)}
+                        style={{ width: '100%' }}
+                      />
+                    )}
                   </td>
                 ))}
               </tr>
@@ -115,12 +126,12 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, onClose, onSave 
         </table>
 
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {!isEditing && (
+            {!leaderboard && (
             <>
               <button onClick={handleAddColumn}>Add Column</button>
-              <button onClick={handleAddRow}>Add Row</button>
+              {/* <button onClick={handleAddRow}>Add Row</button> */}
             </>
-          )}
+            )}
           <button onClick={handleSave}>Save</button>
           <button onClick={onClose}>Close</button>
         </div>

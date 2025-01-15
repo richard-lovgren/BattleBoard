@@ -26,13 +26,12 @@ const UserPageBanner: React.FC<UserProps> = ({
 
   if (session?.user) {
     return (
-      <main className="  text-white flex flex-col items-center px-2 py-2 font-nunito ">
-        <div className="bg-slate-500 flex flex-row w-full px-10 py-10 gap-4 bg-transparent  ">
-          <div className="relative inline-block">
+      <main className="  text-white flex flex-col items-center py-2 font-nunito ">
+        <div className="bg-slate-500 flex flex-row w-full py-10 gap-4 bg-transparent  ">
+          <div className="relative inline-block" style={{ borderRadius:'100%', overflow:'hidden'}}>
             <Image
               src={`${session.user.image}`}
               alt="example"
-              className="h-auto rounded-[70px]"
               height={200}
               width={200}
             ></Image>
@@ -43,13 +42,11 @@ const UserPageBanner: React.FC<UserProps> = ({
               <h1 className="text-4xl font-bold font-odibee my-2">
                 {user_name}
               </h1>
-
               <CountryFlag langcode={langcode}></CountryFlag>
-
-              {/* <h3 className="">{data}</h3> */}
             </div>
             <h2 className="font-bold">{display_name}</h2>
-            <LolUsernameBox></LolUsernameBox>
+            <h2 className="font-bold">Link league of legends API:</h2>
+            <LolUsernameBox/>
           </div>
         </div>
       </main>

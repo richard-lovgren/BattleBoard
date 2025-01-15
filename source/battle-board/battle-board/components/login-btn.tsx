@@ -4,6 +4,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import GeneralButton from "./general-btn";
 
 export default function LoginBtn() {
   const { data: session } = useSession();
@@ -24,17 +25,15 @@ export default function LoginBtn() {
           <p className="text-sm">
             Welcome, {session.user.display_name || "User"}
           </p>
-          <Button variant="outline" size="lg" onClick={() => signOut()}>
-            Logout
-          </Button>
+
+          <GeneralButton text='Log out' onClick={() => signOut()}/>
+          
         </div>
       </Link>
     );
   }
 
   return (
-    <Button variant="outline" size="lg" onClick={() => signIn("discord")}>
-      Login
-    </Button>
+      <GeneralButton text='Log in' onClick={() => signIn("discord")}/>
   );
 }

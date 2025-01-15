@@ -15,3 +15,18 @@ export function formatDate(dateStr: Date): string {
 
   return formattedDate;
 }
+
+export function getCompetitonTypeIcon(type: number) : string {
+  if(type == 0) {
+    return "/tournament.svg"
+  }
+  else if(type == 1) {
+    return "/classic_mode_icon.svg"
+  }
+  else if(type == 2) {
+    return "/rival_mode_icon.svg"
+  }
+  else {
+    return "";
+  }
+}

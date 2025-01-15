@@ -1,17 +1,24 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 
-export default function GeneralButton({ 
-  text ="Click me!", 
-  type = "button", 
-  ...props }: { text?: string, type?: "button" | "submit" | "reset" 
-  } & ButtonHTMLAttributes<HTMLButtonElement>) 
-{
+interface GeneralButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  text?: string;
+  children?: ReactNode;
+}
+
+export default function GeneralButton({
+  text = "Click me!",
+  type = "button",
+  children,
+  ...props
+}: GeneralButtonProps) {
   return (
-    <button 
-      type={type} 
-      className="appearance-none flex bg-buttonprimary max-h-10 max-w-40 py-3 px-5 text-sm rounded-xl items-center justify-center hover:bg-buttonprimaryhover transition ease-in-out duration-300 font-nunito text-white"
-      {...props}>
+    <button
+      type={type}
+      className="appearance-none flex bg-buttonprimary py-2 px-5 text-sm rounded-xl items-center justify-center hover:bg-buttonprimaryhover transition ease-in-out duration-300 font-nunito text-white"
+      {...props}
+    >
       {text}
+      {children} 
     </button>
   );
 }

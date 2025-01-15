@@ -51,7 +51,7 @@ namespace HermitStore
     {
         public required string community_name { get; set; }
         public string? community_image { get; set; }
-        public required ulong id { get; set; }
+        public required string id { get; set; }
     }
 
     public class Community : CommunityDto
@@ -69,7 +69,7 @@ namespace HermitStore
     public class UserCommunity : UserCommunityDto
     {
         public required Guid id { get; set; }
-        public required ulong community_id { get; set; }
+        public required string community_id { get; set; }
     }
 
     public class GameDto
@@ -85,12 +85,18 @@ namespace HermitStore
     public class GameCommunityDto
     {
         public required Guid game_id { get; set; }
-        public required Guid community_id { get; set; }
+        public required string community_id { get; set; }
     }
 
     public class GameCommunity : GameCommunityDto
     {
         public required Guid id { get; set; }
+    }
+
+    public class CompetitionFormDto
+    {
+        public required string competition_data { get; set; }
+        public IFormFile? competition_image { get; set; }
     }
 
     public class CompetitionDto
@@ -101,18 +107,20 @@ namespace HermitStore
         public string? competition_description { get; set; }
         public required int competition_type { get; set; }
         public required int format { get; set; }
-        public byte[]? competition_image { get; set; }
         public bool is_open { get; set; } = true;
         public bool is_running { get; set; } = false;
         public Guid? game_id { get; set; }
         public required int rank_alg { get; set; }
         public required bool is_public { get; set; }
 
-        public ulong? community_id { get; set; }
+        public string? community_id { get; set; }
     }
 
     public class Competition : CompetitionDto
     {
+        public byte[]? competition_image { get; set; }
+        public string? competition_image_path { get; set; }
+        public string? competition_image_content_type {get; set;}
         public required int participants { get; set; }
         public required Guid id { get; set; }
     }

@@ -209,7 +209,7 @@ public static class UsersApi
                     .community.Where(x => communityIds.Contains(x.id))
                     .Select(x => x.community_name)
                     .ToListAsync();
-                var communityIdsAndNames = new Dictionary<ulong, string>();
+                var communityIdsAndNames = new Dictionary<string, string>();
 
                 if (communityIds.Count != communityNames.Count)
                 {

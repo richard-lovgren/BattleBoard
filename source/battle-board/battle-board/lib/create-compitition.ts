@@ -1,5 +1,5 @@
 import RadioButtonProps from "@/models/component-props/radio-button-props";
-import CompetitionDto from "@/models/dtos/competition-dto";
+import CompetitionFormDto from "@/models/dtos/competiton-form-dto";
 import JoinCompetitionDto from "@/models/dtos/join-competition-dto";
 import Game from "@/models/interfaces/game";
 import User from "@/models/interfaces/user";
@@ -72,19 +72,27 @@ export function getModeRadioButtonProps(): RadioButtonProps {
     };
 }
 
-export async function postCompetitionData(
-    body: CompetitionDto
+  export async function postCompetitionData(
+    competitionForm: CompetitionFormDto
   ): Promise<string | null> {
     try {
-      console.log("Creating competition with body:", body);
       const url = `/api/competitions`;
+
+      const formData = new FormData();
+      formData.append("competition_data", JSON.stringify(competitionForm.competition_data));
+
+      if(competitionForm.competition_image) {
+        formData.append("competition_image", competitionForm.competition_image);
+      }
+      console.log(competitionForm);
+      console.log("formData created hello???");
+      for (var key of formData.entries()) {
+        console.log(key[0] + ', ' + key[1]);
+      }
 
       const response = await fetch(url, {
         method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: formData,
       });
 
       if (!response.ok) {
@@ -139,8 +147,6 @@ export async function postCompetitionData(
             },
           },
         };
-
         return MenuProps
-
     }
 

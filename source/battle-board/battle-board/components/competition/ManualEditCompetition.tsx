@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { Button } from "@mui/material";
 import { Leaderboard } from "@/models/leaderboard";
 import TableModal from "@/components/competition/CreateTableComponent";
 import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
+import GeneralButton from "@/components/general-btn";
 
 interface EditCompetitionButtonProps {
   competitionCreator: string;
@@ -13,6 +13,7 @@ interface EditCompetitionButtonProps {
   userNames: string[] | null;
   leaderboard: Leaderboard | null;
   triggerReload: () => void;
+  gameName: string | null;
 }
 
 const postLeaderboard = async (
@@ -59,11 +60,18 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
   leaderboard,
   userNames,
   triggerReload,
+  gameName,
 }) => {
+
   const { data: session } = useSession();
   const username = session?.user?.name;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Build error on conditional statement before useSession etc
+  if (gameName === "League of Legends") {
+    return null;
+  } 
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -98,14 +106,13 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
   if (leaderboard === null) {
     return (
       <div>
-        <Button variant="contained" color="primary" onClick={handleOpenModal}>
-          Create competition table
-        </Button>
+         <GeneralButton text="Create competition table" onClick={handleOpenModal} />
         <TableModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onSave={handleModalSave}
           leaderboard={leaderboard}
+          userNames={userNames}
         />
       </div>
     );
@@ -114,14 +121,13 @@ const EditCompetitionButton: React.FC<EditCompetitionButtonProps> = ({
   if (leaderboard) {
     return (
       <div>
-        <Button variant="contained" color="primary" onClick={handleOpenModal}>
-          Edit competition results
-        </Button>
+         <GeneralButton text="Edit competition results" onClick={handleOpenModal} />
         <TableModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onSave={handleModalSave}
           leaderboard={leaderboard}
+          userNames={userNames}
         />
       </div>
     );

@@ -53,7 +53,7 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
         const data = await fetchRivalLeaderBoardDodge(competitionId);
         setLeaderboardData(data);
       } catch (error) {
-        console.error("Error fetching leaderboard data:", error);
+        console.log("Error fetching leaderboard data:", error);
       } finally {
         setLoading(false);
       }

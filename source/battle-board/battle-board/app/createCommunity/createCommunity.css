@@ -16,8 +16,10 @@
   border-radius: 10px;
   font-size: 16px;
   font-weight: bold;
-  width: 140px;
-  height: 40px;
+  height: fit-content;
+  width: fit-content;
+  box-sizing: border-box;
+  padding: 10px 15px;
 }
 
 .createButton {

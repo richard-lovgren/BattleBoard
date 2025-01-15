@@ -7,7 +7,6 @@ import { styled } from "@mui/material/styles";
 import { parse } from "papaparse";
 import { Leaderboard } from "@/models/leaderboard";
 import LeaderboardDTO from "@/models/dtos/leaderboard-dto";
-
 // Styled components
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -205,6 +204,7 @@ const FileUploadAndParseButton: React.FC<FileUploadAndParseComponentProps> = ({
         component="label"
         variant="contained"
         startIcon={<CloudUploadIcon />}
+        style={{borderRadius: "10px", textTransform: "none"}}
       >
         Upload Results using CSV
         <VisuallyHiddenInput
