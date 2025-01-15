@@ -204,7 +204,7 @@ const FileUploadAndParseButton: React.FC<FileUploadAndParseComponentProps> = ({
         component="label"
         variant="contained"
         startIcon={<CloudUploadIcon />}
-        style={{borderRadius: "10px", textTransform: "none"}}
+        style={{borderRadius: "10px", textTransform: "none", height:'40px'}}
       >
         Upload Results using CSV
         <VisuallyHiddenInput

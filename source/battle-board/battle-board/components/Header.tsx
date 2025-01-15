@@ -3,7 +3,6 @@ import LoginBtn from "./login-btn";
 import Image from "next/image";
 
 export default function Header() {
-  //This is the login button #TODO Remove Link wrapper and place the discord function thingy in the onClick()={} call -->
   return (
     <header className="h-28 flex flex-row items-center justify-between px-10 font-nunito ">
       <Link href="/">
@@ -15,7 +14,8 @@ export default function Header() {
           height={200}
           priority={true}
           style={{
-            width: 'auto'
+            width: 'auto',
+            cursor: 'pointer',
           }}
         />
       </Link>

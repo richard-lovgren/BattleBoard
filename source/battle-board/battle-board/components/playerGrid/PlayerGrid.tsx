@@ -51,7 +51,8 @@ export default function PlayerGrid({ playerList }: { playerList: string[] | null
   return (
     <Box
       style={{
-        width: '95vw',
+        width: '100%',
+        flex:'1',
         margin: '40px',
         border: '3px solid #fff',
         borderRadius: '15px',

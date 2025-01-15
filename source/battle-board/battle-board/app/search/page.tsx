@@ -116,7 +116,7 @@ export default function Search() {
           </div>
 
           <div className="flex flex-wrap gap-10 justify-center mt-10 min-h-[80vh] w-[80vw] p-8">
-            {loading && <div>Loading...</div>}
+            {loading && <div style={{fontSize:'2rem'}}>Loading...</div>}
             {error && <div>Error: {error}</div>}
             {!loading && !error && toggleCompetitions && (
               <>

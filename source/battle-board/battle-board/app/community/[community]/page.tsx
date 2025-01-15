@@ -26,8 +26,6 @@ async function fetchCommunityData(communityId: string): Promise<CommunityData> {
 async function fetchCommunityCompetitionData(
   communityId: string
 ): Promise<string[]> {
-
-
   const response = await fetch(
     `${baseUrl}/api/community/competition?communityId=${communityId}` // Correct URL
   );
@@ -56,42 +54,44 @@ const CommunityPage = async (props: { params: CommunityPageProps }) => {
     communityCompetitionData);
 
 
-
-  console.log("Competition ids: ", communityCompetitionData);
-
   return (
-    <div className="w-full h-full  flex flex-col gap-4 items-center">
-      <div className="w-full  flex text-slate-50 text-3xl flex-row items-center px-10 py-0">
+    <div className='w-full h-full  flex flex-col gap-4 items-center' style={{maxWidth:'1500px', width:'90vw', margin:'0 auto', paddingBottom:'100px'}}>
+   <div className='w-full  flex text-slate-50 text-3xl flex-row items-center px-0 py-0'>
         {communityDataHeader.community_image && (
-          <div className="relative inline-block flex-shrink-0 w-96 h-96"
-            style={{ width: '25vw', height: '25vw' }}
+          <div
+            className='relative inline-block flex-shrink-0 w-96 h-96'
+            style={{ width: '20vw', height: '20vw' }}
           >
             <Image
               src={communityDataHeader.community_image}
               alt={`${communityDataHeader.community_name} image`}
-              className="rounded-full"
-              layout="fill"
-              objectFit="cover"
+              className='rounded-full'
+              layout='fill'
+              objectFit='cover'
             />
-            <div className="absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black"></div>
+            <div className='absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black'></div>
           </div>
         )}
-        <div className="flex flex-col gap-4 h-full pl-8 pr-12 flex-grow self-center py-0 bg-transparent">
+        <div className='flex flex-col gap-4 h-full pl-8 pr-12 flex-grow self-center py-0 bg-transparent'>
           <h1 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-odibee text-white'>
             {communityDataHeader.community_name}
           </h1>
         </div>
+
       </div>
-      <div className=" text-accent flex text-6xl flex-row justify-end px-10 py-10" style={{gap:'40px', marginBottom:'50px'}}>
-       <div >
-        <CompetitionList competitions={userCompetitionsData}></CompetitionList>
-       </div>
-          
+      <div
+        className=' text-accent flex text-6xl flex-row justify-end py-10  w-full'
+        style={{ gap: '40px', marginBottom: '50px',  justifyContent:'start' }}
+      >
+          <CompetitionList
+            competitions={userCompetitionsData}
+          />
         <CommunityMembersList community_id={community}></CommunityMembersList>
+
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Export the server component
-export default CommunityPage;
+export default CommunityPage
