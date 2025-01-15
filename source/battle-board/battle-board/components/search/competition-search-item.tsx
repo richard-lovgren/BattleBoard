@@ -37,7 +37,7 @@ export default function CompetitionSearchItem(competition: CompetitionData) {
 
   return (
     <Link href={`/competition/${competition.id}`} passHref>
-      <div style={{cursor:'pointer'}} className="flex flex-none flex-col h-[400px] w-[329px] rounded-[1.2rem] bg-gradient-to-br from-[#4E35BE] to-[#241958] transform transition-transform duration-300 hover:scale-105">
+      <div style={{cursor:'pointer'}} className="flex flex-none flex-col h-[400px] w-[300px] rounded-[1.2rem] bg-gradient-to-br from-[#4E35BE] to-[#241958] transform transition-transform duration-300 hover:scale-105">
       <div
         className='flex flex-none items-center justify-center rounded-t-[1.2rem] bg-[#D9D9D9] h-[173px]'
         style={{ position: 'relative', overflow: 'hidden' }}

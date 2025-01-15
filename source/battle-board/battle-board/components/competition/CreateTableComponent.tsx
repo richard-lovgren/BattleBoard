@@ -1,6 +1,7 @@
-import React, { useState, useEffect, ChangeEvent, FC } from 'react';
-import ReactDOM from 'react-dom';
-import { Leaderboard } from '@/models/leaderboard';
+import React, { useState, useEffect, ChangeEvent, FC } from 'react'
+import ReactDOM from 'react-dom'
+import { Leaderboard } from '@/models/leaderboard'
+import GeneralButton from '../general-btn'
 
 interface TableModalProps {
   isOpen: boolean;
@@ -69,34 +70,51 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClo
     zIndex: 9999,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  };
+  }
 
   const contentStyles: React.CSSProperties = {
     backgroundColor: '#fff',
-    padding: '2rem',
+    padding: '3rem 2rem',
     borderRadius: '6px',
+    minWidth: '600px',
     maxWidth: '80%',
     maxHeight: '80%',
     overflow: 'auto',
     color: 'black',
-  };
+  }
 
   return ReactDOM.createPortal(
     <div style={modalStyles}>
       <div style={contentStyles}>
-        <h2>{leaderboard ? 'Edit Leaderboard' : 'Create Leaderboard'}</h2>
+        <h2 className='mb-4 font-odibee text-2xl'>
+          {leaderboard ? 'Edit Leaderboard' : 'Create Leaderboard'}
+        </h2>
 
-        <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: '1rem', color: 'black' }}>
+        <table
+          style={{
+            borderCollapse: 'collapse',
+            width: '100%',
+            marginBottom: '1rem',
+            color: 'black',
+          }}
+        >
           <thead>
             <tr>
               {columns.map((col, colIdx) => (
                 <th
                   key={colIdx}
-                  style={{ border: '1px solid #ccc', padding: '0.5rem', backgroundColor: '#f7f7f7' }}
+                  className='font-nunito'
+                  style={{
+                    border: '1px solid #ccc',
+                    padding: '0.5rem',
+                    backgroundColor: '#f7f7f7',
+                    textAlign: 'left',
+                    fontSize: '1rem',
+                  }}
                 >
                   {col}
                 </th>
@@ -107,7 +125,11 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClo
             {rows.map((rowData, rowIdx) => (
               <tr key={rowIdx}>
                 {rowData.map((cellValue, colIdx) => (
-                  <td key={`${rowIdx}-${colIdx}`} style={{ border: '1px solid #ccc', padding: '0.5rem' }}>
+                  <td
+                    className='font-nunito'
+                    key={`${rowIdx}-${colIdx}`}
+                    style={{ border: '1px solid #ccc', padding: '0.5rem' }}
+                  >
                     {colIdx === 0 ? (
                       <span>{cellValue}</span> // Render name column as non-editable text
                     ) : (
@@ -125,20 +147,26 @@ const TableModal: FC<TableModalProps> = ({ isOpen, leaderboard, userNames, onClo
           </tbody>
         </table>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-            {!leaderboard && (
-            <>
-              <button onClick={handleAddColumn}>Add Column</button>
-              {/* <button onClick={handleAddRow}>Add Row</button> */}
-            </>
-            )}
-          <button onClick={handleSave}>Save</button>
-          <button onClick={onClose}>Close</button>
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.5rem',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          {!leaderboard && (
+            <GeneralButton onClick={handleAddColumn} text='Add Column' />
+          )}
+          <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'row' }}>
+            <GeneralButton onClick={handleSave} text='Save' />
+            <GeneralButton onClick={onClose} text='Close' />
+          </div>
         </div>
       </div>
     </div>,
     document.body
-  );
-};
+  )
+}
 
-export default TableModal;
+export default TableModal

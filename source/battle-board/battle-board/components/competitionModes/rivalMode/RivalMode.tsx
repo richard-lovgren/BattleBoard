@@ -83,14 +83,14 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
 
   parseRows(rows, leftScores, rightScores);
 
-  const renderTable = (name: string, scores: string[]) => (
+  const renderTable = (name: string, scores: string[], left?: boolean) => (
     <TableContainer>
-      <Table sx={{ minWidth: 300 }} aria-label={`${name} scores table`}>
+      <Table sx={{ minWidth: 200 }} aria-label={`${name} scores table`}>
         <TableHead>
-          <TableRow>
-            <TableCell align="center">
-              <div className="flex flex-col items-center justify-center gap-2">
-                <Typography className="text-4xl font-odibee">{name}</Typography>
+          <TableRow style={{ height: '80px' }}>
+            <TableCell align='center'>
+              <div className='flex flex-col justify-center gap-2'>
+                <Typography className='text-4xl font-odibee' style={left ? {textAlign:'right'} : {textAlign:'left'}}>{name}</Typography>
               </div>
             </TableCell>
           </TableRow>
@@ -104,11 +104,13 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
                 "&:last-child td, &:last-child th": { border: 0 },
               }}
             >
-              <TableCell align="center" sx={{ color: "white", border: "none" }}>
-                <div className=" border-[3px] border-accent p-4 w-full rounded-xl">
-                  <Typography className="breadText font-bold">
-                    {score}
-                  </Typography>
+              <TableCell
+                align='center'
+                sx={{ color: 'white', border: 'none' }}
+                style={{ height: '80px' }}
+              >
+                <div className=" border-[3px] border-white w-full h-full  rounded-xl flex items-center px-5" style={left ? {justifyContent:'right'} : {justifyContent:'left'}}>
+                <Typography className='breadText font-bold' >{score}</Typography>
                 </div>
               </TableCell>
             </TableRow>
@@ -123,25 +125,51 @@ const RivalMode: React.FC<RivalModeProps> = ({ competitionId, userNames }) => {
       <Table aria-label="metrics table">
         <TableBody>
           {metrics.map((metric, index) => (
-            <TableRow key={index}>
-              <TableCell align="center" sx={{ color: "white" }}>
-                <div className=" border-[3px]  p-4 w-full rounded-xl border-background underline">
-                  <Typography textAlign="center">{metric}</Typography>
-                </div>
+            <TableRow
+              key={index}
+              style={{
+                height: '80px',
+                maxHeight: '80px',
+              }}
+            >
+              <TableCell align='center'>
+                <Typography
+                  textAlign='center'
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'normal',
+                    minWidth: '80px',
+                    fontFamily: 'Odibee Sans',
+                    fontSize: '1.3rem',
+                    lineHeight: '1.2',
+                  }}
+                >
+                  {metric}
+                </Typography>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-  );
+  )
 
   return (
-    <div className="flex flex-row items-end justify-center gap-4   ">
-      {renderTable(leftName, leftScores)}
+    <div
+      className='flex flex-row  justify-center gap-4   '
 
-      <div className="  h-full items-center flex flex-col">
-        <div className="rounded-full p-2 bg-white self-center">
+    >
+      {renderTable(leftName, leftScores, true)}
+
+      <div className='  h-full items-center flex flex-col'>
+        <div
+          className='rounded-full p-2 self-center'
+          style={{ height: '80px' }}
+        >
           <Swords size={64} />
         </div>
 
