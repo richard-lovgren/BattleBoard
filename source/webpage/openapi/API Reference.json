@@ -267,6 +267,346 @@
         }
       }
     },
+    "/competition/classic": {
+      "post": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Create a new leaderboard for a classic mode competition.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaderboardDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/competition/classic/{competition_id}": {
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Get a leaderboard by competition id.",
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/competition/classic/metric": {
+      "post": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Add a metric to a classic mode leaderboard.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaderboardMetricDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardMetric"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/competition/classic/metric/value": {
+      "put": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Create a new metric value for a classic mode leaderboard.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaderboardEntryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardEntry"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/competition/classic/{competition_id}/{user_name}/{metric_name}": {
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Get the sum of a user's metric value for a classic mode leaderboard.",
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardEntry"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/competition/{competition_id}/leaderboard": {
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Get an all you need object for displaying a leaderboard.",
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardMegaObj"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Update a leaderboard.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaderboardMegaObjDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Update a leaderboard.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaderboardMegaObjDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/competition/tournament": {
+      "post": {
+        "tags": [
+          "HermitStore"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TournamentMegaObjDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/competition/{competition_id}/tournament": {
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/communities": {
       "get": {
         "tags": [
@@ -330,8 +670,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "uint64"
+              "type": "string"
             }
           }
         ],
@@ -362,8 +701,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "uint64"
+              "type": "string"
             }
           }
         ],
@@ -389,8 +727,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "uint64"
+              "type": "string"
             }
           }
         ],
@@ -409,6 +746,26 @@
             "description": "Created"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/communities/{id}/competitions": {
@@ -423,8 +780,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "uint64"
+              "type": "string"
             }
           }
         ],
@@ -445,6 +801,59 @@
           },
           "404": {
             "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/communities/{id}/{user_name}": {
+      "delete": {
+        "tags": [
+          "HermitStore"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/competitions/public": {
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Get all public competitions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Competition"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -478,9 +887,40 @@
         "description": "Create a new competition",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CompetitionDto"
+                "required": [
+                  "competition_data"
+                ],
+                "type": "object",
+                "properties": {
+                  "competition_data": {
+                    "type": "string"
+                  },
+                  "competition_image": {
+                    "type": "string",
+                    "format": "binary",
+                    "nullable": true
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "required": [
+                  "competition_data"
+                ],
+                "type": "object",
+                "properties": {
+                  "competition_data": {
+                    "type": "string"
+                  },
+                  "competition_image": {
+                    "type": "string",
+                    "format": "binary",
+                    "nullable": true
+                  }
+                }
               }
             }
           },
@@ -492,7 +932,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Competition"
+                  "type": "string",
+                  "format": "uuid"
                 }
               }
             }
@@ -534,17 +975,74 @@
         }
       }
     },
-    "/competitions/join": {
-      "post": {
+    "/competitions/{id}/users": {
+      "get": {
         "tags": [
           "HermitStore"
         ],
-        "description": "Join a competition",
+        "description": "Competition not found",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/competitions/{id}/image": {
+      "put": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Upload image to competition.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserCompetitionDto"
+                "required": [
+                  "competition_image"
+                ],
+                "type": "object",
+                "properties": {
+                  "competition_image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           },
@@ -552,10 +1050,82 @@
         },
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Get image of competition",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/competitions/join": {
+      "post": {
+        "tags": [
+          "HermitStore"
+        ],
+        "description": "Join one or multiple users to a competition.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinCompetitionDto"
+              }
+            }
           },
-          "404": {
-            "description": "Not Found"
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -610,6 +1180,29 @@
           }
         }
       }
+    },
+    "/games/{id}": {
+      "get": {
+        "tags": [
+          "HermitStore"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -626,6 +1219,10 @@
             "type": "string",
             "format": "date-time"
           },
+          "community_members": {
+            "type": "integer",
+            "format": "int32"
+          },
           "community_name": {
             "type": "string"
           },
@@ -634,8 +1231,7 @@
             "nullable": true
           },
           "id": {
-            "type": "integer",
-            "format": "uint64"
+            "type": "string"
           }
         }
       },
@@ -654,8 +1250,7 @@
             "nullable": true
           },
           "id": {
-            "type": "integer",
-            "format": "uint64"
+            "type": "string"
           }
         }
       },
@@ -664,6 +1259,8 @@
           "participants",
           "id",
           "competition_name",
+          "creator_name",
+          "competition_start_date",
           "competition_type",
           "format",
           "rank_alg",
@@ -671,6 +1268,19 @@
         ],
         "type": "object",
         "properties": {
+          "competition_image": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "competition_image_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "competition_image_content_type": {
+            "type": "string",
+            "nullable": true
+          },
           "participants": {
             "type": "integer",
             "format": "int32"
@@ -682,61 +1292,13 @@
           "competition_name": {
             "type": "string"
           },
-          "competition_description": {
-            "type": "string",
-            "nullable": true
-          },
-          "competition_type": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "format": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "competition_image": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "is_open": {
-            "type": "boolean"
-          },
-          "is_running": {
-            "type": "boolean"
-          },
-          "game_id": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "rank_alg": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "is_public": {
-            "type": "boolean"
-          },
-          "community_id": {
-            "type": "integer",
-            "format": "uint64",
-            "nullable": true
-          }
-        }
-      },
-      "CompetitionDto": {
-        "required": [
-          "competition_name",
-          "competition_type",
-          "format",
-          "rank_alg",
-          "is_public"
-        ],
-        "type": "object",
-        "properties": {
-          "competition_name": {
+          "creator_name": {
             "type": "string"
           },
+          "competition_start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
           "competition_description": {
             "type": "string",
             "nullable": true
@@ -748,11 +1310,6 @@
           "format": {
             "type": "integer",
             "format": "int32"
-          },
-          "competition_image": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
           },
           "is_open": {
             "type": "boolean"
@@ -773,8 +1330,7 @@
             "type": "boolean"
           },
           "community_id": {
-            "type": "integer",
-            "format": "uint64",
+            "type": "string",
             "nullable": true
           }
         }
@@ -806,10 +1362,260 @@
           }
         }
       },
+      "JoinCompetitionDto": {
+        "required": [
+          "competition_id",
+          "user_names"
+        ],
+        "type": "object",
+        "properties": {
+          "competition_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Leaderboard": {
+        "required": [
+          "id",
+          "competition_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "competition_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "LeaderboardDto": {
+        "required": [
+          "competition_id"
+        ],
+        "type": "object",
+        "properties": {
+          "competition_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "LeaderboardEntry": {
+        "required": [
+          "id",
+          "leaderboard_id",
+          "user_name",
+          "metric_name",
+          "metric_value"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "leaderboard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_name": {
+            "type": "string"
+          },
+          "metric_name": {
+            "type": "string"
+          },
+          "metric_value": {
+            "type": "string"
+          }
+        }
+      },
+      "LeaderboardEntryDto": {
+        "required": [
+          "leaderboard_id",
+          "user_name",
+          "metric_name",
+          "metric_value"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_name": {
+            "type": "string"
+          },
+          "metric_name": {
+            "type": "string"
+          },
+          "metric_value": {
+            "type": "string"
+          }
+        }
+      },
+      "LeaderboardMegaObj": {
+        "required": [
+          "leaderboard_id",
+          "competition_id",
+          "leaderboard_entries",
+          "column_names"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "competition_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "leaderboard_entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "column_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LeaderboardMegaObjDto": {
+        "required": [
+          "competition_id",
+          "leaderboard_entries",
+          "column_names"
+        ],
+        "type": "object",
+        "properties": {
+          "competition_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "leaderboard_entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "column_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LeaderboardMetric": {
+        "required": [
+          "leaderboard_id",
+          "metric_name"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "metric_name": {
+            "type": "string"
+          }
+        }
+      },
+      "LeaderboardMetricDto": {
+        "required": [
+          "leaderboard_id",
+          "metric_name"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "metric_name": {
+            "type": "string"
+          }
+        }
+      },
+      "TournamentMatchDto": {
+        "required": [
+          "round_number",
+          "match_in_round"
+        ],
+        "type": "object",
+        "properties": {
+          "round_number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "match_in_round": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "player_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "player_2": {
+            "type": "string",
+            "nullable": true
+          },
+          "winner": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TournamentMegaObjDto": {
+        "required": [
+          "competition_id",
+          "number_of_players",
+          "tournament_matches"
+        ],
+        "type": "object",
+        "properties": {
+          "competition_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number_of_players": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tournament_matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TournamentMatchDto"
+            }
+          }
+        }
+      },
       "User": {
         "required": [
           "id",
-          "discord_id"
+          "discord_id",
+          "user_name"
         ],
         "type": "object",
         "properties": {
@@ -822,14 +1628,17 @@
             "format": "uint64"
           },
           "user_name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "display_name": {
             "type": "string",
             "nullable": true
           },
           "league_puuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
             "type": "string",
             "nullable": true
           }
@@ -846,25 +1655,10 @@
           }
         }
       },
-      "UserCompetitionDto": {
-        "required": [
-          "competition_id",
-          "user_name"
-        ],
-        "type": "object",
-        "properties": {
-          "competition_id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "user_name": {
-            "type": "string"
-          }
-        }
-      },
       "UserDto": {
         "required": [
-          "discord_id"
+          "discord_id",
+          "user_name"
         ],
         "type": "object",
         "properties": {
@@ -873,14 +1667,17 @@
             "format": "uint64"
           },
           "user_name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "display_name": {
             "type": "string",
             "nullable": true
           },
           "league_puuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
             "type": "string",
             "nullable": true
           }
