@@ -43,7 +43,7 @@ export async function removeFromJoinQueue(
 }
 
 export async function getJoinQueue(competitionId: string): Promise<string[]> {
-    const response = await fetch(`${baseUrl}/api/competitions/${competitionId}/join-requests`, {
+    const response = await fetch(`${baseUrl}/api/competitions/join-requests?competition_id=${competitionId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
