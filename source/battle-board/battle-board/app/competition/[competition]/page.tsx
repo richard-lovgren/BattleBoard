@@ -15,8 +15,8 @@ async function getCompetitionData(competitionId: string) {
   if (!competitionData) {
     throw new Error('Competition not found')
   }
-
-  const imageUrl = `http://localhost:8080/competitions/${competitionData.id}/image`
+  const dbUrl = process.env.DB_CONN_STR
+  const imageUrl = `${dbUrl}/competitions/${competitionData.id}/image`
 
   const gameName = await fetchGameName(competitionData.game_id)
   const leaderboard = await fetchClassicLeaderBoard(competitionId)
@@ -32,7 +32,7 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
     await getCompetitionData((await props.params).competition)
 
   return (
-    <div className='w-full h-full  flex flex-col gap-4 items-center' style={{maxWidth:'1500px', width:'90vw', margin:'0 auto', paddingBottom:'100px'}}>
+    <div className='w-full h-full  flex flex-col gap-4 items-center' style={{ maxWidth: '1500px', width: '90vw', margin: '0 auto', paddingBottom: '100px' }}>
 
       <div
         style={{ width: '100%', justifyContent: 'space-between', gap: '20px' }}
@@ -53,14 +53,14 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
               sizes='50vw'
               style={{
                 objectFit: 'cover'
-                }
               }
-            />      
+              }
+            />
 
             <div className='absolute inset-0 bg-black bg-opacity-20 rounded-full shadow-inner shadow-black'></div>
           </div>
 
-          <div style={{ display:'flex', flexDirection:'column', height: '100%', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
             <h1 className='text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-odibee text-white'>
               {competitionData.competition_name}
             </h1>
@@ -91,14 +91,14 @@ const CompetitionPage = async (props: { params: CompetitionPageProps }) => {
             alt='Competition Type Image'
             width={40}
             height={40}
-            style={{ maxWidth: '40px', maxHeight:'40px', padding: '5px' }}
+            style={{ maxWidth: '40px', maxHeight: '40px', padding: '5px' }}
           />
         </div>
       </div>
 
       {/* List players in competition */}
       <Suspense fallback={<p>Loading players...</p>}>
-          <PlayerGrid playerList={competitionUsers} />
+        <PlayerGrid playerList={competitionUsers} />
       </Suspense>
       {/* Leaderboard component - contains edit and upload buttons to avoid excessive state inheritance (pls om ni kommer på bättre sätt help) */}
       <LeaderboardComponent
