@@ -62,8 +62,15 @@ const ClassicMode: React.FC<ClassicModeProps> = ({ competitionId }) => {
   const sortedRows = React.useMemo(() => {
     if (!leaderboardData) return [];
     return [...leaderboardData.leaderboard_entries].sort((a, b) => {
-      if (a[orderBy] < b[orderBy]) return order === 'asc' ? -1 : 1;
-      if (a[orderBy] > b[orderBy]) return order === 'asc' ? 1 : -1;
+      const aValue = a[orderBy];
+      const bValue = b[orderBy];
+
+      if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
+        return order === 'asc' ? Number(aValue) - Number(bValue) : Number(bValue) - Number(aValue);
+      }
+
+      if (aValue < bValue) return order === 'asc' ? -1 : 1;
+      if (aValue > bValue) return order === 'asc' ? 1 : -1;
       return 0;
     });
   }, [leaderboardData, order, orderBy]);

@@ -300,8 +300,8 @@ INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b5
 INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ed', 'ViperStrike', '152e3928-5b50-45a1-92cf-c8695af932e8');
 INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ee', 'BlazeHunter', '152e3928-5b50-45a1-92cf-c8695af932e8');
 INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931ef', 'StormBringer', '152e3928-5b50-45a1-92cf-c8695af932e8');
-INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931fa', 'NightHawk', '152e3928-5b50-45a1-92cf-c8695af932e8');
-INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931fb', 'RogueAssassin', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931f1', 'NightHawk', '152e3928-5b50-45a1-92cf-c8695af932e8');
+INSERT INTO user_competition(id, user_name, competition_id) VALUES('223d4923-5b50-45a1-92cf-c1695af931f2', 'RogueAssassin', '152e3928-5b50-45a1-92cf-c8695af932e8');
 
 -- Join all users to Lab Wars: Ångström Edt
 INSERT INTO user_competition(id, user_name, competition_id) VALUES('323d4923-5b50-45a1-92cf-c1695af931d1', 'ShadowSlayer', '152e3928-5b50-45a1-92cf-c8695af932e7');

@@ -172,8 +172,8 @@ export default function CreateCompetitionPage() {
   }
 
   return (
-    <div className="bg-background flex flex-col items-center">
-      <main className="flex-auto item font-odibee text-9xl">
+    <div className="bg-background flex flex-col items-center" >
+      <main className="flex-auto item font-odibee text-9xl" style={{ maxWidth:'65vw', width:'100%'}}>
         <form method="post" onSubmit={handleSubmit} className="createWrapper">
           <div className="text-6xl">
             Create a competition
@@ -191,14 +191,12 @@ export default function CreateCompetitionPage() {
                 />
               </div>
             </div>
-            <div className="createGroup">
+            <div className="createGroup" style={{width:'30%'}}>
               <label className="text-5xl">Start date</label>
               <div className="search-bar flex items-center rounded-full border-solid border-white border-[5px] h-[50px] py-8 pl-4 pr-8 shadow-lg shadow-indigo-500/50">
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="sv">
                   <DatePicker
                     onChange={(newValue) => setSelectedDate(newValue)}
-
-
                   />
                 </LocalizationProvider>
               </div>

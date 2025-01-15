@@ -50,17 +50,17 @@ const CommunityMembersList: React.FC<any> = ({
   }, [community_id]);
 
   if (loading) {
-    return <div>Loading community data...</div>;
+    return <div style={{fontSize:'1.5rem', color:'white'}}><i>Loading community data...</i></div>;
   }
 
   if (!communityData) {
-    return <div>Failed to load community data.</div>;
+    return <div style={{fontSize:'1.5rem', color:'white'}}><i>Failed to load community data.</i></div>;
   }
 
 
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} style={{marginTop:'58px'}}>
       <h1 className="text-3xl flex font-bold font-odibee">
         Community Members
       </h1>

@@ -18,19 +18,23 @@ async function getCompetitions(): Promise<CompetitionData[]> {
 
 async function getCommunities(): Promise<Community[]> {
   const response = await fetch("/api/community/public");
-  const data = await response.json();
-  return data
+  return await response.json();
 }
 
+async function fetchGameName(gameId: string): Promise<string | null> {
+  const response = await fetch(`/api/game?gameId=${gameId}`);
+  if (!response.ok) return null;
+  return response.json().then((data) => data.game_name);
+}
 
 export default function Search() {
   /* State */
   const [toggleCompetitions, setToggleCompetitions] = useState(false);
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState("");
   const [competitions, setCompetitions] = useState<CompetitionData[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
-  const [filteredCompetitions, setFilteredCompetitions] = useState(competitions);
-  const [filteredCommunities, setFilteredCommunities] = useState(communities);
+  const [filteredCompetitions, setFilteredCompetitions] = useState<CompetitionData[]>([]);
+  const [filteredCommunities, setFilteredCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,28 +42,43 @@ export default function Search() {
     setToggleCompetitions(!toggleCompetitions);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchString(searchTerm);
-    setFilteredCommunities(communities.filter((comm) => comm.community_name.toLowerCase().includes(searchTerm)));
-    setFilteredCompetitions(competitions.filter((comp) => comp.competition_name.toLowerCase().includes(searchTerm)));
-  }
+
+    if (toggleCompetitions) {
+      setFilteredCompetitions(
+        competitions.filter((comp) =>
+          comp.competition_name.toLowerCase().includes(searchTerm) ||
+          (comp.competition_description && comp.competition_description.toLowerCase().includes(searchTerm)) ||
+          (comp.game_name && comp.game_name.toLowerCase().includes(searchTerm))
+        )
+      );
+    } else {
+      setFilteredCommunities(
+        communities.filter((comm) =>
+          comm.community_name.toLowerCase().includes(searchTerm)
+        )
+      );
+    }
+  };
 
   const searchBarData: SearchBarData = {
     searchString: searchString,
     handleChange: handleInputChange,
-  }
+  };
 
   const buttonData: ButtonData = {
     isOn: toggleCompetitions,
     handleOnClick: handleToggle,
   };
+
   useEffect(() => {
     const savedValue = window.localStorage.getItem("toggleCompetitions");
-    if(savedValue === "true") {
+    if (savedValue === "true") {
       setToggleCompetitions(Boolean(savedValue));
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,22 +86,21 @@ export default function Search() {
         setLoading(true);
         setError(null);
         window.localStorage.setItem("toggleCompetitions", toggleCompetitions.toString());
-        
+
         if (toggleCompetitions) {
           const competitionData = await getCompetitions();
-          setCompetitions(competitionData);
-          setFilteredCompetitions(competitionData);
-
-          if(searchString) {
-            setFilteredCompetitions(competitionData.filter((comp) => comp.competition_name.toLowerCase().includes(searchString)));
-          }
+          const updatedCompetitions = await Promise.all(
+            competitionData.map(async (comp) => ({
+              ...comp,
+              game_name: (await fetchGameName(comp.game_id)) || "Unknown Game",
+            }))
+          );
+          setCompetitions(updatedCompetitions);
+          setFilteredCompetitions(updatedCompetitions);
         } else {
           const communityData = await getCommunities();
           setCommunities(communityData);
           setFilteredCommunities(communityData);
-          if(searchString) {
-            setFilteredCommunities(communityData.filter((comm) => comm.community_name.toLowerCase().includes(searchString)));
-          }
         }
       } catch (err) {
         setError((err as Error).message);
@@ -93,7 +111,7 @@ export default function Search() {
 
     fetchData();
   }, [toggleCompetitions]);
-  
+
   /* End of Static placeholder data */
 
   return (
@@ -116,7 +134,7 @@ export default function Search() {
           </div>
 
           <div className="flex flex-wrap gap-10 justify-center mt-10 min-h-[80vh] w-[80vw] p-8">
-            {loading && <div>Loading...</div>}
+            {loading && <div style={{fontSize:'2rem'}}>Loading...</div>}
             {error && <div>Error: {error}</div>}
             {!loading && !error && toggleCompetitions && (
               <>

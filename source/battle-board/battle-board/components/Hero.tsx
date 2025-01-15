@@ -6,11 +6,10 @@ export default function Hero() {
       <Image
         src="/hero.png"
         alt="Hero"
-        className=" m-0 p-0 "
-        height={800}
-        width={800}
+        height={1000}
+        width={1000}
         style={{
-          width: 'auto'
+          margin:'20px',
         }}
       />
     </div>
